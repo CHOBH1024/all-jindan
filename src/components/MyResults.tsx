@@ -3,9 +3,11 @@ import type { DiagnosisRecord } from '../App';
 interface Props {
   results: DiagnosisRecord[];
   onRemove: (idx: number) => void;
+  onShare: (idx: number) => void;
+  isLoggedIn: boolean;
 }
 
-export function MyResults({ results, onRemove }: Props) {
+export function MyResults({ results, onRemove, onShare, isLoggedIn }: Props) {
   if (results.length === 0) {
     return (
       <div style={{ textAlign: 'center', padding: '60px 20px' }}>
@@ -58,6 +60,19 @@ export function MyResults({ results, onRemove }: Props) {
               </div>
             </div>
             <div style={{ fontSize: 11, color: '#64748b', whiteSpace: 'nowrap' }}>{r.date}</div>
+            {isLoggedIn && (
+              <button
+                onClick={() => onShare(i)}
+                style={{
+                  padding: '6px 10px', borderRadius: 8, fontSize: 11, cursor: 'pointer',
+                  background: r.shared ? 'rgba(16,185,129,0.1)' : 'rgba(99,102,241,0.1)',
+                  border: '1px solid ' + (r.shared ? 'rgba(16,185,129,0.3)' : 'rgba(99,102,241,0.3)'),
+                  color: r.shared ? '#34d399' : '#a5b4fc',
+                }}
+              >
+                {r.shared ? '✓ 공유됨' : '공유'}
+              </button>
+            )}
             <button
               onClick={() => onRemove(i)}
               style={{
