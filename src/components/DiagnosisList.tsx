@@ -11,6 +11,15 @@ export function DiagnosisList({ results, onSave }: Props) {
   const [q, setQ] = useState('');
   const [cat, setCat] = useState('전체');
   const [done, setDone] = useState<Record<string, string>>({});
+  const [bookmarks, setBookmarks] = useState<string[]>(() => {
+    try { return JSON.parse(localStorage.getItem('alljindan_bookmarks') || '[]'); } catch { return []; }
+  });
+
+  const toggleBookmark = (site: string) => {
+    const next = bookmarks.includes(site) ? bookmarks.filter(s => s !== site) : [...bookmarks, site];
+    setBookmarks(next);
+    localStorage.setItem('alljindan_bookmarks', JSON.stringify(next));
+  };
 
   const cats = ['전체', ...new Set(SITES.map(s => s.category))];
   const doneSites = new Set(results.map(r => r.site));
@@ -78,6 +87,13 @@ export function DiagnosisList({ results, onSave }: Props) {
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <span style={{ fontSize: 24 }}>{s.emoji}</span>
                 <span style={{ fontSize: 13, fontWeight: 800, flex: 1 }}>{s.title}</span>
+                <button
+                  onClick={() => toggleBookmark(s.name)}
+                  title="북마크"
+                  style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 15 }}
+                >
+                  {bookmarks.includes(s.name) ? '⭐' : '☆'}
+                </button>
                 {isDone && <span style={{ fontSize: 10, background: 'rgba(16,185,129,0.15)', color: '#34d399', padding: '2px 8px', borderRadius: 999, fontWeight: 700 }}>✓ 완료</span>}
               </div>
               <div style={{ fontSize: 11, color: '#94a3b8', minHeight: 30 }}>{s.target}</div>

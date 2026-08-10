@@ -21,13 +21,13 @@ export interface DiagnosisRecord {
 
 export type Tab = 'home' | 'diagnosis' | 'results' | 'analysis' | 'future' | 'community';
 
-const TABS: { id: Tab; label: string; icon: string }[] = [
-  { id: 'home', label: '홈', icon: '🏠' },
-  { id: 'diagnosis', label: '진단 모음', icon: '🧩' },
-  { id: 'results', label: '나의 결과', icon: '📊' },
-  { id: 'analysis', label: '통합 분석', icon: '🧬' },
-  { id: 'future', label: '미래 설계', icon: '🗺️' },
-  { id: 'community', label: '커뮤니티', icon: '👥' },
+const TABS: { id: Tab; label: (en: boolean) => string; icon: string }[] = [
+  { id: 'home', label: en => en ? 'Home' : '홈', icon: '🏠' },
+  { id: 'diagnosis', label: en => en ? 'Diagnoses' : '진단 모음', icon: '🧩' },
+  { id: 'results', label: en => en ? 'My Results' : '나의 결과', icon: '📊' },
+  { id: 'analysis', label: en => en ? 'Analysis' : '통합 분석', icon: '🧬' },
+  { id: 'future', label: en => en ? 'Future' : '미래 설계', icon: '🗺️' },
+  { id: 'community', label: en => en ? 'Community' : '커뮤니티', icon: '👥' },
 ];
 
 export function loadResults(): DiagnosisRecord[] {
@@ -47,6 +47,9 @@ export default function App() {
   const [user, setUser] = useState<User | null>(null);
   const [showAuth, setShowAuth] = useState(false);
   const [dark, setDark] = useState(() => localStorage.getItem('alljindan_theme') !== 'light');
+  const [en, setEn] = useState(() => localStorage.getItem('alljindan_lang') === 'en');
+
+  const t = (ko: string, eng: string) => en ? eng : ko;
 
   useEffect(() => {
     setResults(loadResults());
@@ -137,6 +140,12 @@ export default function App() {
     localStorage.setItem('alljindan_theme', next ? 'dark' : 'light');
   };
 
+  const toggleLang = () => {
+    const next = !en;
+    setEn(next);
+    localStorage.setItem('alljindan_lang', next ? 'en' : 'ko');
+  };
+
   const logout = () => {
     setToken(null);
     saveUser(null);
@@ -174,20 +183,27 @@ export default function App() {
             <span>올<span style={{ color: '#818cf8' }}>진단</span></span>
           </div>
           <nav style={{ display: 'flex', gap: 4, flex: 1, overflowX: 'auto' }}>
-            {TABS.map(t => (
+            {TABS.map(tabItem => (
               <button
-                key={t.id}
-                onClick={() => setTab(t.id)}
+                key={tabItem.id}
+                onClick={() => setTab(tabItem.id)}
                 style={{
                   padding: '8px 14px', borderRadius: 999, border: 'none', cursor: 'pointer', fontSize: 13, fontWeight: 700, whiteSpace: 'nowrap',
-                  background: tab === t.id ? 'linear-gradient(135deg,#6366f1,#8b5cf6)' : 'transparent',
-                  color: tab === t.id ? '#fff' : theme.sub,
+                  background: tab === tabItem.id ? 'linear-gradient(135deg,#6366f1,#8b5cf6)' : 'transparent',
+                  color: tab === tabItem.id ? '#fff' : theme.sub,
                 }}
               >
-                {t.icon} {t.label}
+                {tabItem.icon} {tabItem.label(en)}
               </button>
             ))}
           </nav>
+          <button
+            onClick={toggleLang}
+            title={en ? '한국어' : 'English'}
+            style={{ padding: '8px 10px', borderRadius: 999, border: '1px solid ' + theme.border, cursor: 'pointer', fontSize: 12, fontWeight: 800, background: 'transparent', color: theme.sub }}
+          >
+            {en ? '🇰🇷 KO' : '🇺🇸 EN'}
+          </button>
           <button
             onClick={toggleTheme}
             title="테마 전환"
