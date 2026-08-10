@@ -119,6 +119,58 @@ export function Analysis({ results, onGoDiagnosis }: Props) {
           </ul>
         </div>
       </div>
+
+      {/* 재진단 변화 추이 */}
+      <TrendChart results={results} />
+    </div>
+  );
+}
+
+function TrendChart({ results }: { results: DiagnosisRecord[] }) {
+  // 같은 제목(사이트)의 재진단 기록 찾기 — 2개 이상이면 그래프
+  const byTitle = new Map<string, DiagnosisRecord[]>();
+  for (const r of results) {
+    if (r.score === undefined) continue;
+    const list = byTitle.get(r.title) || [];
+    list.push(r);
+    byTitle.set(r.title, list);
+  }
+  const trends = [...byTitle.entries()].filter(([, list]) => list.length >= 2).sort((a, b) => b[1].length - a[1].length);
+
+  if (trends.length === 0) return null;
+
+  return (
+    <div style={{ background: 'rgba(30,41,59,0.5)', border: '1px solid #1e293b', borderRadius: 16, padding: 20, marginTop: 16 }}>
+      <h2 style={{ fontSize: 15, fontWeight: 800, margin: '0 0 4px' }}>📈 재진단 변화 추이</h2>
+      <p style={{ fontSize: 11, color: '#64748b', margin: '0 0 16px' }}>같은 진단을 다시 받으면 변화를 그래프로 볼 수 있어요</p>
+      {trends.map(([title, list]) => {
+        const sorted = [...list].sort((a, b) => a.date.localeCompare(b.date));
+        const max = Math.max(...sorted.map(s => s.score || 0), 100);
+        return (
+          <div key={title} style={{ marginBottom: 16 }}>
+            <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 8 }}>
+              {sorted[0].emoji} {title}
+            </div>
+            <div style={{ display: 'flex', alignItems: 'flex-end', gap: 8, height: 80, padding: '0 4px' }}>
+              {sorted.map((s, i) => (
+                <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, flex: 1 }}>
+                  <div style={{ fontSize: 10, fontWeight: 800, color: '#818cf8' }}>{s.score}</div>
+                  <div style={{
+                    width: '100%', maxWidth: 50, height: Math.max(8, ((s.score || 0) / max) * 60), borderRadius: '6px 6px 2px 2px',
+                    background: 'linear-gradient(180deg,#6366f1,#8b5cf6)', transition: 'height .5s',
+                  }} />
+                  <div style={{ fontSize: 9, color: '#64748b' }}>{s.date.slice(5)}</div>
+                </div>
+              ))}
+            </div>
+            <div style={{ fontSize: 11, color: '#94a3b8', marginTop: 6 }}>
+              {sorted.length >= 2 && (sorted[sorted.length - 1].score || 0) > (sorted[0].score || 0)
+                ? `📈 ${sorted[0].score}점 → ${sorted[sorted.length - 1].score}점 (${sorted[sorted.length - 1].score! - sorted[0].score!}점 상승!)`
+                : `📉 ${sorted[0].score}점 → ${sorted[sorted.length - 1].score}점`}
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 }

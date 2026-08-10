@@ -143,6 +143,19 @@ export default function App() {
     setUser(null);
   };
 
+  const deleteAccount = async () => {
+    if (!confirm('정말 계정을 삭제할까요? 모든 데이터가 사라집니다. (이 작업은 되돌릴 수 없어요)')) return;
+    try {
+      await api.deleteAccount();
+      localStorage.removeItem('alljindan_results');
+      setResults([]);
+      logout();
+      alert('계정이 삭제되었습니다. 이용해주셔서 감사합니다.');
+    } catch {
+      alert('계정 삭제에 실패했습니다. 다시 시도해주세요.');
+    }
+  };
+
   const theme = {
     bg: dark ? 'linear-gradient(160deg,#0a0a14 0%,#101828 100%)' : 'linear-gradient(160deg,#f1f5f9 0%,#e2e8f0 100%)',
     text: dark ? '#e2e8f0' : '#0f172a',
@@ -189,6 +202,7 @@ export default function App() {
               </div>
               <div style={{ fontSize: 12, fontWeight: 700 }}>{user.name}</div>
               <button onClick={logout} style={{ padding: '6px 10px', borderRadius: 8, fontSize: 11, cursor: 'pointer', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', color: '#f87171' }}>로그아웃</button>
+              <button onClick={deleteAccount} title="계정 삭제" style={{ padding: '6px 10px', borderRadius: 8, fontSize: 11, cursor: 'pointer', background: 'transparent', border: '1px solid #334155', color: '#64748b' }}>🗑️</button>
             </div>
           ) : (
             <button

@@ -1,4 +1,5 @@
 import type { DiagnosisRecord } from '../App';
+import { api, getToken } from '../api';
 
 interface Props {
   results: DiagnosisRecord[];
@@ -8,6 +9,24 @@ interface Props {
 }
 
 export function MyResults({ results, onRemove, onShare, isLoggedIn }: Props) {
+  const exportData = async () => {
+    try {
+      if (getToken()) {
+        const d = await api.exportData();
+        const blob = new Blob([JSON.stringify(d, null, 2)], { type: 'application/json' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'alljindan-data.json';
+        a.click();
+      } else {
+        const blob = new Blob([JSON.stringify({ results }, null, 2)], { type: 'application/json' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'alljindan-data.json';
+        a.click();
+      }
+    } catch {}
+  };
   if (results.length === 0) {
     return (
       <div style={{ textAlign: 'center', padding: '60px 20px' }}>
@@ -29,9 +48,18 @@ export function MyResults({ results, onRemove, onShare, isLoggedIn }: Props) {
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
         <h1 style={{ fontSize: 24, fontWeight: 900, margin: 0 }}>📊 나의 결과</h1>
         <button
-          onClick={() => window.print()}
+          onClick={exportData}
           style={{
             marginLeft: 'auto', padding: '9px 16px', borderRadius: 10, fontSize: 12, fontWeight: 700, cursor: 'pointer',
+            background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.3)', color: '#34d399',
+          }}
+        >
+          📦 데이터 내보내기
+        </button>
+        <button
+          onClick={() => window.print()}
+          style={{
+            padding: '9px 16px', borderRadius: 10, fontSize: 12, fontWeight: 700, cursor: 'pointer',
             background: 'rgba(99,102,241,0.12)', border: '1px solid rgba(99,102,241,0.3)', color: '#a5b4fc',
           }}
         >

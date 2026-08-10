@@ -74,4 +74,6 @@ export const api = {
   feedComments: (id: number) => req('GET', `/feed/${id}/comments`),
   addFeedComment: (id: number, body: string) => req('POST', `/feed/${id}/comments`, { body }),
   toggleLike: (id: number) => req('POST', `/feed/${id}/like`),
+  deleteAccount: () => req('DELETE', '/me'),
+  exportData: () => req('GET', '/me/export'),
 };
