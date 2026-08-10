@@ -26,7 +26,18 @@ export function MyResults({ results, onRemove, onShare, isLoggedIn }: Props) {
 
   return (
     <div>
-      <h1 style={{ fontSize: 24, fontWeight: 900, margin: '0 0 4px' }}>📊 나의 결과</h1>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
+        <h1 style={{ fontSize: 24, fontWeight: 900, margin: 0 }}>📊 나의 결과</h1>
+        <button
+          onClick={() => window.print()}
+          style={{
+            marginLeft: 'auto', padding: '9px 16px', borderRadius: 10, fontSize: 12, fontWeight: 700, cursor: 'pointer',
+            background: 'rgba(99,102,241,0.12)', border: '1px solid rgba(99,102,241,0.3)', color: '#a5b4fc',
+          }}
+        >
+          🖨️ PDF로 저장
+        </button>
+      </div>
       <p style={{ fontSize: 13, color: '#94a3b8', margin: '0 0 20px' }}>총 {results.length}개 진단 기록 — 결과를 쌓을수록 종합 분석이 정밀해집니다.</p>
 
       {/* 최근 결과 카드 */}

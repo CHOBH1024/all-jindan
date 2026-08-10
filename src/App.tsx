@@ -46,6 +46,7 @@ export default function App() {
   const [results, setResults] = useState<DiagnosisRecord[]>([]);
   const [user, setUser] = useState<User | null>(null);
   const [showAuth, setShowAuth] = useState(false);
+  const [dark, setDark] = useState(() => localStorage.getItem('alljindan_theme') !== 'light');
 
   useEffect(() => {
     setResults(loadResults());
@@ -130,15 +131,30 @@ export default function App() {
     }).catch(() => {});
   };
 
+  const toggleTheme = () => {
+    const next = !dark;
+    setDark(next);
+    localStorage.setItem('alljindan_theme', next ? 'dark' : 'light');
+  };
+
   const logout = () => {
     setToken(null);
     saveUser(null);
     setUser(null);
   };
 
+  const theme = {
+    bg: dark ? 'linear-gradient(160deg,#0a0a14 0%,#101828 100%)' : 'linear-gradient(160deg,#f1f5f9 0%,#e2e8f0 100%)',
+    text: dark ? '#e2e8f0' : '#0f172a',
+    sub: dark ? '#94a3b8' : '#64748b',
+    card: dark ? 'rgba(30,41,59,0.5)' : 'rgba(255,255,255,0.8)',
+    border: dark ? '#1e293b' : '#cbd5e1',
+    header: dark ? 'rgba(10,10,20,0.85)' : 'rgba(255,255,255,0.9)',
+  };
+
   return (
-    <div style={{ minHeight: '100vh', background: 'linear-gradient(160deg,#0a0a14 0%,#101828 100%)', color: '#e2e8f0', fontFamily: "'Pretendard','Noto Sans KR',system-ui,sans-serif" }}>
-      <header style={{ position: 'sticky', top: 0, zIndex: 50, background: 'rgba(10,10,20,0.85)', backdropFilter: 'blur(12px)', borderBottom: '1px solid #1e293b' }}>
+    <div style={{ minHeight: '100vh', background: theme.bg, color: theme.text, fontFamily: "'Pretendard','Noto Sans KR',system-ui,sans-serif", transition: 'background .3s, color .3s' }}>
+      <header style={{ position: 'sticky', top: 0, zIndex: 50, background: theme.header, backdropFilter: 'blur(12px)', borderBottom: '1px solid ' + theme.border }}>
         <div style={{ maxWidth: 1080, margin: '0 auto', padding: '12px 20px', display: 'flex', alignItems: 'center', gap: 16 }}>
           <div style={{ fontSize: 22, fontWeight: 900, letterSpacing: -1, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8 }} onClick={() => setTab('home')}>
             <span style={{ fontSize: 26 }}>🧬</span>
@@ -152,13 +168,20 @@ export default function App() {
                 style={{
                   padding: '8px 14px', borderRadius: 999, border: 'none', cursor: 'pointer', fontSize: 13, fontWeight: 700, whiteSpace: 'nowrap',
                   background: tab === t.id ? 'linear-gradient(135deg,#6366f1,#8b5cf6)' : 'transparent',
-                  color: tab === t.id ? '#fff' : '#94a3b8',
+                  color: tab === t.id ? '#fff' : theme.sub,
                 }}
               >
                 {t.icon} {t.label}
               </button>
             ))}
           </nav>
+          <button
+            onClick={toggleTheme}
+            title="테마 전환"
+            style={{ padding: '8px 10px', borderRadius: 999, border: '1px solid ' + theme.border, cursor: 'pointer', fontSize: 14, background: 'transparent' }}
+          >
+            {dark ? '☀️' : '🌙'}
+          </button>
           {user ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <div style={{ width: 32, height: 32, borderRadius: '50%', background: 'linear-gradient(135deg,#6366f1,#8b5cf6)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 800 }}>

@@ -19,6 +19,8 @@ export interface ServerDiagnosis {
   created_at: number;
   shared: number;
   user_name?: string;
+  like_count?: number;
+  comment_count?: number;
 }
 
 export function getToken(): string | null {
@@ -69,4 +71,7 @@ export const api = {
   deleteDiagnosis: (id: number) => req('DELETE', `/me/diagnoses/${id}`),
   shareDiagnosis: (id: number) => req('POST', `/me/diagnoses/${id}/share`),
   feed: () => req('GET', '/feed'),
+  feedComments: (id: number) => req('GET', `/feed/${id}/comments`),
+  addFeedComment: (id: number, body: string) => req('POST', `/feed/${id}/comments`, { body }),
+  toggleLike: (id: number) => req('POST', `/feed/${id}/like`),
 };
