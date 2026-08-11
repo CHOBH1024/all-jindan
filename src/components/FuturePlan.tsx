@@ -3,6 +3,8 @@ import type { DiagnosisRecord } from '../App';
 
 interface Props {
   results: DiagnosisRecord[];
+  isPremium: boolean;
+  onShowPremium: () => void;
 }
 
 interface Goal {
@@ -20,7 +22,7 @@ interface Habit {
 
 const WEEK = ['월', '화', '수', '목', '금', '토', '일'];
 
-export function FuturePlan({ results }: Props) {
+export function FuturePlan({ results, isPremium, onShowPremium }: Props) {
   const [goals, setGoals] = useState<Goal[]>([]);
   const [goalText, setGoalText] = useState('');
   const [goalPeriod, setGoalPeriod] = useState<'short' | 'long'>('short');
@@ -98,7 +100,7 @@ export function FuturePlan({ results }: Props) {
       <h1 style={{ fontSize: 24, fontWeight: 900, margin: '0 0 4px' }}>🗺️ 미래 설계</h1>
       <p style={{ fontSize: 13, color: '#9a9081', margin: '0 0 20px' }}>진단 결과를 바탕으로, 앞으로의 삶을 만들어갑니다.</p>
 
-      <WeeklyReport results={results} />
+      <WeeklyReport results={results} isPremium={isPremium} onShowPremium={onShowPremium} />
 
       {/* 주간 챌린지 */}
       <WeeklyChallenge habits={habits} results={results} onGoDiagnosis={() => {}} />
@@ -406,7 +408,7 @@ function WeeklyChallenge({ habits, results, onGoDiagnosis }: {
 }
 
 /* ---------- 주간 리포트 ---------- */
-function WeeklyReport({ results }: { results: DiagnosisRecord[] }) {
+function WeeklyReport({ results, isPremium, onShowPremium }: { results: DiagnosisRecord[]; isPremium: boolean; onShowPremium: () => void }) {
   const [report, setReport] = useState<{ stats?: { diagnoses: number; comments: number; likes: number; shared: number }; message?: string } | null>(null);
   const [coach, setCoach] = useState<{ interpretation?: string; keep?: string; reduce?: string; miniGoal?: string } | null>(null);
   const [loading, setLoading] = useState(true);
@@ -466,11 +468,28 @@ function WeeklyReport({ results }: { results: DiagnosisRecord[] }) {
                 🧑‍🏫 이번 주 코치 브리핑
               </div>
               <div style={{ fontSize: 13, fontWeight: 700, lineHeight: 1.7, marginBottom: 8 }}>{coach.interpretation}</div>
-              <div style={{ fontSize: 12, color: '#5a5245', lineHeight: 1.9 }}>
-                <div>✅ <strong>유지할 것:</strong> {coach.keep}</div>
-                <div>➖ <strong>줄일 것:</strong> {coach.reduce}</div>
-                <div>🎯 <strong>미니 목표:</strong> {coach.miniGoal}</div>
-              </div>
+              {isPremium ? (
+                <div style={{ fontSize: 12, color: '#5a5245', lineHeight: 1.9 }}>
+                  <div>✅ <strong>유지할 것:</strong> {coach.keep}</div>
+                  <div>➖ <strong>줄일 것:</strong> {coach.reduce}</div>
+                  <div>🎯 <strong>미니 목표:</strong> {coach.miniGoal}</div>
+                </div>
+              ) : (
+                <div style={{ borderTop: '1px dashed #c9bda8', marginTop: 8, paddingTop: 10, textAlign: 'center' }}>
+                  <div style={{ fontSize: 11, color: '#9a9081', marginBottom: 8 }}>
+                    🔒 유지할 것 · 줄일 것 · 미니 목표는 <strong>프리미엄</strong>에서 확인할 수 있어요
+                  </div>
+                  <button
+                    onClick={onShowPremium}
+                    style={{
+                      padding: '8px 20px', borderRadius: 6, fontSize: 12, fontWeight: 800, cursor: 'pointer',
+                      background: '#2b2620', color: '#faf7f2', border: 'none',
+                    }}
+                  >
+                    💎 프리미엄 보기 (4,900원/월)
+                  </button>
+                </div>
+              )}
             </div>
           )}
           {/* 성찰 프롬프트 */}

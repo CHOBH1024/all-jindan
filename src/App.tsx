@@ -7,6 +7,7 @@ import { FuturePlan } from './components/FuturePlan';
 import { Community } from './components/Community';
 import { Science } from './components/Science';
 import { AuthModal } from './components/AuthModal';
+import { PremiumModal } from './components/PremiumModal';
 import { api, getToken, getSavedUser, setToken, saveUser, type User } from './api';
 
 export interface DiagnosisRecord {
@@ -48,6 +49,11 @@ export default function App() {
   const [results, setResults] = useState<DiagnosisRecord[]>([]);
   const [user, setUser] = useState<User | null>(null);
   const [showAuth, setShowAuth] = useState(false);
+  const [showPremium, setShowPremium] = useState(false);
+  const [showAdmin, setShowAdmin] = useState(false);
+  const [isPremium, setIsPremium] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [adminStats, setAdminStats] = useState<{ users?: number; premiumUsers?: number; orders?: number; revenue?: number; recentOrders?: { id: number; item: string; amount: number; email: string; created_at: number }[] } | null>(null);
   const [dark, setDark] = useState(() => localStorage.getItem('alljindan_theme') !== 'light');
   const [en, setEn] = useState(() => localStorage.getItem('alljindan_lang') === 'en');
 
@@ -56,6 +62,16 @@ export default function App() {
   useEffect(() => {
     setResults(loadResults());
     setUser(getSavedUser());
+    // 프리미엄/관리자 상태 로드
+    if (getToken()) {
+      api.myStatus().then(d => {
+        setIsPremium(!!d.isPremium);
+        setIsAdmin(!!d.isAdmin);
+        if (d.isAdmin) {
+          api.adminStats().then(s => setAdminStats(s)).catch(() => {});
+        }
+      }).catch(() => {});
+    }
     // 토큰 있으면 서버 데이터 동기화 (병합 — 데이터 유실 방지)
     if (getToken()) {
       api.myDiagnoses().then(d => {
@@ -202,6 +218,19 @@ export default function App() {
     accent: '#8a6d3b',
   };
 
+  const openAdmin = () => {
+    api.adminStats().then(s => {
+      setAdminStats(s);
+      setShowAdmin(true);
+    }).catch(() => alert('관리자 통계를 불러오지 못했어요.'));
+  };
+
+  const handlePremiumPurchased = (product: string) => {
+    if (product === 'premium_month' || product === 'premium_year') {
+      setIsPremium(true);
+    }
+  };
+
   return (
     <div style={{ minHeight: '100vh', background: theme.bg, color: theme.text, fontFamily: "'Noto Serif KR','Noto Sans KR',system-ui,sans-serif", transition: 'background .3s, color .3s' }}>
       <header style={{ position: 'sticky', top: 0, zIndex: 50, background: theme.header, backdropFilter: 'blur(12px)', borderBottom: '1px solid ' + theme.border }}>
@@ -241,6 +270,25 @@ export default function App() {
           </button>
           {user ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              {isPremium && (
+                <span style={{
+                  fontSize: 10, padding: '4px 10px', borderRadius: 999, fontWeight: 800,
+                  background: 'linear-gradient(135deg,#c9a867,#a8853f)', color: '#fff',
+                }}>
+                  👑 PRO
+                </span>
+              )}
+              {isAdmin && (
+                <button
+                  onClick={openAdmin}
+                  style={{
+                    padding: '6px 10px', borderRadius: 8, fontSize: 11, cursor: 'pointer',
+                    background: 'rgba(138,109,59,0.12)', border: '1px solid rgba(138,109,59,0.4)', color: '#8a6d3b',
+                  }}
+                >
+                  📊 관리자
+                </button>
+              )}
               <div style={{ width: 32, height: 32, borderRadius: '50%', background: '#2b2620', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 800 }}>
                 {(user.name || '?')[0]}
               </div>
@@ -249,12 +297,23 @@ export default function App() {
               <button onClick={deleteAccount} title="계정 삭제" style={{ padding: '6px 10px', borderRadius: 8, fontSize: 11, cursor: 'pointer', background: 'transparent', border: '1px solid #ddd3c2', color: '#9a9081' }}>🗑️</button>
             </div>
           ) : (
-            <button
-              onClick={() => setShowAuth(true)}
-              style={{ padding: '9px 18px', borderRadius: 999, border: 'none', cursor: 'pointer', fontSize: 13, fontWeight: 800, color: '#fff', background: '#2b2620' }}
-            >
-              로그인
-            </button>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <button
+                onClick={() => setShowPremium(true)}
+                style={{
+                  padding: '9px 14px', borderRadius: 999, cursor: 'pointer', fontSize: 12, fontWeight: 800,
+                  background: 'transparent', border: '1px solid #c9a867', color: '#8a6d3b',
+                }}
+              >
+                💎 프리미엄
+              </button>
+              <button
+                onClick={() => setShowAuth(true)}
+                style={{ padding: '9px 18px', borderRadius: 999, border: 'none', cursor: 'pointer', fontSize: 13, fontWeight: 800, color: '#fff', background: '#2b2620' }}
+              >
+                로그인
+              </button>
+            </div>
           )}
         </div>
       </header>
@@ -264,7 +323,7 @@ export default function App() {
         {tab === 'diagnosis' && <DiagnosisList results={results} onSave={addResult} onGoAnalysis={() => setTab('analysis')} />}
         {tab === 'results' && <MyResults results={results} onRemove={removeResult} onShare={shareResult} isLoggedIn={!!user} onShowLogin={() => setShowAuth(true)} />}
         {tab === 'analysis' && <Analysis results={results} onGoDiagnosis={() => setTab('diagnosis')} />}
-        {tab === 'future' && <FuturePlan results={results} />}
+        {tab === 'future' && <FuturePlan results={results} isPremium={isPremium} onShowPremium={() => setShowPremium(true)} />}
         {tab === 'community' && <Community />}
         {tab === 'science' && <Science />}
       </main>
@@ -278,6 +337,51 @@ export default function App() {
       </footer>
 
       {showAuth && <AuthModal onClose={() => setShowAuth(false)} onLogin={handleLogin} />}
+      {showPremium && <PremiumModal onClose={() => setShowPremium(false)} onPurchased={handlePremiumPurchased} />}
+      {showAdmin && adminStats && (
+        <div style={{
+          position: 'fixed', inset: 0, zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center',
+          background: 'rgba(43,38,32,0.6)', backdropFilter: 'blur(4px)', padding: 16,
+        }} onClick={() => setShowAdmin(false)}>
+          <div onClick={e => e.stopPropagation()} style={{
+            width: '100%', maxWidth: 480, background: '#fffdf8', border: '1px solid #e5ded2', borderRadius: 14,
+            padding: 24, boxShadow: '0 20px 60px rgba(43,38,32,0.3)', maxHeight: '80vh', overflowY: 'auto',
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+              <h2 style={{ fontSize: 17, fontWeight: 800, margin: 0, fontFamily: "'Noto Serif KR',serif" }}>📊 관리자 대시보드</h2>
+              <button onClick={() => setShowAdmin(false)} style={{ background: 'none', border: 'none', color: '#7a7060', fontSize: 18, cursor: 'pointer' }}>✕</button>
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 8, marginBottom: 16 }}>
+              {[
+                { label: '사용자', value: adminStats.users ?? 0 },
+                { label: '프리미엄', value: adminStats.premiumUsers ?? 0 },
+                { label: '주문', value: adminStats.orders ?? 0 },
+                { label: '매출', value: (adminStats.revenue ?? 0).toLocaleString() + '원' },
+              ].map((s, i) => (
+                <div key={i} style={{ textAlign: 'center', background: '#f7f2e9', borderRadius: 8, padding: '10px 4px' }}>
+                  <div style={{ fontSize: 16, fontWeight: 900, color: '#8a6d3b' }}>{s.value}</div>
+                  <div style={{ fontSize: 10, color: '#7a7060' }}>{s.label}</div>
+                </div>
+              ))}
+            </div>
+            <div style={{ fontSize: 11, letterSpacing: 1, fontWeight: 800, color: '#8a6d3b', textTransform: 'uppercase', marginBottom: 8 }}>
+              최근 주문
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+              {(adminStats.recentOrders || []).map(o => (
+                <div key={o.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 10px', background: '#f7f2e9', borderRadius: 8, fontSize: 12 }}>
+                  <span style={{ fontWeight: 700, flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{o.item}</span>
+                  <span style={{ color: '#7a7060' }}>{o.email}</span>
+                  <span style={{ fontWeight: 800, color: '#8a6d3b' }}>{o.amount.toLocaleString()}원</span>
+                </div>
+              ))}
+              {(adminStats.recentOrders || []).length === 0 && (
+                <div style={{ fontSize: 12, color: '#9a9081', textAlign: 'center', padding: 16 }}>아직 주문이 없습니다</div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

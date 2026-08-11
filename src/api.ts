@@ -84,4 +84,7 @@ export const api = {
   coach: () => req('GET', '/me/coach'),
   challenges: () => req('GET', '/challenges'),
   joinChallenge: (id: string) => req('POST', `/challenges/${id}/join`),
+  myStatus: () => req('GET', '/me/status'),
+  createOrder: (product: string) => req('POST', '/orders', { product }),
+  adminStats: () => req('GET', '/admin/stats'),
 };
