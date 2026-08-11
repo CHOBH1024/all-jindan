@@ -272,7 +272,7 @@ function QuarterMap({ goals, results, habits }: {
   const items = [
     { id: 'g1', label: '목표 1개 완료', auto: goals.filter(g => g.done).length >= 1 },
     { id: 'g3', label: '목표 3개 설정', auto: goals.length >= 3 },
-    { id: 'r1', label: '재진단 1회 (같은 진단 2번째)', auto: results.filter(r => r.repeat).length >= 1 || results.length >= 6 },
+    { id: 'r1', label: '재진단 1회 (같은 진단 2번째)', auto: results.length >= 8 },
     { id: 'r2', label: '다른 축 진단 1개', auto: results.length >= 4 },
     { id: 'h1', label: '습관 1개 4주 유지', auto: habits.some(h => h.days.length >= 10) },
     { id: 's1', label: '결과 공유 1회', auto: results.some(r => r.shared) },
