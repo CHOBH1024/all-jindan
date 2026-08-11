@@ -106,6 +106,7 @@ export function Community() {
   const [challenges, setChallenges] = useState<{ id: string; emoji: string; title: string; desc: string; participants: number }[]>([]);
   const [joinedChallenges, setJoinedChallenges] = useState<Set<string>>(new Set());
   const [compareWith, setCompareWith] = useState<{ title: string; result: string; score?: number; user_name: string } | null>(null);
+  const [profileUser, setProfileUser] = useState<string | null>(null);
   useEffect(() => {
     api.challenges().then(d => {
       setChallenges(d.challenges || []);
@@ -216,7 +217,15 @@ export function Community() {
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                  <span style={{ fontSize: 13, fontWeight: 800, color: '#3d3830' }}>{f.user_name}</span>
+                  <button
+                    onClick={() => setProfileUser(f.user_name || null)}
+                    style={{
+                      fontSize: 13, fontWeight: 800, color: '#3d3830', background: 'none', border: 'none',
+                      cursor: 'pointer', padding: 0,
+                    }}
+                  >
+                    {f.user_name}
+                  </button>
                   {growthUsers.has(f.user_name || '') && (
                     <span style={{
                       fontSize: 9, padding: '2px 8px', borderRadius: 999, fontWeight: 700,
@@ -369,6 +378,82 @@ export function Community() {
 
       {/* 나와 비교 모달 */}
       {compareWith && <CompareModal data={compareWith} onClose={() => setCompareWith(null)} />}
+
+      {/* 유저 프로필 모달 */}
+      {profileUser && <UserProfileModal userName={profileUser} feed={feed} onClose={() => setProfileUser(null)} />}
+    </div>
+  );
+}
+
+/* ---------- 유저 프로필 모달 ---------- */
+function UserProfileModal({ userName, feed, onClose }: {
+  userName: string;
+  feed: ServerDiagnosis[];
+  onClose: () => void;
+}) {
+  const userPosts = feed.filter(f => f.user_name === userName);
+  const growth = userPosts.length >= 3;
+  const axes = new Set(userPosts.map(p => {
+    const map: Record<string, number> = { 'mz-radar': 1, 'attachment-style-radar': 2, 'sleep-hygiene-radar': 3 };
+    return map[p.site] !== undefined ? ['성격', '커리어', '관계', '습관'][map[p.site]] : '성격';
+  }));
+
+  return (
+    <div style={{
+      position: 'fixed', inset: 0, zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center',
+      background: 'rgba(43,38,32,0.6)', backdropFilter: 'blur(4px)',
+    }} onClick={onClose}>
+      <div onClick={e => e.stopPropagation()} style={{
+        width: '100%', maxWidth: 420, background: '#fffdf8', border: '1px solid #e5ded2', borderRadius: 14,
+        padding: 24, boxShadow: '0 20px 60px rgba(43,38,32,0.3)', maxHeight: '80vh', overflowY: 'auto',
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
+          <div style={{
+            width: 44, height: 44, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: 20, fontWeight: 800, background: 'rgba(138,109,59,0.15)', color: '#8a6d3b',
+          }}>
+            {userName.slice(0, 1).toUpperCase()}
+          </div>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 15, fontWeight: 800 }}>{userName}</div>
+            <div style={{ fontSize: 11, color: '#7a7060' }}>
+              공유 {userPosts.length}개 {growth && '· 📈 꾸준한 진단러'}
+            </div>
+          </div>
+          <button onClick={onClose} style={{ background: 'none', border: 'none', color: '#7a7060', fontSize: 18, cursor: 'pointer' }}>✕</button>
+        </div>
+
+        {axes.size > 0 && (
+          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 14 }}>
+            {[...axes].map(a => (
+              <span key={a} style={{
+                fontSize: 10, padding: '3px 10px', borderRadius: 999, fontWeight: 700,
+                background: 'rgba(138,109,59,0.1)', border: '1px solid rgba(138,109,59,0.3)', color: '#8a6d3b',
+              }}>
+                {a} 축
+              </span>
+            ))}
+          </div>
+        )}
+
+        <div style={{ fontSize: 11, letterSpacing: 1, fontWeight: 800, color: '#8a6d3b', textTransform: 'uppercase', marginBottom: 8 }}>
+          공유한 진단
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+          {userPosts.map((p, i) => (
+            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 10px', background: '#f7f2e9', borderRadius: 8 }}>
+              <span style={{ fontSize: 16 }}>{p.emoji || '🧩'}</span>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontSize: 12, fontWeight: 700, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.title}</div>
+                <div style={{ fontSize: 11, color: '#7a7060' }}>{p.result}</div>
+              </div>
+              {p.score !== null && p.score !== undefined && (
+                <span style={{ fontSize: 12, fontWeight: 800, color: '#8a6d3b' }}>{p.score}점</span>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

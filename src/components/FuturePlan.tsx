@@ -483,6 +483,22 @@ function WeeklyReport({ results }: { results: DiagnosisRecord[] }) {
             </div>
             <div style={{ fontSize: 11, color: '#7a7060', marginTop: 4 }}>주간 리포트는 개인 기록으로 저장됩니다.</div>
           </div>
+          {/* 최근 진단 기반 미니 팁 */}
+          {results[0] && (
+            <div style={{ marginTop: 12, padding: '12px 14px', background: '#fffdf8', border: '1px solid #ece4d5', borderRadius: 8 }}>
+              <div style={{ fontSize: 10, letterSpacing: 1, fontWeight: 800, color: '#8a6d3b', textTransform: 'uppercase', marginBottom: 6 }}>
+                🧩 최근 진단 기준 미니 팁
+              </div>
+              <div style={{ fontSize: 12, color: '#5a5245', lineHeight: 1.7 }}>
+                "{results[0].title}"에서 <strong style={{ color: '#8a6d3b' }}>{results[0].result}</strong> 결과를 기록했어요.{' '}
+                {results[0].score !== undefined && results[0].score >= 70
+                  ? '높은 점수는 에너지의 신호예요. 이 강점을 이번 주 목표 1개에 연결해보세요.'
+                  : results[0].score !== undefined && results[0].score <= 40
+                  ? '낮은 점수는 부족함이 아니라 우선순위예요. 작은 실천 1개부터 시작해보세요.'
+                  : '이 결과를 바탕으로, 이번 주 실천할 작은 행동 1개를 정해보세요.'}
+              </div>
+            </div>
+          )}
         </div>
       ) : (
         <div style={{ fontSize: 12, color: '#9a9081', lineHeight: 1.7 }}>

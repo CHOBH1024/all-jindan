@@ -145,6 +145,22 @@ export function Analysis({ results, onGoDiagnosis }: Props) {
   const conflicts = generateConflicts(scores, axisCounts);
   const [tone, setTone] = useState<'calm' | 'warm' | 'fun'>('calm');
   const oneLine = generateOneLine(results, axisCounts, scores, tone);
+  const [notifEnabled, setNotifEnabled] = useState(() => localStorage.getItem('alljindan_notif') === '1');
+
+  // 웹푸시 — 브라우저 알림 (재방문 리마인더)
+  const enableNotif = async () => {
+    try {
+      if (!('Notification' in window)) { alert('이 브라우저는 알림을 지원하지 않아요'); return; }
+      const perm = await Notification.requestPermission();
+      if (perm === 'granted') {
+        localStorage.setItem('alljindan_notif', '1');
+        setNotifEnabled(true);
+        new Notification('🔔 올진단 알림이 켜졌어요', { body: '진단 타이밍을 놓치지 않도록 알려드릴게요.' });
+      } else {
+        alert('알림 권한이 거부됐어요. 브라우저 설정에서 허용해주세요.');
+      }
+    } catch { alert('알림 설정에 실패했어요.'); }
+  };
 
   return (
     <div>
@@ -177,6 +193,18 @@ export function Analysis({ results, onGoDiagnosis }: Props) {
             }}
           >
             📤 공유 카드 만들기
+          </button>
+        )}
+        {!notifEnabled && (
+          <button
+            onClick={enableNotif}
+            title="재진단 타이밍 알림"
+            style={{
+              padding: '9px 14px', borderRadius: 10, fontSize: 12, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap',
+              background: 'rgba(138,109,59,0.06)', border: '1px dashed rgba(138,109,59,0.5)', color: '#8a6d3b',
+            }}
+          >
+            🔔 알림 켜기
           </button>
         )}
       </div>
