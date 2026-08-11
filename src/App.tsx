@@ -56,7 +56,7 @@ export default function App() {
   useEffect(() => {
     setResults(loadResults());
     setUser(getSavedUser());
-    // 토큰 있으면 서버 데이터 동기화
+    // 토큰 있으면 서버 데이터 동기화 (병합 — 데이터 유실 방지)
     if (getToken()) {
       api.myDiagnoses().then(d => {
         const serverItems = (d.diagnoses || []).map((x: { site: string; title: string; result: string; emoji: string; score?: number; created_at: number; id: number; shared: number }) => ({
@@ -64,9 +64,20 @@ export default function App() {
           date: new Date(x.created_at).toISOString().slice(0, 10),
           serverId: x.id, shared: x.shared,
         }));
-        if (serverItems.length > 0) {
-          setResults(serverItems);
-          saveResults(serverItems);
+        const local = loadResults();
+        const seen = new Set<string>();
+        const merged: DiagnosisRecord[] = [];
+        const push = (r: DiagnosisRecord) => {
+          const key = `${r.site}|${r.result}|${r.date}`;
+          if (seen.has(key)) return;
+          seen.add(key);
+          merged.push(r);
+        };
+        serverItems.forEach(push);
+        local.forEach(push);
+        if (merged.length > 0) {
+          setResults(merged);
+          saveResults(merged);
         }
       }).catch(() => {});
     }
