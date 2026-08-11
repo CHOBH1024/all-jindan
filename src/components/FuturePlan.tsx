@@ -220,6 +220,7 @@ export function FuturePlan({ results }: Props) {
 /* ---------- 주간 리포트 ---------- */
 function WeeklyReport({ results }: { results: DiagnosisRecord[] }) {
   const [report, setReport] = useState<{ stats?: { diagnoses: number; comments: number; likes: number; shared: number }; message?: string } | null>(null);
+  const [coach, setCoach] = useState<{ interpretation?: string; keep?: string; reduce?: string; miniGoal?: string } | null>(null);
   const [loading, setLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -232,6 +233,9 @@ function WeeklyReport({ results }: { results: DiagnosisRecord[] }) {
           setReport(d);
           setLoading(false);
         }).catch(() => { setReport(null); setLoading(false); });
+        api.coach().then(d => {
+          setCoach(d.briefing || null);
+        }).catch(() => {});
       } else {
         setLoading(false);
       }
@@ -267,6 +271,20 @@ function WeeklyReport({ results }: { results: DiagnosisRecord[] }) {
             ))}
           </div>
           <div style={{ fontSize: 12, color: '#6b6355' }}>{report.message}</div>
+          {/* 주간 코치 브리핑 */}
+          {coach && (
+            <div style={{ marginTop: 12, padding: '14px 16px', background: '#f7f2e9', border: '1px solid #ece4d5', borderRadius: 10 }}>
+              <div style={{ fontSize: 11, letterSpacing: 1.5, fontWeight: 800, color: '#8a6d3b', textTransform: 'uppercase', marginBottom: 8 }}>
+                🧑‍🏫 이번 주 코치 브리핑
+              </div>
+              <div style={{ fontSize: 13, fontWeight: 700, lineHeight: 1.7, marginBottom: 8 }}>{coach.interpretation}</div>
+              <div style={{ fontSize: 12, color: '#5a5245', lineHeight: 1.9 }}>
+                <div>✅ <strong>유지할 것:</strong> {coach.keep}</div>
+                <div>➖ <strong>줄일 것:</strong> {coach.reduce}</div>
+                <div>🎯 <strong>미니 목표:</strong> {coach.miniGoal}</div>
+              </div>
+            </div>
+          )}
         </div>
       ) : (
         <div style={{ fontSize: 12, color: '#9a9081', lineHeight: 1.7 }}>

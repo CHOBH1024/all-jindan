@@ -81,4 +81,5 @@ export const api = {
   unfollow: (userId: number) => req('DELETE', `/users/${userId}/follow`),
   myFollowing: () => req('GET', '/me/following'),
   weeklyReport: () => req('GET', '/me/weekly-report'),
+  coach: () => req('GET', '/me/coach'),
 };

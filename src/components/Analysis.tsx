@@ -1,4 +1,6 @@
+import { useState } from 'react';
 import type { DiagnosisRecord } from '../App';
+import { ShareCardModal } from './ShareCardModal';
 
 interface Props {
   results: DiagnosisRecord[];
@@ -98,6 +100,7 @@ export function getAxis(site: string, category: string): number {
 }
 
 export function Analysis({ results, onGoDiagnosis }: Props) {
+  const [showShare, setShowShare] = useState(false);
   if (results.length === 0) {
     return (
       <div style={{ textAlign: 'center', padding: '60px 20px' }}>
@@ -138,6 +141,7 @@ export function Analysis({ results, onGoDiagnosis }: Props) {
 
   const strengths = generateStrengths(results);
   const warnings = generateWarnings(results);
+  const conflicts = generateConflicts(scores, axisCounts);
 
   return (
     <div>
@@ -163,13 +167,13 @@ export function Analysis({ results, onGoDiagnosis }: Props) {
         )}
         {results.length > 0 && (
           <button
-            onClick={() => shareProfile(results)}
+            onClick={() => setShowShare(true)}
             style={{
               padding: '9px 16px', borderRadius: 10, fontSize: 12, fontWeight: 800, cursor: 'pointer',
               background: 'rgba(138,109,59,0.1)', border: '1px solid rgba(138,109,59,0.3)', color: '#8a6d3b', whiteSpace: 'nowrap',
             }}
           >
-            📤 종합 프로필 공유
+            📤 공유 카드 만들기
           </button>
         )}
       </div>
@@ -248,8 +252,27 @@ export function Analysis({ results, onGoDiagnosis }: Props) {
         </div>
       </div>
 
+      {/* 축 간 충돌 인사이트 */}
+      {conflicts.length > 0 && (
+        <div style={{ background: 'rgba(255,253,248,0.9)', border: '1px solid #e5ded2', borderRadius: 16, padding: 20, marginTop: 16 }}>
+          <h2 style={{ fontSize: 15, fontWeight: 800, margin: '0 0 4px' }}>⚡ 축 간 인사이트</h2>
+          <p style={{ fontSize: 11, color: '#7a7060', margin: '0 0 12px' }}>서로 다른 영역의 점수가 만드는 독특한 패턴</p>
+          {conflicts.map((c, i) => (
+            <div key={i} style={{
+              padding: '12px 14px', borderRadius: 10, marginBottom: 8,
+              background: '#f7f2e9', border: '1px solid #ece4d5', fontSize: 13, lineHeight: 1.7,
+            }}>
+              <strong style={{ color: '#8a6d3b' }}>{c.title}</strong>
+              <div style={{ fontSize: 12, color: '#5a5245', marginTop: 4 }}>{c.text}</div>
+            </div>
+          ))}
+        </div>
+      )}
+
       {/* 재진단 변화 추이 */}
       <TrendChart results={results} />
+
+      {showShare && <ShareCardModal results={results} onClose={() => setShowShare(false)} />}
     </div>
   );
 }
@@ -354,5 +377,36 @@ export async function shareProfile(results: DiagnosisRecord[]) {
     alert('📋 종합 프로필이 복사되었습니다! (붙여넣어 공유하세요)');
   } catch {
     window.open('https://x.com/intent/post?text=' + encodeURIComponent(text + '\n' + url), '_blank');
-  }
-}
+      }
+    }
+
+    /* ---------- 축 간 충돌 인사이트 (규칙 기반) ---------- */
+    function generateConflicts(scores: number[], axisCounts: number[]) {
+      const out: { title: string; text: string }[] = [];
+      const has = (i: number) => axisCounts[i] > 0;
+      const high = (i: number) => has(i) && scores[i] >= 70;
+      const low = (i: number) => has(i) && scores[i] <= 40;
+      const names = ['성격', '커리어', '관계', '습관'];
+
+      // 관계↑ + 습관↓
+      if (high(2) && low(3)) {
+        out.push({ title: '관계 에너지는 높은데, 자기관리가 낮아요', text: '타인을 향한 관심과 에너지는 풍부하지만, 자신을 돌보는 시간이 부족할 수 있어요. 관계에 쓰는 만큼의 휴식과 루틴이 필요합니다.' });
+      }
+      // 커리어↑ + 관계↓
+      if (high(1) && low(2)) {
+        out.push({ title: '커리어 집중이 관계를 압박하고 있어요', text: '일적 성취에 몰입하는 동안 가까운 사람들과의 연결이 소홀해지기 쉬워요. 주 1회 의미 있는 대화를 의도적으로 만들어보세요.' });
+      }
+      // 습관↑ + 성격(자기이해)↓
+      if (high(3) && low(0)) {
+        out.push({ title: '습관은 잘 지키는데, 내면 탐구는 부족해요', text: '규칙적인 생활은 훌륭하지만, 자기 자신에 대한 이해를 위한 진단이 아직 적어요. 성격·심리 영역의 진단으로 균형을 맞춰보세요.' });
+      }
+      // 커리어↑ + 습관↓
+      if (high(1) && low(3)) {
+        out.push({ title: '일은 열심히 하는데, 몸이 따라주지 못할 때', text: '커리어에 쏟는 에너지가 수면·운동·휴식 같은 기초 습관을 압박하고 있어요. 하루 7시간 수면을 최우선 목표로 삼아보세요.' });
+      }
+      // 관계↑ + 커리어↓
+      if (high(2) && low(1)) {
+        out.push({ title: '관계에서는 활발하지만, 커리어 방향이 흐릿해요', text: '사람과의 연결에서는 에너지를 얻지만, 직업적 방향에 대한 확신이 낮아요. 커리어 영역 진단으로 방향을 잡아보세요.' });
+      }
+      return out.slice(0, 3);
+    }
