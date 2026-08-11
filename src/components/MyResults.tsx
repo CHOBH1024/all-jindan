@@ -82,6 +82,19 @@ export function MyResults({ results, onRemove, onShare, isLoggedIn }: Props) {
             <div style={{ fontSize: 11, color: '#9a9081', marginTop: 2 }}>{recent.date} 기록</div>
           </div>
         </div>
+        {/* 해석 가이드 — 3분 읽기 */}
+        {recent.score !== undefined && (
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(200px,1fr))', gap: 10, marginTop: 16 }}>
+            {guideCards(recent.score).map((g, gi) => (
+              <div key={gi} style={{ background: 'rgba(255,253,248,0.9)', border: '1px solid #e5ded2', borderRadius: 10, padding: '12px 14px' }}>
+                <div style={{ fontSize: 10, letterSpacing: 1, fontWeight: 800, color: '#8a6d3b', textTransform: 'uppercase', marginBottom: 4 }}>
+                  {g.label}
+                </div>
+                <div style={{ fontSize: 12, color: '#3d3830', lineHeight: 1.6 }}>{g.text}</div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* 전체 이력 타임라인 */}
@@ -127,3 +140,26 @@ export function MyResults({ results, onRemove, onShare, isLoggedIn }: Props) {
     </div>
   );
 }
+
+/* ---------- 해석 가이드 (점수대별 의미/오해/다음 행동) ---------- */
+function guideCards(score: number) {
+          const band = score >= 75 ? 'high' : score >= 40 ? 'mid' : 'low';
+          const guides: Record<string, { label: string; text: string }[]> = {
+            high: [
+              { label: '이 점수의 의미', text: '해당 영역에서 강한 성향이 나타나고 있어요. 이 에너지를 인정하는 것이 첫걸음입니다.' },
+              { label: '오해하기 쉬운 점', text: '높은 점수가 "항상 좋다"는 뜻은 아니에요. 과잉 상태에선 관리가 오히려 필요할 수 있습니다.' },
+              { label: '다음 행동 1가지', text: '이 강점을 활용할 작은 실천을 하나 정해보세요. 일주일 후 재진단으로 변화를 확인하세요.' },
+            ],
+            mid: [
+              { label: '이 점수의 의미', text: '균형 잡힌 중간 지점이에요. 상황에 따라 유연하게 반응할 수 있는 상태입니다.' },
+              { label: '오해하기 쉬운 점', text: '"평범하다"가 아닌 "유연하다"로 읽는 것이 정확해요. 중간값은 적응력의 신호입니다.' },
+              { label: '다음 행동 1가지', text: '이 영역에서 가장 개선하고 싶은 지점을 골라, 목표 설정 탭에 기록해보세요.' },
+            ],
+            low: [
+              { label: '이 점수의 의미', text: '현재 이 영역의 에너지가 낮은 상태예요. 부족함이 아니라 우선순위가 낮다는 뜻일 수 있습니다.' },
+              { label: '오해하기 쉬운 점', text: '낮은 점수를 결핍으로 해석하지 마세요. 삶의 단계에 따라 자연스러운 변화입니다.' },
+              { label: '다음 행동 1가지', text: '이 영역을 지금 키울 필요가 있는지 스스로 물어보고, 필요하다면 작게 시작해보세요.' },
+            ],
+          };
+          return guides[band];
+        }

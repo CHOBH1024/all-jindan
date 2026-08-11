@@ -88,7 +88,7 @@ const AXIS_MAP: Record<string, string> = {
 const CAT_TO_AXIS: Record<string, number> = { '성격·심리': 0, '일·커리어': 1, '건강·습관': 3, '기타': 0 };
 const AXIS_NAMES = ['성격', '커리어', '관계', '습관'];
 
-function getAxis(site: string, category: string): number {
+export function getAxis(site: string, category: string): number {
   const axis = AXIS_MAP[site];
   if (axis === '관계') return 2;
   if (axis === '커리어') return 1;
@@ -168,13 +168,25 @@ export function Analysis({ results, onGoDiagnosis }: Props) {
                     <span style={{ color: '#8a6d3b', fontWeight: 800 }}>{scores[i] > 0 ? scores[i] : '미측정'}</span>
                   </div>
                   <div style={{ height: 8, background: 'rgba(51,65,85,0.5)', borderRadius: 999, overflow: 'hidden' }}>
-                    <div style={{ height: '100%', width: `${scores[i]}%`, background: 'linear-gradient(90deg,#6366f1,#8b5cf6)', borderRadius: 999, transition: 'width .5s' }} />
+                    <div style={{ height: '100%', width: `${scores[i]}%`, background: '#8a6d3b', borderRadius: 999, transition: 'width .5s' }} />
                   </div>
                 </div>
               ))}
-              <div style={{ fontSize: 11, color: '#9a9081', marginTop: 4 }}>
+              <div style={{ fontSize: 11, color: '#7a7060', marginTop: 4 }}>
                 {axisCounts[0] > 0 && `성격 ${axisCounts[0]}개 · `}{axisCounts[1] > 0 && `커리어 ${axisCounts[1]}개 · `}{axisCounts[3] > 0 && `습관 ${axisCounts[3]}개`}
               </div>
+              {/* 빈 축 CTA */}
+              {axisCounts.some(c => c === 0) && (
+                <button
+                  onClick={onGoDiagnosis}
+                  style={{
+                    marginTop: 12, padding: '10px 0', borderRadius: 6, fontSize: 12, fontWeight: 700, cursor: 'pointer',
+                    background: '#f7f2e9', border: '1px solid #e5ded2', color: '#8a6d3b',
+                  }}
+                >
+                  {AXIS_NAMES.filter((_, i) => axisCounts[i] === 0).map(n => n).join('·')} 축 진단하러 가기 →
+                </button>
+              )}
             </div>
           ) : (
             <div style={{ fontSize: 12, color: '#9a9081' }}>진단을 더 기록하면 레이더가 채워집니다.</div>
@@ -193,6 +205,9 @@ export function Analysis({ results, onGoDiagnosis }: Props) {
             </p>
             <p style={{ margin: 0, fontSize: 12, color: '#9a9081' }}>
               진단을 더 많이 기록할수록, 이 프로필은 당신을 더 정확히 그려냅니다.
+              <div style={{ fontSize: 10, color: '#7a7060', marginTop: 8, lineHeight: 1.6 }}>
+                * 본 분석은 자기이해를 위한 참고 자료이며, 의학적·임상적 진단을 대체하지 않습니다.
+              </div>
             </p>
           </div>
         </div>

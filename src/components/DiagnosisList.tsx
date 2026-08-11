@@ -200,19 +200,20 @@ function ResultModal({ site, onClose, onSave }: {
           <button onClick={onClose} style={{ background: 'none', border: 'none', color: '#9a9081', fontSize: 18, cursor: 'pointer' }}>✕</button>
         </div>
 
-        <label style={{ fontSize: 11, color: '#9a9081', fontWeight: 700 }}>진단 결과 유형 / 한 줄 요약</label>
+        <label style={{ fontSize: 11, color: '#7a7060', fontWeight: 700 }}>진단 결과 유형 / 한 줄 요약</label>
         <input
           value={result}
           onChange={e => setResult(e.target.value)}
           placeholder="예: 카리스마 비전 리더"
+          autoFocus
           style={{
-            width: '100%', padding: '11px 14px', borderRadius: 12, fontSize: 14, marginTop: 6, boxSizing: 'border-box',
-            background: '#f0e9dc', border: '1px solid #ddd3c2', color: '#3d3830', outline: 'none',
+            width: '100%', padding: '11px 14px', borderRadius: 6, fontSize: 14, marginTop: 6, boxSizing: 'border-box',
+            background: '#fffdf8', border: '1px solid #ddd3c2', color: '#2b2620', outline: 'none',
           }}
         />
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 16 }}>
-          <label style={{ fontSize: 11, color: '#9a9081', fontWeight: 700, whiteSpace: 'nowrap' }}>점수 기록</label>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 14 }}>
+          <label style={{ fontSize: 11, color: '#7a7060', fontWeight: 700, whiteSpace: 'nowrap' }}>점수 기록 (선택)</label>
           <input
             type="checkbox"
             checked={hasScore}

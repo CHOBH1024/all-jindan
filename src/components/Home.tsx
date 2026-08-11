@@ -1,15 +1,23 @@
 import { SITES } from '../data';
+import { Recommend } from './Recommend';
 
 interface Props {
   onGoDiagnosis: () => void;
   resultCount: number;
 }
 
+function loadResultsLocal() {
+  try {
+    const raw = localStorage.getItem('alljindan_results');
+    return raw ? JSON.parse(raw) : [];
+  } catch { return []; }
+}
+
 export function Home({ onGoDiagnosis, resultCount }: Props) {
   const categories = [...new Set(SITES.map(s => s.category))];
+  const results = loadResultsLocal();
   return (
     <div>
-      {/* 히어로 — Calm Editorial 스타일 */}
       <section style={{ padding: '64px 0 36px', textAlign: 'center', position: 'relative' }}>
         <div style={{
           fontSize: 11, letterSpacing: 3, color: '#8a6d3b', fontWeight: 800, textTransform: 'uppercase', marginBottom: 16,
@@ -55,6 +63,9 @@ export function Home({ onGoDiagnosis, resultCount }: Props) {
           </div>
         ))}
       </section>
+
+      {/* 추천 진단 (온보딩 — 빈 축 메우기) */}
+      <Recommend results={results} onGoDiagnosis={onGoDiagnosis} />
 
       {/* 카테고리 소개 */}
       <section style={{ maxWidth: 720, margin: '0 auto' }}>
