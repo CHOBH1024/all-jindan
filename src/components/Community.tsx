@@ -26,10 +26,23 @@ export function Community() {
         const lc: Record<number, number> = {};
         items.forEach((f: ServerDiagnosis) => { lc[f.id] = f.like_count || 0; });
         setLikeCount(lc);
+        setLoading(false);
       })
-      .catch(() => setError('피드를 불러오지 못했습니다'))
-      .finally(() => setLoading(false));
+      .catch(() => { setError('피드를 불러오지 못했어요'); setLoading(false); });
   }, []);
+
+  // 성장률 하이라이트 — 같은 사이트를 여러 번 진단한 사용자 (재진단)
+  const siteCounts = new Map<string, Map<string, number>>();
+  feed.forEach(f => {
+    if (!f.user_name) return;
+    if (!siteCounts.has(f.user_name)) siteCounts.set(f.user_name, new Map());
+    const m = siteCounts.get(f.user_name)!;
+    m.set(f.site, (m.get(f.site) || 0) + 1);
+  });
+  const growthUsers = new Set<string>();
+  siteCounts.forEach((m, user) => {
+    m.forEach((count) => { if (count >= 2) growthUsers.add(user); });
+  });
 
   const isLoggedIn = !!getToken();
 
@@ -132,7 +145,15 @@ export function Community() {
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                  <span style={{ fontSize: 13, fontWeight: 800 }}>{f.user_name}</span>
+                  <span style={{ fontSize: 13, fontWeight: 800, color: '#3d3830' }}>{f.user_name}</span>
+                  {growthUsers.has(f.user_name || '') && (
+                    <span style={{
+                      fontSize: 9, padding: '2px 8px', borderRadius: 999, fontWeight: 700,
+                      background: 'rgba(138,109,59,0.12)', border: '1px solid rgba(138,109,59,0.3)', color: '#8a6d3b',
+                    }}>
+                      📈 성장 중
+                    </span>
+                  )}
                   <span style={{ fontSize: 11, color: '#9a9081' }}>
                     {new Date(f.created_at).toLocaleDateString('ko-KR')}
                   </span>

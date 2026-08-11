@@ -143,6 +143,8 @@ export function Analysis({ results, onGoDiagnosis }: Props) {
   const strengths = generateStrengths(results);
   const warnings = generateWarnings(results);
   const conflicts = generateConflicts(scores, axisCounts);
+  const [tone, setTone] = useState<'calm' | 'warm' | 'fun'>('calm');
+  const oneLine = generateOneLine(results, axisCounts, scores, tone);
 
   return (
     <div>
@@ -233,6 +235,30 @@ export function Analysis({ results, onGoDiagnosis }: Props) {
         {/* 종합 프로필 */}
         <div style={{ background: 'linear-gradient(135deg,rgba(138,109,59,0.1),rgba(139,92,246,0.08))', border: '1px solid rgba(138,109,59,0.3)', borderRadius: 16, padding: 20 }}>
           <h2 style={{ fontSize: 15, fontWeight: 800, margin: '0 0 12px' }}>나의 종합 프로필</h2>
+          {/* 한 줄 프로필 + 톤 선택 */}
+          <div style={{ fontSize: 13, color: '#3d3830', lineHeight: 1.8, fontFamily: "'Noto Serif KR',serif", marginBottom: 10 }}>
+            "{oneLine}"
+          </div>
+          <div style={{ display: 'flex', gap: 6, marginBottom: 12 }}>
+            {([
+              ['calm', '담백'],
+              ['warm', '따뜻'],
+              ['fun', '유머'],
+            ] as const).map(([key, label]) => (
+              <button
+                key={key}
+                onClick={() => setTone(key)}
+                style={{
+                  padding: '5px 12px', borderRadius: 999, fontSize: 11, fontWeight: 700, cursor: 'pointer',
+                  border: '1px solid ' + (tone === key ? '#8a6d3b' : '#ddd3c2'),
+                  background: tone === key ? 'rgba(138,109,59,0.12)' : '#fffdf8',
+                  color: tone === key ? '#8a6d3b' : '#7a7060',
+                }}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
           <div style={{ fontSize: 13, color: '#6b6355', lineHeight: 1.8 }}>
             <p style={{ margin: '0 0 8px' }}>
               당신은 <strong style={{ color: '#8a6d3b' }}>{topCat ? topCat[0] : '다양한'} 영역</strong>에서 가장 많은 진단을 받았어요.
@@ -394,8 +420,24 @@ export async function shareProfile(results: DiagnosisRecord[]) {
       }
     }
 
-    /* ---------- 축 간 충돌 인사이트 (규칙 기반) ---------- */
-    function generateConflicts(scores: number[], axisCounts: number[]) {
+    /* ---------- 한 줄 프로필 (톤 3종) ---------- */
+function generateOneLine(results: DiagnosisRecord[], axisCounts: number[], scores: number[], tone: 'calm' | 'warm' | 'fun'): string {
+  const names = ['성격', '커리어', '관계', '습관'];
+  // 상위 축 찾기
+  let top = -1, topScore = -1;
+  for (let i = 0; i < 4; i++) {
+    if (axisCounts[i] > 0 && scores[i] > topScore) { top = i; topScore = scores[i]; }
+  }
+  if (top < 0) return '아직 기록이 없어요. 첫 진단으로 프로필을 시작해보세요.';
+  const topName = names[top];
+  const recent = results[0];
+  if (tone === 'calm') return `관계에서는 경청형, 커리어에서는 탐색형 — 지금은 ${topName} 영역에서 가장 선명한 나를 보여주는 시기입니다.`;
+  if (tone === 'warm') return `당신은 ${topName}에서 빛나는 사람이에요. 조금씩 쌓아온 기록이 증명합니다.`;
+  return `MBTI는 몰라도 나는 안다 — ${topName} 에너지로 살아가는 사람, 그것이 나다.`;
+}
+
+/* ---------- 축 간 충돌 인사이트 (규칙 기반) ---------- */
+function generateConflicts(scores: number[], axisCounts: number[]) {
       const out: { title: string; text: string }[] = [];
       const has = (i: number) => axisCounts[i] > 0;
       const high = (i: number) => has(i) && scores[i] >= 70;

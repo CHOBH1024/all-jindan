@@ -103,6 +103,9 @@ export function FuturePlan({ results }: Props) {
       {/* 주간 챌린지 */}
       <WeeklyChallenge habits={habits} results={results} onGoDiagnosis={() => {}} />
 
+      {/* 분기 성장 맵 */}
+      <QuarterMap goals={goals} results={results} habits={habits} />
+
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(300px,1fr))', gap: 16 }}>
         {/* 목표 설정 */}
         <div style={{ background: 'rgba(255,253,248,0.9)', border: '1px solid #e5ded2', borderRadius: 16, padding: 20 }}>
@@ -127,10 +130,18 @@ export function FuturePlan({ results }: Props) {
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
             {goals.map(g => (
-              <div key={g.id} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px', background: '#f0e9dc', borderRadius: 10, border: '1px solid #e5ded2' }}>
-                <button onClick={() => toggleGoal(g.id)} style={{ width: 20, height: 20, borderRadius: 6, border: '1px solid #475569', cursor: 'pointer', background: g.done ? '#10b981' : 'transparent', color: '#fff', fontSize: 11 }}>{g.done ? '✓' : ''}</button>
-                <span style={{ flex: 1, fontSize: 13, textDecoration: g.done ? 'line-through' : 'none', color: g.done ? '#9a9081' : '#3d3830' }}>{g.text}</span>
-                <span style={{ fontSize: 10, color: g.period === 'short' ? '#38bdf8' : '#a78bfa', fontWeight: 700 }}>{g.period === 'short' ? '단기' : '장기'}</span>
+              <div key={g.id} style={{ padding: '10px 12px', background: '#f0e9dc', borderRadius: 10, border: '1px solid #e5ded2' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <button onClick={() => toggleGoal(g.id)} style={{ width: 20, height: 20, borderRadius: 6, border: '1px solid #475569', cursor: 'pointer', background: g.done ? '#15803d' : 'transparent', color: '#fff', fontSize: 11 }}>{g.done ? '✓' : ''}</button>
+                  <span style={{ flex: 1, fontSize: 13, textDecoration: g.done ? 'line-through' : 'none', color: g.done ? '#9a9081' : '#3d3830' }}>{g.text}</span>
+                  <span style={{ fontSize: 10, color: '#8a6d3b', fontWeight: 700 }}>{g.period === 'short' ? '단기' : '장기'}</span>
+                </div>
+                {/* 목표-진단-습관 연결 */}
+                {goalLinks(g.text, results, habits).map((link, li) => (
+                  <div key={li} style={{ fontSize: 10, color: '#7a7060', marginTop: 6, paddingLeft: 30 }}>
+                    {link}
+                  </div>
+                ))}
               </div>
             ))}
             {goals.length === 0 && <div style={{ fontSize: 12, color: '#9a9081', textAlign: 'center', padding: 16 }}>목표를 추가해보세요</div>}
@@ -215,6 +226,95 @@ export function FuturePlan({ results }: Props) {
             <span key={i} style={{ padding: '8px 14px', borderRadius: 999, background: 'rgba(138,109,59,0.1)', border: '1px solid rgba(138,109,59,0.3)', color: '#6b6355', fontSize: 12, fontWeight: 600 }}>{g}</span>
           ))}
         </div>
+      </div>
+    </div>
+  );
+}
+
+/* ---------- 목표-진단-습관 연결 (키워드 기반) ---------- */
+function goalLinks(text: string, results: DiagnosisRecord[], habits: { id: number; name: string; days: string[] }[]): string[] {
+  const links: string[] = [];
+  const doneSites = new Set(results.map(r => r.site));
+  const has = (kw: string[]) => kw.some(k => text.includes(k));
+
+  if (has(['관계', '연애', '가족', '친구', '소통'])) {
+    links.push('🧩 근거 진단: 애착 유형 진단' + (doneSites.has('attachment-style-radar') ? ' (완료 ✓)' : ''));
+  }
+  if (has(['커리어', '직장', '이직', '일', '승진', '취업'])) {
+    links.push('🧩 근거 진단: MZ 직장 DNA' + (doneSites.has('mz-radar') ? ' (완료 ✓)' : ''));
+  }
+  if (has(['수면', '잠'])) {
+    links.push('🧩 근거 진단: 수면 위생 진단' + (doneSites.has('sleep-hygiene-radar') ? ' (완료 ✓)' : ''));
+  }
+  if (has(['운동', '건강', '체력'])) {
+    links.push('🧩 근거 진단: 운동 마인드셋' + (doneSites.has('fitness-mindset-radar') ? ' (완료 ✓)' : ''));
+  }
+  if (has(['미루', '집중', '공부', '습관'])) {
+    links.push('🧩 근거 진단: 미루기 습관 진단' + (doneSites.has('procrastination-radar') ? ' (완료 ✓)' : ''));
+  }
+  // 관련 습관
+  const habitNames = habits.map(h => h.name).join(' ');
+  if (has(['수면', '잠']) && !habitNames.includes('수면')) links.push('✅ 연결 습관: "밤 12시 취침" 습관을 추가해보세요');
+  if (has(['운동', '건강']) && !habitNames.includes('운동')) links.push('✅ 연결 습관: "하루 30분 걷기" 습관을 추가해보세요');
+  if (has(['공부', '독서']) && !habitNames.includes('독서')) links.push('✅ 연결 습관: "30분 독서" 습관을 추가해보세요');
+  return links.slice(0, 2);
+}
+
+/* ---------- 분기 성장 맵 (클리어 체크리스트) ---------- */
+function QuarterMap({ goals, results, habits }: {
+  goals: { id: number; text: string; done: boolean }[];
+  results: DiagnosisRecord[];
+  habits: { id: number; name: string; days: string[] }[];
+}) {
+  const quarter = Math.floor(new Date().getMonth() / 3) + 1;
+
+  // 체크리스트 항목 (자동 판정)
+  const items = [
+    { id: 'g1', label: '목표 1개 완료', auto: goals.filter(g => g.done).length >= 1 },
+    { id: 'g3', label: '목표 3개 설정', auto: goals.length >= 3 },
+    { id: 'r1', label: '재진단 1회 (같은 진단 2번째)', auto: results.filter(r => r.repeat).length >= 1 || results.length >= 6 },
+    { id: 'r2', label: '다른 축 진단 1개', auto: results.length >= 4 },
+    { id: 'h1', label: '습관 1개 4주 유지', auto: habits.some(h => h.days.length >= 10) },
+    { id: 's1', label: '결과 공유 1회', auto: results.some(r => r.shared) },
+  ];
+
+  const doneCount = items.filter(i => i.auto).length;
+  const allDone = doneCount === items.length;
+
+  return (
+    <div style={{
+      background: '#fffdf8', border: '1px solid #e5ded2', borderRadius: 12, padding: 20, marginBottom: 16,
+    }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+        <div style={{ fontSize: 11, letterSpacing: 2, color: '#8a6d3b', fontWeight: 800, textTransform: 'uppercase' }}>
+          {quarter}분기 성장 맵
+        </div>
+        <div style={{ flex: 1, height: 1, background: '#e5ded2' }} />
+        <span style={{ fontSize: 11, fontWeight: 800, padding: '3px 10px', borderRadius: 999, background: 'rgba(138,109,59,0.08)', border: '1px solid rgba(138,109,59,0.3)', color: '#8a6d3b' }}>
+          {doneCount}/{items.length}
+        </span>
+      </div>
+      <div style={{ fontSize: 11, color: '#7a7060', marginBottom: 10 }}>
+        {allDone ? '🎉 분기 목표 완료! 성장의 한 장을 넘겼어요.' : '분기가 끝나기 전에, 이 6개의 체크를 채워보세요.'}
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+        {items.map(item => (
+          <div key={item.id} style={{
+            display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px', borderRadius: 8,
+            background: item.auto ? 'rgba(138,109,59,0.08)' : '#f7f2e9',
+            border: '1px solid ' + (item.auto ? 'rgba(138,109,59,0.3)' : '#ece4d5'),
+          }}>
+            <span style={{
+              width: 20, height: 20, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 11, fontWeight: 800,
+              background: item.auto ? '#8a6d3b' : 'transparent', border: '1.5px solid ' + (item.auto ? '#8a6d3b' : '#c9bda8'),
+              color: '#fff', flexShrink: 0,
+            }}>
+              {item.auto ? '✓' : ''}
+            </span>
+            <span style={{ fontSize: 12, color: item.auto ? '#5a5245' : '#3d3830' }}>{item.label}</span>
+          </div>
+        ))}
       </div>
     </div>
   );

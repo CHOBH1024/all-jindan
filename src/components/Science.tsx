@@ -2,6 +2,16 @@ import { useState } from 'react';
 import { SITES } from '../data';
 import { SCIENCE } from '../science';
 
+/* 진단 비교 가이드 — 유사 진단 A vs B */
+const COMPARISONS = [
+  { title: '애착 유형 vs 관계 만족도', desc: '애착 유형은 관계 패턴의 뿌리를, 관계 만족도는 현재 관계의 상태를 봅니다.', when: '관계가 반복되는 패턴이 궁금하다면 애착 유형부터, 현재 관계가 힘들다면 관계 만족도부터' },
+  { title: '완벽주의 vs 번아웃', desc: '완벽주의는 기준의 높이를, 번아웃은 소진 상태를 측정합니다.', when: '끝없이 기준을 올리는 습관이면 완벽주의, 에너지가 다 빠졌다면 번아웃부터' },
+  { title: '미루기 vs 집중력', desc: '미루기는 시작의 장애물을, 집중력은 유지의 어려움을 봅니다.', when: '시작이 안 되면 미루기, 시작은 하는데 오래 못 가면 집중력부터' },
+  { title: 'FOMO vs 디지털 디톡스', desc: 'FOMO는 놓칠까 불안을, 디지털 디톡스는 스크린 의존도를 측정합니다.', when: '소식을 놓치는 게 불안하면 FOMO, 손에서 폰이 안 떨어지면 디톡스부터' },
+  { title: '그릿 vs 미루기', desc: '그릿은 장기적 열정·끈기를, 미루기는 과제 회피를 봅니다.', when: '오래 해왔지만 성과가 안 나면 그릿, 할 일이 계속 밀리면 미루기부터' },
+  { title: '가면 증후군 vs 자존감', desc: '가면 증후군은 성과를 인정 못 하는 인지 패턴, 자존감은 자기 가치의 기저를 봅니다.', when: '잘하는데도 두렵다면 가면 증후군, 전반적으로 자신이 없다면 자존감부터' },
+];
+
 export function Science() {
   const [q, setQ] = useState('');
   const [cat, setCat] = useState('전체');
@@ -22,6 +32,22 @@ export function Science() {
           모든 진단은 심리학·행동과학의 검증된 이론과 척도에 기반합니다.
           진단 결과는 자기 이해를 위한 참고 자료이며, 임상적 진단을 대체하지 않습니다.
         </p>
+      </div>
+
+      {/* 진단 비교 가이드 — 무엇부터 받을까? */}
+      <div style={{ marginBottom: 24 }}>
+        <div style={{ fontSize: 11, letterSpacing: 2, color: '#8a6d3b', fontWeight: 800, textTransform: 'uppercase', marginBottom: 8 }}>
+          진단 비교 가이드 — 무엇부터 받을까?
+        </div>
+        {COMPARISONS.map((c, i) => (
+          <div key={i} style={{
+            background: '#fffdf8', border: '1px solid #e5ded2', borderRadius: 10, padding: '14px 16px', marginBottom: 8,
+          }}>
+            <div style={{ fontSize: 13, fontWeight: 800, marginBottom: 6 }}>{c.title}</div>
+            <div style={{ fontSize: 12, color: '#5a5245', lineHeight: 1.8 }}>{c.desc}</div>
+            <div style={{ fontSize: 11, color: '#8a6d3b', fontWeight: 700, marginTop: 6 }}>👉 {c.when}</div>
+          </div>
+        ))}
       </div>
 
       <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 20 }}>
