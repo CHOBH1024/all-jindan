@@ -218,7 +218,7 @@ export function Community() {
         </div>
       )}
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+      <div className="stagger" style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
         {feed.map(f => (
           <div key={f.id} style={{ background: 'rgba(255,253,248,0.9)', border: '1px solid var(--border)', borderRadius: 14, padding: 16 }}>
             <div style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
@@ -495,7 +495,7 @@ function CompareModal({ data, onClose }: {
         </h2>
         <div style={{ fontSize: 11, color: 'var(--sub2)', marginBottom: 16 }}>동일 진단을 받은 두 사람의 결과</div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+        <div className="stagger" style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
           <div style={{ background: 'var(--card2)', borderRadius: 8, padding: 12 }}>
             <div style={{ fontSize: 11, fontWeight: 800, color: 'var(--accent)', marginBottom: 4 }}>{data.user_name}</div>
             <div style={{ fontSize: 13, fontWeight: 700 }}>{data.result}</div>

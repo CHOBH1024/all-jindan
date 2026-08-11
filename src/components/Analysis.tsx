@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { DiagnosisRecord } from '../App';
 import { ShareCardModal } from './ShareCardModal';
 
@@ -102,6 +102,11 @@ export function getAxis(site: string, category: string): number {
 export function Analysis({ results, onGoDiagnosis }: Props) {
   const [showShare, setShowShare] = useState(false);
   const [activeAxis, setActiveAxis] = useState<number | null>(null);
+  const [grown, setGrown] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => setGrown(true), 80);
+    return () => clearTimeout(t);
+  }, []);
   if (results.length === 0) {
     return (
       <div style={{ textAlign: 'center', padding: '60px 20px' }}>
@@ -222,7 +227,7 @@ export function Analysis({ results, onGoDiagnosis }: Props) {
                     <span style={{ color: 'var(--accent)', fontWeight: 800 }}>{scores[i] > 0 ? scores[i] : '미측정'}</span>
                   </div>
                   <div style={{ height: 8, background: 'rgba(51,65,85,0.5)', borderRadius: 999, overflow: 'hidden' }}>
-                    <div style={{ height: '100%', width: `${scores[i]}%`, background: 'var(--accent)', borderRadius: 999, transition: 'width .5s' }} />
+                    <div style={{ height: '100%', width: grown ? `${scores[i]}%` : '0%', background: 'var(--accent)', borderRadius: 999, transition: 'width .7s cubic-bezier(0.22,1,0.36,1)' }} />
                   </div>
                   {/* 축 드로어 — 기여 진단 목록 */}
                   {activeAxis === i && axisCounts[i] > 0 && (

@@ -108,7 +108,7 @@ export function MyResults({ results, onRemove, onShare, isLoggedIn, onShowLogin 
         </div>
         {/* 해석 가이드 — 3분 읽기 */}
         {recent.score !== undefined && (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(200px,1fr))', gap: 10, marginTop: 16 }}>
+          <div className="stagger" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(200px,1fr))', gap: 10, marginTop: 16 }}>
             {guideCards(recent.score).map((g, gi) => (
               <div key={gi} style={{ background: 'rgba(255,253,248,0.9)', border: '1px solid var(--border)', borderRadius: 10, padding: '12px 14px' }}>
                 <div style={{ fontSize: 10, letterSpacing: 1, fontWeight: 800, color: 'var(--accent)', textTransform: 'uppercase', marginBottom: 4 }}>
