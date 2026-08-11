@@ -101,6 +101,7 @@ export function getAxis(site: string, category: string): number {
 
 export function Analysis({ results, onGoDiagnosis }: Props) {
   const [showShare, setShowShare] = useState(false);
+  const [activeAxis, setActiveAxis] = useState<number | null>(null);
   if (results.length === 0) {
     return (
       <div style={{ textAlign: 'center', padding: '60px 20px' }}>
@@ -186,13 +187,26 @@ export function Analysis({ results, onGoDiagnosis }: Props) {
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               {AXIS_NAMES.map((name, i) => (
                 <div key={i}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, marginBottom: 4 }}>
-                    <span style={{ fontWeight: 700 }}>{name}</span>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, marginBottom: 4, cursor: 'pointer' }} onClick={() => setActiveAxis(activeAxis === i ? null : i)}>
+                    <span style={{ fontWeight: 700 }}>{name} {axisCounts[i] > 0 ? `(${axisCounts[i]})` : ''}</span>
                     <span style={{ color: '#8a6d3b', fontWeight: 800 }}>{scores[i] > 0 ? scores[i] : '미측정'}</span>
                   </div>
                   <div style={{ height: 8, background: 'rgba(51,65,85,0.5)', borderRadius: 999, overflow: 'hidden' }}>
                     <div style={{ height: '100%', width: `${scores[i]}%`, background: '#8a6d3b', borderRadius: 999, transition: 'width .5s' }} />
                   </div>
+                  {/* 축 드로어 — 기여 진단 목록 */}
+                  {activeAxis === i && axisCounts[i] > 0 && (
+                    <div style={{ marginTop: 8, padding: '10px 12px', background: '#f7f2e9', border: '1px solid #ece4d5', borderRadius: 8 }}>
+                      <div style={{ fontSize: 10, fontWeight: 800, color: '#8a6d3b', letterSpacing: 1, marginBottom: 6, textTransform: 'uppercase' }}>
+                        {name} 축 기여 진단
+                      </div>
+                      {results.filter(r => getAxis(r.site, '') === i).map((r, ri) => (
+                        <div key={ri} style={{ fontSize: 12, color: '#5a5245', padding: '4px 0', borderBottom: '1px solid #ece4d5' }}>
+                          {r.emoji} {r.title} — {r.result}{r.score !== undefined ? ` (${r.score}점)` : ''}
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               ))}
               <div style={{ fontSize: 11, color: '#7a7060', marginTop: 4 }}>

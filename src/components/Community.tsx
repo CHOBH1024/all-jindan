@@ -83,10 +83,39 @@ export function Community() {
     return {};
   });
 
+  // 첫 공유 미션 상태
+  const [hasSharedOnce, setHasSharedOnce] = useState(() => {
+    try { return localStorage.getItem('alljindan_shared_once') === '1'; } catch { return false; }
+  });
+  const [showGuide, setShowGuide] = useState(false);
+
   return (
     <div>
       <h1 style={{ fontSize: 24, fontWeight: 900, margin: '0 0 4px' }}>👥 커뮤니티 피드</h1>
-      <p style={{ fontSize: 13, color: '#9a9081', margin: '0 0 20px' }}>다른 사람들의 진단 결과를 구경하고, 댓글과 좋아요로 소통해보세요.</p>
+      <p style={{ fontSize: 13, color: '#7a7060', margin: '0 0 20px' }}>다른 사람들의 진단 결과를 구경하고, 댓글과 좋아요로 소통해보세요.</p>
+
+      {/* 첫 공유 미션 — 사회적 증명 */}
+      {!hasSharedOnce && isLoggedIn && (
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16,
+          background: 'linear-gradient(135deg,#f7f2e9,#f0e9dc)', border: '1px solid #e5ded2', borderRadius: 12, padding: '14px 16px',
+        }}>
+          <span style={{ fontSize: 26 }}>🎁</span>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 13, fontWeight: 800 }}>첫 결과를 공유해보세요</div>
+            <div style={{ fontSize: 11, color: '#7a7060' }}>나의 결과 탭에서 공유하면 커뮤니티에 소개됩니다.</div>
+          </div>
+          <button
+            onClick={() => setShowGuide(true)}
+            style={{
+              padding: '8px 14px', borderRadius: 6, fontSize: 12, fontWeight: 700, cursor: 'pointer',
+              background: '#2b2620', color: '#faf7f2', border: 'none', whiteSpace: 'nowrap',
+            }}
+          >
+            공유 방법 보기
+          </button>
+        </div>
+      )}
 
       {loading && <div style={{ textAlign: 'center', padding: 40, color: '#9a9081' }}>피드 불러오는 중...</div>}
       {error && <div style={{ textAlign: 'center', padding: 40, color: '#dc2626' }}>{error}</div>}
@@ -201,6 +230,35 @@ export function Community() {
           </div>
         )}
       </div>
+
+      {/* 공유 방법 안내 모달 */}
+      {showGuide && (
+        <div style={{
+          position: 'fixed', inset: 0, zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center',
+          background: 'rgba(43,38,32,0.6)', backdropFilter: 'blur(4px)',
+        }} onClick={() => setShowGuide(false)}>
+          <div onClick={e => e.stopPropagation()} style={{
+            width: '100%', maxWidth: 380, background: '#fffdf8', border: '1px solid #e5ded2', borderRadius: 14,
+            padding: 24, boxShadow: '0 20px 60px rgba(43,38,32,0.3)',
+          }}>
+            <h2 style={{ fontSize: 16, fontWeight: 800, margin: '0 0 12px', fontFamily: "'Noto Serif KR',serif" }}>📤 공유하는 방법</h2>
+            <div style={{ fontSize: 13, color: '#5a5245', lineHeight: 1.9 }}>
+              1. <strong>나의 결과</strong> 탭으로 이동<br />
+              2. 결과 옆 <strong>공유</strong> 버튼 클릭<br />
+              3. 커뮤니티 피드에 내 결과가 표시됩니다!
+            </div>
+            <button
+              onClick={() => setShowGuide(false)}
+              style={{
+                width: '100%', marginTop: 16, padding: '11px 0', borderRadius: 8, border: 'none', cursor: 'pointer',
+                fontSize: 13, fontWeight: 800, color: '#faf7f2', background: '#2b2620',
+              }}
+            >
+              확인
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

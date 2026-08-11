@@ -68,6 +68,9 @@ export function Home({ onGoDiagnosis, resultCount }: Props) {
       {/* 추천 진단 (온보딩 — 빈 축 메우기) */}
       <Recommend results={results} onGoDiagnosis={onGoDiagnosis} />
 
+      {/* 이달의 테마 — 큐레이션 */}
+      <MonthlyTheme onGoDiagnosis={onGoDiagnosis} />
+
       {/* 오늘의 한 화면 — 대시보드 */}
       {results.length > 0 && <TodayDashboard results={results} onGoDiagnosis={onGoDiagnosis} />}
 
@@ -89,6 +92,56 @@ export function Home({ onGoDiagnosis, resultCount }: Props) {
           })}
         </div>
       </section>
+    </div>
+  );
+}
+
+/* ---------- 이달의 테마 (월간 큐레이션) ---------- */
+function MonthlyTheme({ onGoDiagnosis }: { onGoDiagnosis: () => void }) {
+  // 월별 테마 데이터 (8월: 이직 시즌, 9월: 관계 정리 등)
+  const month = new Date().getMonth() + 1;
+  const themes: Record<number, { title: string; desc: string; sites: string[] }> = {
+    8: { title: '이직 시즌, 나의 커리어 방향 점검', desc: '가을 이직을 앞두고, 일의 방향과 강점을 확인해보세요.', sites: ['mz-radar', 'FIRE-readiness-radar', 'ai-readiness-radar', 'async-work-radar', 'code-review-roulette'] },
+    9: { title: '연말 전, 관계 정리와 소통 점검', desc: '가까운 관계의 패턴을 들여다보고 소통 방식을 점검해요.', sites: ['attachment-style-radar', 'assertion-style-radar', 'argument-recovery-radar', 'defensiveness-radar', 'empathy-fatigue-radar'] },
+    10: { title: '수면과 회복, 에너지 관리의 계절', desc: '일교차가 커지는 시기, 몸과 마음의 회복 습관을 점검하세요.', sites: ['sleep-hygiene-radar', 'burnout-recovery-radar', 'mindfulness-zen-radar', 'caffeine-dependency-radar', 'digital-detox-radar'] },
+    11: { title: '연말 소비와 재무 마인드', desc: '지출이 많아지는 연말, 돈에 대한 감정을 점검해보세요.', sites: ['financial-anxiety-radar', 'reward-spending-radar', 'subscription-fatigue-radar', 'crypto-fomo-radar', 'FIRE-readiness-radar'] },
+    12: { title: '한 해를 돌아보는 자기 점검', desc: '올해의 나를 기록하고, 내년의 방향을 설계해보세요.', sites: ['persona-mask-radar', 'perfectionism-radar', 'introvert-charm-radar', 'grit-focus-radar', 'decision-paralysis-radar'] },
+    1: { title: '새해 목표, 습관의 힘', desc: '올해의 목표를 습관으로 만드는 첫 단계를 시작해요.', sites: ['procrastination-radar', 'fitness-mindset-radar', 'grit-focus-radar', 'deep-work-battery', 'micro-break-routine'] },
+  };
+  const theme = themes[month] || themes[8];
+  const themeSites = SITES.filter(s => theme.sites.includes(s.name));
+
+  return (
+    <div style={{ marginBottom: 24 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+        <div style={{ fontSize: 11, letterSpacing: 2, color: '#8a6d3b', fontWeight: 800, textTransform: 'uppercase' }}>
+          {month}월의 테마
+        </div>
+        <div style={{ flex: 1, height: 1, background: '#e5ded2' }} />
+      </div>
+      <div style={{
+        background: 'linear-gradient(135deg,#f7f2e9,#f0e9dc)', border: '1px solid #e5ded2', borderRadius: 12,
+        padding: 20, marginBottom: 12,
+      }}>
+        <div style={{ fontSize: 17, fontWeight: 800, fontFamily: "'Noto Serif KR',serif", marginBottom: 4 }}>{theme.title}</div>
+        <div style={{ fontSize: 12, color: '#6b6355', marginBottom: 14 }}>{theme.desc}</div>
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+          {themeSites.map(s => (
+            <a
+              key={s.name}
+              href={s.url}
+              target="_blank"
+              rel="noreferrer"
+              style={{
+                padding: '8px 14px', borderRadius: 999, fontSize: 12, fontWeight: 700, textDecoration: 'none',
+                background: '#fffdf8', border: '1px solid #ddd3c2', color: '#5a5245',
+              }}
+            >
+              {s.emoji} {s.title}
+            </a>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

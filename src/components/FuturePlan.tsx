@@ -100,6 +100,9 @@ export function FuturePlan({ results }: Props) {
 
       <WeeklyReport results={results} />
 
+      {/* 주간 챌린지 */}
+      <WeeklyChallenge habits={habits} results={results} onGoDiagnosis={() => {}} />
+
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(300px,1fr))', gap: 16 }}>
         {/* 목표 설정 */}
         <div style={{ background: 'rgba(255,253,248,0.9)', border: '1px solid #e5ded2', borderRadius: 16, padding: 20 }}>
@@ -217,6 +220,91 @@ export function FuturePlan({ results }: Props) {
   );
 }
 
+/* ---------- 주간 챌린지 ---------- */
+function WeeklyChallenge({ habits, results, onGoDiagnosis }: {
+  habits: { id: number; name: string; days: string[] }[];
+  results: DiagnosisRecord[];
+  onGoDiagnosis: () => void;
+}) {
+  const [done, setDone] = useState<Record<string, boolean>>(() => {
+    try {
+      const d = JSON.parse(localStorage.getItem('alljindan_challenge') || '{}');
+      const week = Math.floor(Date.now() / (7 * 86400000));
+      return d && d.week === week ? d.done : {};
+    } catch { return {}; }
+  });
+
+  const missions = [
+    { id: 'habit4', label: '이번 주 습관 체크 4회', check: () => habits.reduce((a, h) => a + h.days.length, 0) >= 4 },
+    { id: 'diag1', label: '진단 1개 새로 기록', check: () => {
+      const weekAgo = new Date(); weekAgo.setDate(weekAgo.getDate() - 7);
+      return results.filter(r => new Date(r.date) >= weekAgo).length >= 1;
+    } },
+    { id: 'reflect', label: '성찰 질문에 답하기', check: () => {
+      try { return !!localStorage.getItem('alljindan_reflection_' + new Date().toISOString().slice(0, 10)); } catch { return false; }
+    } },
+  ];
+
+  const toggle = (id: string) => {
+    const next = { ...done, [id]: !done[id] };
+    setDone(next);
+    const week = Math.floor(Date.now() / (7 * 86400000));
+    localStorage.setItem('alljindan_challenge', JSON.stringify({ week, done: next }));
+  };
+
+  const completed = missions.filter(m => done[m.id]).length;
+  const allDone = completed === missions.length;
+
+  return (
+    <div style={{
+      background: '#fffdf8', border: '1px solid #e5ded2', borderRadius: 12, padding: 20, marginBottom: 16,
+    }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+        <div style={{ fontSize: 11, letterSpacing: 2, color: '#8a6d3b', fontWeight: 800, textTransform: 'uppercase' }}>
+          이번 주 챌린지
+        </div>
+        <div style={{ flex: 1, height: 1, background: '#e5ded2' }} />
+        <span style={{
+          fontSize: 11, fontWeight: 800, padding: '3px 10px', borderRadius: 999,
+          background: allDone ? 'rgba(138,109,59,0.15)' : 'rgba(138,109,59,0.08)',
+          border: '1px solid rgba(138,109,59,0.3)', color: '#8a6d3b',
+        }}>
+          {completed}/{missions.length}
+        </span>
+      </div>
+      <div style={{ fontSize: 11, color: '#7a7060', marginBottom: 10 }}>
+        {allDone ? '🎉 이번 주 챌린지 완료! 작은 습관이 모여 큰 변화가 됩니다.' : '가벼운 미션 3개를 완료해보세요.'}
+      </div>
+      {missions.map(m => {
+        const auto = m.check();
+        const isDone = done[m.id] || auto;
+        return (
+          <button
+            key={m.id}
+            onClick={() => toggle(m.id)}
+            style={{
+              display: 'flex', alignItems: 'center', gap: 10, width: '100%', padding: '10px 12px', marginBottom: 6,
+              borderRadius: 8, cursor: 'pointer', textAlign: 'left',
+              background: isDone ? 'rgba(138,109,59,0.08)' : '#f7f2e9',
+              border: '1px solid ' + (isDone ? 'rgba(138,109,59,0.3)' : '#ece4d5'),
+            }}
+          >
+            <span style={{
+              width: 22, height: 22, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 12, fontWeight: 800,
+              background: isDone ? '#8a6d3b' : 'transparent', border: '1.5px solid ' + (isDone ? '#8a6d3b' : '#c9bda8'),
+              color: '#fff', flexShrink: 0,
+            }}>
+              {isDone ? '✓' : ''}
+            </span>
+            <span style={{ fontSize: 13, color: isDone ? '#5a5245' : '#3d3830' }}>{m.label}</span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
 /* ---------- 주간 리포트 ---------- */
 function WeeklyReport({ results }: { results: DiagnosisRecord[] }) {
   const [report, setReport] = useState<{ stats?: { diagnoses: number; comments: number; likes: number; shared: number }; message?: string } | null>(null);
@@ -285,6 +373,16 @@ function WeeklyReport({ results }: { results: DiagnosisRecord[] }) {
               </div>
             </div>
           )}
+          {/* 성찰 프롬프트 */}
+          <div style={{ marginTop: 12 }}>
+            <div style={{ fontSize: 11, letterSpacing: 1.5, fontWeight: 800, color: '#8a6d3b', textTransform: 'uppercase', marginBottom: 8 }}>
+              📝 이번 주 성찰 질문
+            </div>
+            <div style={{ fontSize: 13, color: '#3d3830', lineHeight: 1.8, fontFamily: "'Noto Serif KR',serif" }}>
+              "이번 주, 관계에서 가장 에너지를 쓴 순간은 언제였나요?"
+            </div>
+            <div style={{ fontSize: 11, color: '#7a7060', marginTop: 4 }}>주간 리포트는 개인 기록으로 저장됩니다.</div>
+          </div>
         </div>
       ) : (
         <div style={{ fontSize: 12, color: '#9a9081', lineHeight: 1.7 }}>
