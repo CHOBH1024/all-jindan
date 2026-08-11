@@ -51,6 +51,8 @@ export default function App() {
   const [showAuth, setShowAuth] = useState(false);
   const [showPremium, setShowPremium] = useState(false);
   const [showAdmin, setShowAdmin] = useState(false);
+  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth <= 768);
+  const [showMore, setShowMore] = useState(false);
   const [isPremium, setIsPremium] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [adminStats, setAdminStats] = useState<{ users?: number; premiumUsers?: number; orders?: number; revenue?: number; recentOrders?: { id: number; item: string; amount: number; email: string; created_at: number }[] } | null>(null);
@@ -62,6 +64,8 @@ export default function App() {
   useEffect(() => {
     setResults(loadResults());
     setUser(getSavedUser());
+    const onResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener('resize', onResize);
     // 프리미엄/관리자 상태 로드
     if (getToken()) {
       api.myStatus().then(d => {
@@ -234,45 +238,47 @@ export default function App() {
   return (
     <div style={{ minHeight: '100vh', background: theme.bg, color: theme.text, fontFamily: "'Noto Serif KR','Noto Sans KR',system-ui,sans-serif", transition: 'background .3s, color .3s' }}>
       <header style={{ position: 'sticky', top: 0, zIndex: 50, background: theme.header, backdropFilter: 'blur(12px)', borderBottom: '1px solid ' + theme.border }}>
-        <div style={{ maxWidth: 1080, margin: '0 auto', padding: '12px 20px', display: 'flex', alignItems: 'center', gap: 16 }}>
-          <div style={{ fontSize: 22, fontWeight: 900, letterSpacing: -1, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, fontFamily: "'Noto Serif KR',serif" }} onClick={() => setTab('home')}>
-            <span style={{ fontSize: 24 }}>🧬</span>
+        <div style={{ maxWidth: 1080, margin: '0 auto', padding: isMobile ? '8px 14px' : '12px 20px', display: 'flex', alignItems: 'center', gap: isMobile ? 10 : 16 }}>
+          <div style={{ fontSize: isMobile ? 17 : 22, fontWeight: 900, letterSpacing: -1, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6, fontFamily: "'Noto Serif KR',serif" }} onClick={() => setTab('home')}>
+            <span style={{ fontSize: isMobile ? 20 : 24 }}>🧬</span>
             <span>올<span style={{ color: '#8a6d3b' }}>진단</span></span>
           </div>
-          <nav style={{ display: 'flex', gap: 4, flex: 1, overflowX: 'auto' }}>
-            {TABS.map(tabItem => (
-              <button
-                key={tabItem.id}
-                onClick={() => setTab(tabItem.id)}
-                style={{
-                  padding: '8px 14px', borderRadius: 999, border: 'none', cursor: 'pointer', fontSize: 13, fontWeight: 700, whiteSpace: 'nowrap',
-                  background: tab === tabItem.id ? '#2b2620' : 'transparent',
-                  color: tab === tabItem.id ? '#fff' : theme.sub,
-                }}
-              >
-                {tabItem.icon} {tabItem.label(en)}
-              </button>
-            ))}
-          </nav>
+          {!isMobile && (
+            <nav style={{ display: 'flex', gap: 4, flex: 1, overflowX: 'auto' }}>
+              {TABS.map(tabItem => (
+                <button
+                  key={tabItem.id}
+                  onClick={() => setTab(tabItem.id)}
+                  style={{
+                    padding: '8px 14px', borderRadius: 999, border: 'none', cursor: 'pointer', fontSize: 13, fontWeight: 700, whiteSpace: 'nowrap',
+                    background: tab === tabItem.id ? '#2b2620' : 'transparent',
+                    color: tab === tabItem.id ? '#fff' : theme.sub,
+                  }}
+                >
+                  {tabItem.icon} {tabItem.label(en)}
+                </button>
+              ))}
+            </nav>
+          )}
           <button
             onClick={toggleLang}
             title={en ? '한국어' : 'English'}
-            style={{ padding: '8px 10px', borderRadius: 999, border: '1px solid ' + theme.border, cursor: 'pointer', fontSize: 12, fontWeight: 800, background: 'transparent', color: theme.sub }}
+            style={{ padding: isMobile ? '6px 7px' : '8px 10px', borderRadius: 999, border: '1px solid ' + theme.border, cursor: 'pointer', fontSize: isMobile ? 10 : 12, fontWeight: 800, background: 'transparent', color: theme.sub }}
           >
-            {en ? '🇰🇷 KO' : '🇺🇸 EN'}
+            {en ? 'KO' : 'EN'}
           </button>
           <button
             onClick={toggleTheme}
             title="테마 전환"
-            style={{ padding: '8px 10px', borderRadius: 999, border: '1px solid ' + theme.border, cursor: 'pointer', fontSize: 14, background: 'transparent' }}
+            style={{ padding: isMobile ? '6px 7px' : '8px 10px', borderRadius: 999, border: '1px solid ' + theme.border, cursor: 'pointer', fontSize: isMobile ? 12 : 14, background: 'transparent' }}
           >
             {dark ? '☀️' : '🌙'}
           </button>
           {user ? (
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? 4 : 8 }}>
               {isPremium && (
                 <span style={{
-                  fontSize: 10, padding: '4px 10px', borderRadius: 999, fontWeight: 800,
+                  fontSize: isMobile ? 8 : 10, padding: isMobile ? '3px 7px' : '4px 10px', borderRadius: 999, fontWeight: 800,
                   background: 'linear-gradient(135deg,#c9a867,#a8853f)', color: '#fff',
                 }}>
                   👑 PRO
@@ -282,43 +288,45 @@ export default function App() {
                 <button
                   onClick={openAdmin}
                   style={{
-                    padding: '6px 10px', borderRadius: 8, fontSize: 11, cursor: 'pointer',
+                    padding: isMobile ? '4px 7px' : '6px 10px', borderRadius: 8, fontSize: isMobile ? 9 : 11, cursor: 'pointer',
                     background: 'rgba(138,109,59,0.12)', border: '1px solid rgba(138,109,59,0.4)', color: '#8a6d3b',
                   }}
                 >
                   📊 관리자
                 </button>
               )}
-              <div style={{ width: 32, height: 32, borderRadius: '50%', background: '#2b2620', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 800 }}>
+              <div style={{ width: isMobile ? 26 : 32, height: isMobile ? 26 : 32, borderRadius: '50%', background: '#2b2620', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: isMobile ? 11 : 14, fontWeight: 800 }}>
                 {(user.name || '?')[0]}
               </div>
-              <div style={{ fontSize: 12, fontWeight: 700 }}>{user.name}</div>
-              <button onClick={logout} style={{ padding: '6px 10px', borderRadius: 8, fontSize: 11, cursor: 'pointer', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', color: '#dc2626' }}>로그아웃</button>
-              <button onClick={deleteAccount} title="계정 삭제" style={{ padding: '6px 10px', borderRadius: 8, fontSize: 11, cursor: 'pointer', background: 'transparent', border: '1px solid #ddd3c2', color: '#9a9081' }}>🗑️</button>
+              {!isMobile && <div style={{ fontSize: 12, fontWeight: 700 }}>{user.name}</div>}
+              {!isMobile && <button onClick={logout} style={{ padding: '6px 10px', borderRadius: 8, fontSize: 11, cursor: 'pointer', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', color: '#dc2626' }}>로그아웃</button>}
+              <button onClick={deleteAccount} title="계정 삭제" style={{ padding: isMobile ? '4px 7px' : '6px 10px', borderRadius: 8, fontSize: isMobile ? 10 : 11, cursor: 'pointer', background: 'transparent', border: '1px solid #ddd3c2', color: '#9a9081' }}>🗑️</button>
             </div>
           ) : (
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <button
-                onClick={() => setShowPremium(true)}
-                style={{
-                  padding: '9px 14px', borderRadius: 999, cursor: 'pointer', fontSize: 12, fontWeight: 800,
-                  background: 'transparent', border: '1px solid #c9a867', color: '#8a6d3b',
-                }}
-              >
-                💎 프리미엄
-              </button>
+            <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? 6 : 8 }}>
+              {!isMobile && (
+                <button
+                  onClick={() => setShowPremium(true)}
+                  style={{
+                    padding: '9px 14px', borderRadius: 999, cursor: 'pointer', fontSize: 12, fontWeight: 800,
+                    background: 'transparent', border: '1px solid #c9a867', color: '#8a6d3b',
+                  }}
+                >
+                  💎 프리미엄
+                </button>
+              )}
               <button
                 onClick={() => setShowAuth(true)}
-                style={{ padding: '9px 18px', borderRadius: 999, border: 'none', cursor: 'pointer', fontSize: 13, fontWeight: 800, color: '#fff', background: '#2b2620' }}
+                style={{ padding: isMobile ? '7px 12px' : '9px 18px', borderRadius: 999, border: 'none', cursor: 'pointer', fontSize: isMobile ? 12 : 13, fontWeight: 800, color: '#fff', background: '#2b2620' }}
               >
-                로그인
+                {isMobile ? '로그인' : '로그인'}
               </button>
             </div>
           )}
         </div>
       </header>
 
-      <main style={{ maxWidth: 1080, margin: '0 auto', padding: '24px 20px 60px' }}>
+      <main style={{ maxWidth: 1080, margin: '0 auto', padding: '24px 20px ' + (isMobile ? '110px' : '60px') }}>
         {tab === 'home' && <Home onGoDiagnosis={() => setTab('diagnosis')} resultCount={results.length} />}
         {tab === 'diagnosis' && <DiagnosisList results={results} onSave={addResult} onGoAnalysis={() => setTab('analysis')} />}
         {tab === 'results' && <MyResults results={results} onRemove={removeResult} onShare={shareResult} isLoggedIn={!!user} onShowLogin={() => setShowAuth(true)} />}
@@ -335,6 +343,82 @@ export default function App() {
         </div>
         <div style={{ fontSize: 11, color: '#9a9081' }}>© 2026 올진단 · POMYJO · 문의: nokira1024@gmail.com · 진단 결과는 자기 이해를 위한 참고 자료입니다</div>
       </footer>
+
+      {/* 모바일 하단 탭 바 */}
+      {isMobile && (
+        <>
+          <nav style={{
+            position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 60,
+            background: theme.header, backdropFilter: 'blur(12px)',
+            borderTop: '1px solid ' + theme.border,
+            padding: '8px 4px calc(8px + env(safe-area-inset-bottom))',
+            display: 'flex', justifyContent: 'space-around',
+          }}>
+            {TABS.slice(0, 4).map(tabItem => {
+              const active = tab === tabItem.id;
+              return (
+                <button
+                  key={tabItem.id}
+                  onClick={() => { setTab(tabItem.id); setShowMore(false); }}
+                  style={{
+                    display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2,
+                    padding: '6px 10px', border: 'none', background: 'transparent', cursor: 'pointer',
+                    fontSize: 10, fontWeight: active ? 800 : 600,
+                    color: active ? '#8a6d3b' : theme.sub, minWidth: 60,
+                  }}
+                >
+                  <span style={{ fontSize: 19 }}>{tabItem.icon}</span>
+                  {tabItem.label(en).split(' ')[0]}
+                </button>
+              );
+            })}
+            {/* 더보기 */}
+            <button
+              onClick={() => setShowMore(!showMore)}
+              style={{
+                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2,
+                padding: '6px 10px', border: 'none', background: 'transparent', cursor: 'pointer',
+                fontSize: 10, fontWeight: showMore || ['future', 'community', 'science'].includes(tab) ? 800 : 600,
+                color: showMore || ['future', 'community', 'science'].includes(tab) ? '#8a6d3b' : theme.sub, minWidth: 60,
+              }}
+            >
+              <span style={{ fontSize: 19 }}>⋯</span>
+              더보기
+            </button>
+          </nav>
+          {/* 더보기 시트 */}
+          {showMore && (
+            <div style={{
+              position: 'fixed', bottom: 64, left: 0, right: 0, zIndex: 59,
+              background: theme.header, backdropFilter: 'blur(12px)',
+              borderTop: '1px solid ' + theme.border, borderRadius: '16px 16px 0 0',
+              padding: '16px 20px calc(16px + env(safe-area-inset-bottom))',
+              boxShadow: '0 -8px 32px rgba(43,38,32,0.12)',
+            }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
+                {TABS.slice(4).map(tabItem => (
+                  <button
+                    key={tabItem.id}
+                    onClick={() => { setTab(tabItem.id); setShowMore(false); }}
+                    style={{
+                      display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4,
+                      padding: '14px 8px', borderRadius: 12, border: '1px solid ' + theme.border, cursor: 'pointer',
+                      background: tab === tabItem.id ? 'rgba(138,109,59,0.08)' : 'transparent',
+                      fontSize: 11, fontWeight: tab === tabItem.id ? 800 : 600, color: tab === tabItem.id ? '#8a6d3b' : theme.text,
+                    }}
+                  >
+                    <span style={{ fontSize: 22 }}>{tabItem.icon}</span>
+                    {tabItem.label(en)}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+          {showMore && (
+            <div style={{ position: 'fixed', inset: 0, zIndex: 58, background: 'rgba(43,38,32,0.3)' }} onClick={() => setShowMore(false)} />
+          )}
+        </>
+      )}
 
       {showAuth && <AuthModal onClose={() => setShowAuth(false)} onLogin={handleLogin} />}
       {showPremium && <PremiumModal onClose={() => setShowPremium(false)} onPurchased={handlePremiumPurchased} />}
