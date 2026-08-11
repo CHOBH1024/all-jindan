@@ -102,6 +102,32 @@ export function Community() {
   });
   const [showGuide, setShowGuide] = useState(false);
 
+  // 커뮤니티 챌린지
+  const [challenges, setChallenges] = useState<{ id: string; emoji: string; title: string; desc: string; participants: number }[]>([]);
+  const [joinedChallenges, setJoinedChallenges] = useState<Set<string>>(new Set());
+  const [compareWith, setCompareWith] = useState<{ title: string; result: string; score?: number; user_name: string } | null>(null);
+  useEffect(() => {
+    api.challenges().then(d => {
+      setChallenges(d.challenges || []);
+      // 참여 상태 (localStorage)
+      try {
+        const joined = new Set<string>(JSON.parse(localStorage.getItem('alljindan_challenge_joined') || '[]'));
+        setJoinedChallenges(joined);
+      } catch {}
+    }).catch(() => {});
+  }, []);
+  const joinChallenge = async (id: string) => {
+    if (!getToken()) return;
+    try {
+      const r = await api.joinChallenge(id);
+      const next = new Set(joinedChallenges);
+      if (r.joined) next.add(id); else next.delete(id);
+      setJoinedChallenges(next);
+      localStorage.setItem('alljindan_challenge_joined', JSON.stringify([...next]));
+      setChallenges(challenges.map(c => c.id === id ? { ...c, participants: r.participants } : c));
+    } catch {}
+  };
+
   return (
     <div>
       <h1 style={{ fontSize: 24, fontWeight: 900, margin: '0 0 4px' }}>👥 커뮤니티 피드</h1>
@@ -132,6 +158,51 @@ export function Community() {
 
       {loading && <div style={{ textAlign: 'center', padding: 40, color: '#9a9081' }}>피드 불러오는 중...</div>}
       {error && <div style={{ textAlign: 'center', padding: 40, color: '#dc2626' }}>{error}</div>}
+
+      {/* 주간 커뮤니티 챌린지 */}
+      {challenges.length > 0 && (
+        <div style={{ marginBottom: 16 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+            <div style={{ fontSize: 11, letterSpacing: 2, color: '#8a6d3b', fontWeight: 800, textTransform: 'uppercase' }}>
+              이번 주 챌린지
+            </div>
+            <div style={{ flex: 1, height: 1, background: '#e5ded2' }} />
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))', gap: 8 }}>
+            {challenges.map(c => {
+              const joined = joinedChallenges.has(c.id);
+              return (
+                <div key={c.id} style={{
+                  background: '#fffdf8', border: '1px solid #e5ded2', borderRadius: 10, padding: 14,
+                  display: 'flex', flexDirection: 'column', gap: 6,
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <span style={{ fontSize: 20 }}>{c.emoji}</span>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontSize: 13, fontWeight: 800 }}>{c.title}</div>
+                      <div style={{ fontSize: 10, color: '#7a7060' }}>{c.desc}</div>
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <span style={{ fontSize: 11, color: '#8a6d3b', fontWeight: 700 }}>👥 {c.participants}명 참여 중</span>
+                    <button
+                      onClick={() => joinChallenge(c.id)}
+                      style={{
+                        padding: '6px 12px', borderRadius: 6, fontSize: 11, fontWeight: 700, cursor: 'pointer',
+                        background: joined ? 'rgba(138,109,59,0.12)' : '#2b2620',
+                        border: joined ? '1px solid rgba(138,109,59,0.4)' : 'none',
+                        color: joined ? '#8a6d3b' : '#faf7f2',
+                      }}
+                    >
+                      {joined ? '✓ 참여 중' : '참여하기'}
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
         {feed.map(f => (
@@ -198,6 +269,21 @@ export function Community() {
                     }}
                   >
                     💬 {f.comment_count || 0}
+                  </button>
+                  {/* 나와 비교 — 같은 사이트 내 결과 */}
+                  <button
+                    onClick={() => {
+                      let mine = null;
+                      try { mine = JSON.parse(localStorage.getItem('alljindan_results') || '[]').find((r: { site: string }) => r.site === f.site) || null; } catch {}
+                      if (mine) setCompareWith({ title: f.title, result: f.result, score: f.score ?? undefined, user_name: f.user_name || '' });
+                      else alert('이 진단을 먼저 받고 기록하면 비교할 수 있어요!');
+                    }}
+                    style={{
+                      padding: '5px 12px', borderRadius: 999, fontSize: 11, fontWeight: 700, cursor: 'pointer',
+                      background: 'rgba(138,109,59,0.1)', border: '1px solid rgba(138,109,59,0.3)', color: '#8a6d3b',
+                    }}
+                  >
+                    ⚔️ 나와 비교
                   </button>
                 </div>
                 {/* 댓글 섹션 */}
@@ -280,6 +366,71 @@ export function Community() {
           </div>
         </div>
       )}
+
+      {/* 나와 비교 모달 */}
+      {compareWith && <CompareModal data={compareWith} onClose={() => setCompareWith(null)} />}
+    </div>
+  );
+}
+
+/* ---------- 나와 비교 모달 ---------- */
+function CompareModal({ data, onClose }: {
+  data: { title: string; result: string; score?: number; user_name: string };
+  onClose: () => void;
+}) {
+  let mine: { result?: string; score?: number } | null = null;
+  try { mine = JSON.parse(localStorage.getItem('alljindan_results') || '[]')[0] || null; } catch {}
+  const diff = data.score !== undefined && mine?.score !== undefined ? data.score - mine.score : null;
+
+  return (
+    <div style={{
+      position: 'fixed', inset: 0, zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center',
+      background: 'rgba(43,38,32,0.6)', backdropFilter: 'blur(4px)',
+    }} onClick={onClose}>
+      <div onClick={e => e.stopPropagation()} style={{
+        width: '100%', maxWidth: 400, background: '#fffdf8', border: '1px solid #e5ded2', borderRadius: 14,
+        padding: 24, boxShadow: '0 20px 60px rgba(43,38,32,0.3)',
+      }}>
+        <h2 style={{ fontSize: 16, fontWeight: 800, margin: '0 0 4px', fontFamily: "'Noto Serif KR',serif" }}>
+          ⚔️ 나와 비교 — {data.title}
+        </h2>
+        <div style={{ fontSize: 11, color: '#7a7060', marginBottom: 16 }}>동일 진단을 받은 두 사람의 결과</div>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          <div style={{ background: '#f7f2e9', borderRadius: 8, padding: 12 }}>
+            <div style={{ fontSize: 11, fontWeight: 800, color: '#8a6d3b', marginBottom: 4 }}>{data.user_name}</div>
+            <div style={{ fontSize: 13, fontWeight: 700 }}>{data.result}</div>
+            {data.score !== undefined && <div style={{ fontSize: 12, color: '#8a6d3b', fontWeight: 700, marginTop: 2 }}>{data.score}점</div>}
+          </div>
+          <div style={{ textAlign: 'center', fontSize: 18 }}>▼</div>
+          <div style={{ background: '#f0e9dc', borderRadius: 8, padding: 12 }}>
+            <div style={{ fontSize: 11, fontWeight: 800, color: '#7a7060', marginBottom: 4 }}>나</div>
+            <div style={{ fontSize: 13, fontWeight: 700 }}>{mine?.result || '기록 없음'}</div>
+            {mine?.score !== undefined && <div style={{ fontSize: 12, color: '#7a7060', fontWeight: 700, marginTop: 2 }}>{mine.score}점</div>}
+          </div>
+        </div>
+
+        {diff !== null && diff !== 0 && (
+          <div style={{
+            marginTop: 14, padding: '10px 12px', borderRadius: 8, fontSize: 12, lineHeight: 1.6,
+            background: 'rgba(138,109,59,0.1)', border: '1px solid rgba(138,109,59,0.3)', color: '#5a5245',
+          }}>
+            {diff > 0
+              ? `${data.user_name}님이 ${diff}점 더 높아요. 사람마다 이 진단의 강도가 다르게 나타난다는 뜻이에요.`
+              : `당신이 ${-diff}점 더 높아요. 이 점수는 비교가 아니라 각자의 신호로 읽어주세요.`}
+          </div>
+        )}
+
+        <button
+          onClick={onClose}
+          style={{
+            width: '100%', marginTop: 16, padding: '11px 0', borderRadius: 8, border: 'none', cursor: 'pointer',
+            fontSize: 13, fontWeight: 800, color: '#faf7f2', background: '#2b2620',
+          }}
+        >
+          확인
+        </button>
+      </div>
     </div>
   );
 }

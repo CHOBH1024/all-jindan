@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>나의 4축 미니 레이더 — 올진단</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, 'Noto Sans KR', sans-serif; background: transparent; }
+  .widget { max-width: 400px; margin: 0 auto; padding: 16px; }
+  .head { font-size: 11px; letter-spacing: 2px; color: #8a6d3b; font-weight: 800; text-transform: uppercase; margin-bottom: 12px; }
+  .row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .label { width: 44px; font-size: 11px; font-weight: 700; color: #3d3830; }
+  .bar { flex: 1; height: 14px; background: #f0e9dc; border-radius: 999px; overflow: hidden; }
+  .fill { height: 100%; background: #8a6d3b; border-radius: 999px; }
+  .score { width: 30px; font-size: 12px; font-weight: 800; color: #8a6d3b; text-align: right; }
+  .foot { margin-top: 12px; font-size: 10px; color: #9a9081; text-align: center; }
+  .foot a { color: #8a6d3b; text-decoration: none; font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="widget">
+  <div class="head">내 4축 레이더</div>
+  <div id="radar"></div>
+  <div class="foot"><a href="https://all-jindan.pomyjo.com/">올진단</a> · 76개 진단 통합 분석</div>
+</div>
+<script>
+// ?d=eyJzaXRlIjoidGVzdCIsInJlc3VsdCI6Im9rIn0= 형식의 데이터 파라미터 지원
+// 또는 localStorage(alljindan_results)에서 읽기
+(function () {
+  const names = ['성격', '커리어', '관계', '습관'];
+  const counts = [0, 0, 0, 0];
+  const scores = [0, 0, 0, 0];
+  // localStorage에서 읽기
+  try {
+    const results = JSON.parse(localStorage.getItem('alljindan_results') || '[]');
+    results.forEach(function (r) {
+      const ax = axisOf(r.site);
+      counts[ax]++;
+      scores[ax] += r.score !== undefined ? r.score : 70;
+    });
+  } catch (e) {}
+  // URL 파라미터 데이터 (위젯 공유용)
+  const q = new URLSearchParams(location.search).get('d');
+  if (q) {
+    try {
+      const d = JSON.parse(atob(q));
+      if (d.scores) {
+        d.scores.forEach(function (s, i) { if (s > 0) { scores[i] = s * counts[i]; counts[i] = Math.max(counts[i], 1); } });
+      }
+    } catch (e) {}
+  }
+  const radar = document.getElementById('radar');
+  names.forEach(function (n, i) {
+    const score = counts[i] > 0 ? Math.round(scores[i] / counts[i]) : 0;
+    const row = document.createElement('div');
+    row.className = 'row';
+    row.innerHTML = '<div class="label">' + n + '</div>' +
+      '<div class="bar"><div class="fill" style="width:' + score + '%"></div></div>' +
+      '<div class="score">' + (score > 0 ? score : '-') + '</div>';
+    radar.appendChild(row);
+  });
+})();
+function axisOf(site) {
+  const map = {
+    'mz-radar': 1, 'FIRE-readiness-radar': 1, 'code-review-roulette': 1, 'async-work-radar': 1, 'ai-readiness-radar': 1, 'prompt-efficiency-score': 1,
+    'attachment-style-radar': 2, 'assertion-style-radar': 2, 'argument-recovery-radar': 2, 'defensiveness-radar': 2, 'empathy-fatigue-radar': 2, 'love-radar': 2, 'relationship-radar': 2,
+    'sleep-hygiene-radar': 3, 'burnout-recovery-radar': 3, 'procrastination-radar': 3, 'mindfulness-zen-radar': 3, 'caffeine-dependency-radar': 3, 'digital-detox-radar': 3, 'fitness-mindset-radar': 3, 'grit-focus-radar': 3, 'deep-work-battery': 3, 'micro-break-routine': 3, 'reward-spending-radar': 3,
+  };
+  return map[site] !== undefined ? map[site] : 0;
+}
+</script>
+</body>
+</html>

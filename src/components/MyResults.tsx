@@ -6,9 +6,10 @@ interface Props {
   onRemove: (idx: number) => void;
   onShare: (idx: number) => void;
   isLoggedIn: boolean;
+  onShowLogin: () => void;
 }
 
-export function MyResults({ results, onRemove, onShare, isLoggedIn }: Props) {
+export function MyResults({ results, onRemove, onShare, isLoggedIn, onShowLogin }: Props) {
   const exportData = async () => {
     try {
       if (getToken()) {
@@ -67,6 +68,29 @@ export function MyResults({ results, onRemove, onShare, isLoggedIn }: Props) {
         </button>
       </div>
       <p style={{ fontSize: 13, color: '#9a9081', margin: '0 0 20px' }}>총 {results.length}개 진단 기록 — 결과를 쌓을수록 종합 분석이 정밀해집니다.</p>
+
+      {/* 비로그인 — 가입 유도 배너 */}
+      {!isLoggedIn && (
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16,
+          background: 'linear-gradient(135deg,#f7f2e9,#f0e9dc)', border: '1px solid #e5ded2', borderRadius: 12, padding: '14px 16px',
+        }}>
+          <span style={{ fontSize: 24 }}>🔐</span>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 13, fontWeight: 800 }}>기록을 잃지 않으려면 가입하세요</div>
+            <div style={{ fontSize: 11, color: '#7a7060' }}>가입하면 {results.length}개 기록이 서버에 안전하게 저장되고, 다른 기기에서도 이어볼 수 있어요.</div>
+          </div>
+          <button
+            onClick={onShowLogin}
+            style={{
+              padding: '8px 14px', borderRadius: 6, fontSize: 12, fontWeight: 700, cursor: 'pointer',
+              background: '#2b2620', color: '#faf7f2', border: 'none', whiteSpace: 'nowrap',
+            }}
+          >
+            가입하기
+          </button>
+        </div>
+      )}
 
       {/* 최근 결과 카드 */}
       <div style={{

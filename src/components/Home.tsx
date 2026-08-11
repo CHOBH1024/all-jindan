@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { SITES } from '../data';
 import { Recommend } from './Recommend';
 import type { DiagnosisRecord } from '../App';
@@ -71,6 +72,9 @@ export function Home({ onGoDiagnosis, resultCount }: Props) {
       {/* 이달의 테마 — 큐레이션 */}
       <MonthlyTheme onGoDiagnosis={onGoDiagnosis} />
 
+      {/* 상황 시뮬레이션 — 인터랙티브 */}
+      <SituationSim results={results} onGoDiagnosis={onGoDiagnosis} />
+
       {/* 오늘의 한 화면 — 대시보드 */}
       {results.length > 0 && <TodayDashboard results={results} onGoDiagnosis={onGoDiagnosis} />}
 
@@ -141,6 +145,116 @@ function MonthlyTheme({ onGoDiagnosis }: { onGoDiagnosis: () => void }) {
             </a>
           ))}
         </div>
+      </div>
+    </div>
+  );
+}
+
+/* ---------- 상황 시뮬레이션 (인터랙티브) ---------- */
+function SituationSim({ results, onGoDiagnosis }: { results: DiagnosisRecord[]; onGoDiagnosis: () => void }) {
+  const [step, setStep] = useState(0);
+  const [answers, setAnswers] = useState<number[]>([]);
+  const doneSites = new Set(results.map(r => r.site));
+
+  const scenarios = [
+    {
+      title: '팀 회의에서 내 의견이 무시됐다',
+      options: ['다시 한 번 조리 있게 말한다', '일단 받아들이고 나중에 따로 말한다', '속으로 정리하고 포기한다'],
+      tip: '주장력과 갈등 회복 패턴을 보여주는 상황이에요. 대화 유형 진단으로 내 반응 스타일을 확인해보세요.',
+      site: 'assertion-style-radar',
+    },
+    {
+      title: '일이 몰리는데 계속 미루고 있다',
+      options: ['가장 어려운 것부터 깨부순다', '작은 단위로 쪼개서 시작한다', '마감 직전에 폭발적으로 한다'],
+      tip: '미루기의 원인은 의지력이 아니라 감정 조절이에요. 미루기 습관 진단으로 시작 블록을 찾아보세요.',
+      site: 'procrastination-radar',
+    },
+    {
+      title: '친한 친구가 갑자기 차갑게 대한다',
+      options: ['바로 물어본다', '시간을 두고 기다린다', '내가 뭘 잘못했나 계속 생각한다'],
+      tip: '애착 유형에 따라 대인 관계의 위기 대처 방식이 달라져요. 애착 유형 진단으로 내 패턴을 확인해보세요.',
+      site: 'attachment-style-radar',
+    },
+  ];
+
+  const s = scenarios[step];
+  const allDone = answers.length === scenarios.length;
+
+  const choose = (i: number) => {
+    const next = [...answers, i];
+    setAnswers(next);
+    if (next.length < scenarios.length) setStep(step + 1);
+  };
+  const reset = () => { setAnswers([]); setStep(0); };
+
+  return (
+    <div style={{ marginBottom: 24 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+        <div style={{ fontSize: 11, letterSpacing: 2, color: '#8a6d3b', fontWeight: 800, textTransform: 'uppercase' }}>
+          상황 시뮬레이션
+        </div>
+        <div style={{ flex: 1, height: 1, background: '#e5ded2' }} />
+        <span style={{ fontSize: 11, color: '#7a7060' }}>{allDone ? '완료' : `${step + 1}/${scenarios.length}`}</span>
+      </div>
+
+      <div style={{
+        background: '#fffdf8', border: '1px solid #e5ded2', borderRadius: 12, padding: 20,
+      }}>
+        {!allDone ? (
+          <>
+            <div style={{ fontSize: 15, fontWeight: 800, fontFamily: "'Noto Serif KR',serif", marginBottom: 14 }}>
+              {s.title}
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              {s.options.map((opt, i) => (
+                <button
+                  key={i}
+                  onClick={() => choose(i)}
+                  style={{
+                    textAlign: 'left', padding: '12px 14px', borderRadius: 8, cursor: 'pointer', fontSize: 13,
+                    background: '#f7f2e9', border: '1px solid #ece4d5', color: '#3d3830',
+                  }}
+                >
+                  {opt}
+                </button>
+              ))}
+            </div>
+          </>
+        ) : (
+          <>
+            <div style={{ fontSize: 14, fontWeight: 800, marginBottom: 8 }}>🎯 당신의 반응 스타일</div>
+            <div style={{ fontSize: 12, color: '#5a5245', lineHeight: 1.8, marginBottom: 14 }}>
+              {scenarios.map((sc, i) => (
+                <div key={i} style={{ marginBottom: 6 }}>
+                  <strong>{sc.title}</strong> → "{sc.options[answers[i]]}"
+                </div>
+              ))}
+              <div style={{ marginTop: 10, color: '#8a6d3b', fontWeight: 700 }}>
+                {scenarios[0].tip.split('. ')[0]}와 같은 패턴을 정확히 알고 싶다면, 진단으로 확인해보세요.
+              </div>
+            </div>
+            <div style={{ display: 'flex', gap: 8 }}>
+              <button
+                onClick={() => onGoDiagnosis()}
+                style={{
+                  flex: 1, padding: '10px 0', borderRadius: 6, cursor: 'pointer', fontSize: 12, fontWeight: 800,
+                  background: '#2b2620', color: '#faf7f2', border: 'none',
+                }}
+              >
+                진단 모음 가기
+              </button>
+              <button
+                onClick={reset}
+                style={{
+                  padding: '10px 18px', borderRadius: 6, cursor: 'pointer', fontSize: 12, fontWeight: 700,
+                  background: '#fffdf8', border: '1px solid #ddd3c2', color: '#7a7060',
+                }}
+              >
+                다시 하기
+              </button>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

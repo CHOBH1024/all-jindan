@@ -82,4 +82,6 @@ export const api = {
   myFollowing: () => req('GET', '/me/following'),
   weeklyReport: () => req('GET', '/me/weekly-report'),
   coach: () => req('GET', '/me/coach'),
+  challenges: () => req('GET', '/challenges'),
+  joinChallenge: (id: string) => req('POST', `/challenges/${id}/join`),
 };
