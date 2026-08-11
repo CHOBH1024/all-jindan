@@ -140,14 +140,14 @@ export function DiagnosisList({ results, onSave, onGoAnalysis }: Props) {
       </div>
 
       {/* 진단 카드 그리드 */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(240px,1fr))', gap: 12 }}>
+      <div className="stagger" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(240px,1fr))', gap: 12 }}>
         {filtered.map(s => {
           const isDone = doneSites.has(s.name);
           const bm = bookmarks.includes(s.name);
           return (
-            <div key={s.name} style={{
-              background: 'rgba(255,253,248,0.9)', border: '1px solid var(--border)', borderRadius: 14, padding: 14,
-              display: 'flex', flexDirection: 'column', gap: 8, transition: 'transform .15s, border-color .15s',
+            <div key={s.name} className="hover-lift" style={{
+              background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 14, padding: 14,
+              display: 'flex', flexDirection: 'column', gap: 8,
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <span style={{ fontSize: 24 }}>{s.emoji}</span>
@@ -227,15 +227,17 @@ function ResultModal({ site, onClose, onSave }: {
   };
 
   return (
-    <div style={{
+    <div className="anim-fade" style={{
       position: 'fixed', inset: 0, zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center',
       background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)',
     }} onClick={onClose}>
       <div
         onClick={e => e.stopPropagation()}
+        className="anim-scale"
         style={{
-          width: '100%', maxWidth: 400, background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 20,
-          padding: 24, boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
+          width: '100%', maxWidth: 400, background: 'var(--card)',
+border: '1px solid var(--border)', borderRadius: 20,
+          padding: 24, boxShadow: 'var(--shadow-modal)',
         }}
       >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>

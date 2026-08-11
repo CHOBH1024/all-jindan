@@ -36,12 +36,13 @@ export function PremiumModal({ onClose, onPurchased }: Props) {
   };
 
   return (
-    <div style={{
+    <div className="anim-fade" style={{
       position: 'fixed', inset: 0, zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center',
       background: 'rgba(43,38,32,0.6)', backdropFilter: 'blur(4px)', padding: 16, overflowY: 'auto',
     }} onClick={onClose}>
-      <div onClick={e => e.stopPropagation()} style={{
-        width: '100%', maxWidth: 460, background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 14,
+      <div onClick={e => e.stopPropagation()} className="anim-scale" style={{
+        width: '100%', maxWidth: 460, background: 'var(--card)',
+border: '1px solid var(--border)', borderRadius: 14,
         padding: 24, boxShadow: '0 20px 60px rgba(43,38,32,0.3)',
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>

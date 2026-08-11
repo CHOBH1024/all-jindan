@@ -97,6 +97,15 @@ body {
   50% { opacity: 0.55; }
 }
 
+/* ---- 스크롤 리빌 (Chrome 115+ scroll-driven) ---- */
+@supports (animation-timeline: view()) {
+  .reveal-scroll {
+    animation: fadeInUp linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 35%;
+  }
+}
+
 .anim-fade { animation: fadeIn 0.35s ease both; }
 .anim-up { animation: fadeInUp 0.45s cubic-bezier(0.22, 1, 0.36, 1) both; }
 .anim-down { animation: fadeInDown 0.3s ease both; }

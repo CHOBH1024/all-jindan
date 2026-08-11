@@ -44,15 +44,16 @@ export function AuthModal({ onClose, onLogin }: Props) {
   };
 
   return (
-    <div style={{
+    <div className="anim-fade" style={{
       position: 'fixed', inset: 0, zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center',
       background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)',
     }} onClick={onClose}>
       <div
         onClick={e => e.stopPropagation()}
+        className="anim-scale"
         style={{
           width: '100%', maxWidth: 380, background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 20,
-          padding: 28, boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
+          padding: 28, boxShadow: 'var(--shadow-modal)',
         }}
       >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>

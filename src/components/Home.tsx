@@ -20,39 +20,45 @@ export function Home({ onGoDiagnosis, resultCount }: Props) {
   const results = loadResultsLocal();
   return (
     <div>
-      <section style={{ padding: '64px 0 36px', textAlign: 'center', position: 'relative' }}>
-        <div style={{
-          fontSize: 11, letterSpacing: 3, color: 'var(--accent)', fontWeight: 800, textTransform: 'uppercase', marginBottom: 16,
+      <section style={{ padding: '56px 0 36px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
+        {/* 배경 장식 — 대기업 히어로 느낌 */}
+        <div style={{ position: 'absolute', top: -80, left: '50%', transform: 'translateX(-50%)', width: 600, height: 600, borderRadius: '50%', background: 'radial-gradient(circle, var(--accent-soft) 0%, transparent 65%)', pointerEvents: 'none' }} />
+        <div className="anim-up" style={{
+          fontSize: 11, letterSpacing: 3, color: 'var(--accent)', fontWeight: 800, textTransform: 'uppercase', marginBottom: 16, position: 'relative',
         }}>
           Self-Knowledge, Systematically
         </div>
-        <h1 style={{
+        <h1 className="anim-up" style={{
           fontSize: 'clamp(30px,5vw,46px)', fontWeight: 900, margin: '0 0 16px', letterSpacing: -1,
-          lineHeight: 1.35, fontFamily: "'Noto Serif KR',serif",
+          lineHeight: 1.35, fontFamily: "'Noto Serif KR',serif", position: 'relative',
+          animationDelay: '0.08s',
         }}>
           나는 어떤 사람인가,<br />진단으로 <span style={{ color: 'var(--accent)' }}>쌓아가는</span> 나의 지도
         </h1>
-        <p style={{ fontSize: 'clamp(13px,2vw,15px)', color: 'var(--sub)', maxWidth: 540, margin: '0 auto 28px', lineHeight: 1.8 }}>
+        <p className="anim-up" style={{ fontSize: 'clamp(13px,2vw,15px)', color: 'var(--sub)', maxWidth: 540, margin: '0 auto 28px', lineHeight: 1.8, position: 'relative', animationDelay: '0.16s' }}>
           {SITES.length}개의 진단을 하나의 종합 프로필로. 성격, 커리어, 관계, 습관 —<br />
           네 개의 축으로 <strong style={{ color: 'var(--body-text)' }}>오늘의 나</strong>와 <strong style={{ color: 'var(--body-text)' }}>내일의 나</strong>를 잇습니다.
         </p>
-        <button
-          onClick={onGoDiagnosis}
-          style={{
-            padding: '13px 34px', borderRadius: 6, border: 'none', cursor: 'pointer',
-            fontSize: 14, fontWeight: 700, color: 'var(--bg)', background: 'var(--text)',
-            boxShadow: '0 4px 16px rgba(43,38,32,0.2)', transition: 'all .15s',
-          }}
-          onMouseEnter={e => { e.currentTarget.style.background = 'var(--text-strong)'; }}
-          onMouseLeave={e => { e.currentTarget.style.background = 'var(--text)'; }}
-        >
+        <div className="anim-up" style={{ position: 'relative', animationDelay: '0.24s' }}>
+          <button
+            onClick={onGoDiagnosis}
+            className="btn-press hover-lift"
+            style={{
+              padding: '13px 34px', borderRadius: 6, border: 'none', cursor: 'pointer',
+              fontSize: 14, fontWeight: 700, color: 'var(--bg)', background: 'var(--text)',
+              boxShadow: 'var(--shadow-md)', position: 'relative', zIndex: 1,
+            }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'var(--text-strong)'; }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'var(--text)'; }}
+          >
           진단 시작하기
         </button>
         <div style={{ fontSize: 12, color: 'var(--sub2)', marginTop: 12 }}>무료 · 로그인 없이 3분</div>
+        </div>
       </section>
 
       {/* 통계 */}
-      <section style={{ display: 'flex', gap: 40, justifyContent: 'center', maxWidth: 720, margin: '0 auto 40px', flexWrap: 'wrap' }}>
+      <section className="reveal-scroll" style={{ display: 'flex', gap: 40, justifyContent: 'center', maxWidth: 720, margin: '0 auto 40px', flexWrap: 'wrap' }}>
         {[
           { n: `${SITES.length}`, l: '진단 도구' },
           { n: `${categories.length}`, l: '카테고리' },
@@ -79,13 +85,13 @@ export function Home({ onGoDiagnosis, resultCount }: Props) {
       {results.length > 0 && <TodayDashboard results={results} onGoDiagnosis={onGoDiagnosis} />}
 
       {/* 카테고리 소개 */}
-      <section style={{ maxWidth: 720, margin: '0 auto' }}>
+      <section className="reveal-scroll" style={{ maxWidth: 720, margin: '0 auto' }}>
         <h2 style={{ fontSize: 20, fontWeight: 800, margin: '0 0 16px' }}>어떤 영역을 진단하나요?</h2>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(240px,1fr))', gap: 12 }}>
+        <div className="stagger" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(240px,1fr))', gap: 12 }}>
           {categories.map((cat, i) => {
             const items = SITES.filter(s => s.category === cat);
             return (
-              <div key={i} style={{ background: 'rgba(255,253,248,0.9)', border: '1px solid var(--border)', borderRadius: 16, padding: 16 }}>
+              <div key={i} className="hover-lift" style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 16, padding: 16 }}>
                 <div style={{ fontSize: 15, fontWeight: 800, marginBottom: 6 }}>{cat}</div>
                 <div style={{ fontSize: 12, color: 'var(--hint)' }}>
                   {items.slice(0, 4).map(s => s.emoji + ' ' + s.title).join(' · ')}

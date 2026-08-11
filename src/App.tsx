@@ -390,7 +390,7 @@ export default function App() {
           </nav>
           {/* 더보기 시트 */}
           {showMore && (
-            <div style={{
+            <div className="anim-up" style={{
               position: 'fixed', bottom: 64, left: 0, right: 0, zIndex: 59,
               background: theme.header, backdropFilter: 'blur(12px)',
               borderTop: '1px solid ' + theme.border, borderRadius: '16px 16px 0 0',
@@ -425,11 +425,11 @@ export default function App() {
       {showAuth && <AuthModal onClose={() => setShowAuth(false)} onLogin={handleLogin} />}
       {showPremium && <PremiumModal onClose={() => setShowPremium(false)} onPurchased={handlePremiumPurchased} />}
       {showAdmin && adminStats && (
-        <div style={{
+        <div className="anim-fade" style={{
           position: 'fixed', inset: 0, zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center',
           background: 'rgba(43,38,32,0.6)', backdropFilter: 'blur(4px)', padding: 16,
         }} onClick={() => setShowAdmin(false)}>
-          <div onClick={e => e.stopPropagation()} style={{
+          <div onClick={e => e.stopPropagation()} className="anim-scale" style={{
             width: '100%', maxWidth: 480, background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 14,
             padding: 24, boxShadow: '0 20px 60px rgba(43,38,32,0.3)', maxHeight: '80vh', overflowY: 'auto',
           }}>

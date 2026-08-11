@@ -157,7 +157,20 @@ export function Community() {
         </div>
       )}
 
-      {loading && <div style={{ textAlign: 'center', padding: 40, color: 'var(--hint)' }}>피드 불러오는 중...</div>}
+      {loading && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          {[0, 1, 2].map(i => (
+            <div key={i} style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 12, padding: 16 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+                <div style={{ width: 30, height: 30, borderRadius: '50%', background: 'var(--card3)', animation: 'pulse 1.5s ease infinite' }} />
+                <div style={{ width: 80, height: 12, borderRadius: 6, background: 'var(--card3)', animation: 'pulse 1.5s ease infinite' }} />
+              </div>
+              <div style={{ width: '70%', height: 14, borderRadius: 6, background: 'var(--card3)', marginBottom: 8, animation: 'pulse 1.5s ease infinite' }} />
+              <div style={{ width: '90%', height: 12, borderRadius: 6, background: 'var(--card3)', animation: 'pulse 1.5s ease infinite' }} />
+            </div>
+          ))}
+        </div>
+      )}
       {error && <div style={{ textAlign: 'center', padding: 40, color: 'var(--error)' }}>{error}</div>}
 
       {/* 주간 커뮤니티 챌린지 */}
@@ -349,11 +362,11 @@ export function Community() {
 
       {/* 공유 방법 안내 모달 */}
       {showGuide && (
-        <div style={{
+        <div className="anim-fade" style={{
           position: 'fixed', inset: 0, zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center',
           background: 'rgba(43,38,32,0.6)', backdropFilter: 'blur(4px)',
         }} onClick={() => setShowGuide(false)}>
-          <div onClick={e => e.stopPropagation()} style={{
+          <div onClick={e => e.stopPropagation()} className="anim-scale" style={{
             width: '100%', maxWidth: 380, background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 14,
             padding: 24, boxShadow: '0 20px 60px rgba(43,38,32,0.3)',
           }}>
@@ -399,11 +412,11 @@ function UserProfileModal({ userName, feed, onClose }: {
   }));
 
   return (
-    <div style={{
+    <div className="anim-fade" style={{
       position: 'fixed', inset: 0, zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center',
       background: 'rgba(43,38,32,0.6)', backdropFilter: 'blur(4px)',
     }} onClick={onClose}>
-      <div onClick={e => e.stopPropagation()} style={{
+      <div onClick={e => e.stopPropagation()} className="anim-scale" style={{
         width: '100%', maxWidth: 420, background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 14,
         padding: 24, boxShadow: '0 20px 60px rgba(43,38,32,0.3)', maxHeight: '80vh', overflowY: 'auto',
       }}>
@@ -468,13 +481,14 @@ function CompareModal({ data, onClose }: {
   const diff = data.score !== undefined && mine?.score !== undefined ? data.score - mine.score : null;
 
   return (
-    <div style={{
+    <div className="anim-fade" style={{
       position: 'fixed', inset: 0, zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center',
       background: 'rgba(43,38,32,0.6)', backdropFilter: 'blur(4px)',
     }} onClick={onClose}>
-      <div onClick={e => e.stopPropagation()} style={{
-        width: '100%', maxWidth: 400, background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 14,
-        padding: 24, boxShadow: '0 20px 60px rgba(43,38,32,0.3)',
+      <div onClick={e => e.stopPropagation()} className="anim-scale" style={{
+        width: '100%', maxWidth: 400, background: 'var(--card)',
+        border: '1px solid var(--border)', borderRadius: 14,
+        padding: 24, boxShadow: 'var(--shadow-modal)',
       }}>
         <h2 style={{ fontSize: 16, fontWeight: 800, margin: '0 0 4px', fontFamily: "'Noto Serif KR',serif" }}>
           ⚔️ 나와 비교 — {data.title}
