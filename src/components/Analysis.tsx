@@ -124,6 +124,8 @@ export function Analysis({ results, onGoDiagnosis }: Props) {
   }
   const scores = axisScores.map((s, i) => axisCounts[i] > 0 ? Math.min(100, Math.round(s / axisCounts[i])) : 0);
   const hasAxis = axisCounts.some(c => c > 0);
+  const fullAxes = axisCounts.filter(c => c > 0).length;
+  const balanced = fullAxes === 4;
 
   // 종합 성격 요약 (가장 많은 카테고리 + 최근 결과 기반)
   const catCounts: Record<string, number> = {};
@@ -141,7 +143,24 @@ export function Analysis({ results, onGoDiagnosis }: Props) {
     <div>
       <h1 style={{ fontSize: 24, fontWeight: 900, margin: '0 0 4px' }}>🧬 통합 분석</h1>
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
-        <p style={{ fontSize: 13, color: '#9a9081', margin: 0, flex: 1 }}>{results.length}개의 진단을 종합한 "지금의 나"</p>
+        <p style={{ fontSize: 13, color: '#6b6355', margin: 0, flex: 1 }}>{results.length}개의 진단을 종합한 "지금의 나"</p>
+        {balanced && (
+          <span style={{
+            padding: '6px 14px', borderRadius: 999, fontSize: 11, fontWeight: 800,
+            background: 'linear-gradient(135deg,#c9a867,#a8853f)', color: '#fff',
+            boxShadow: '0 2px 10px rgba(201,168,103,0.35)',
+          }}>
+            🏅 균형 프로필 — 4축 완성
+          </span>
+        )}
+        {!balanced && fullAxes > 0 && (
+          <span style={{
+            padding: '6px 14px', borderRadius: 999, fontSize: 11, fontWeight: 700,
+            background: 'rgba(138,109,59,0.1)', border: '1px solid rgba(138,109,59,0.3)', color: '#8a6d3b',
+          }}>
+            {fullAxes}/4 축 완성
+          </span>
+        )}
         {results.length > 0 && (
           <button
             onClick={() => shareProfile(results)}

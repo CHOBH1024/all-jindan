@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { SITES } from '../data';
+import { getAxis } from './Analysis';
 import type { DiagnosisRecord } from '../App';
 
 interface Props {
@@ -15,6 +16,7 @@ interface ModalState {
 export function DiagnosisList({ results, onSave, onGoAnalysis }: Props) {
   const [q, setQ] = useState('');
   const [cat, setCat] = useState('전체');
+  const [sortBy, setSortBy] = useState<'default' | 'empty-axis' | 'recent'>('default');
   const [done, setDone] = useState<Record<string, string>>({});
   const [modal, setModal] = useState<ModalState | null>(null);
   const [bookmarks, setBookmarks] = useState<string[]>(() => {
@@ -31,10 +33,30 @@ export function DiagnosisList({ results, onSave, onGoAnalysis }: Props) {
 
   const cats = ['전체', ...new Set(SITES.map(s => s.category))];
   const doneSites = new Set(results.map(r => r.site));
-  const filtered = SITES.filter(s =>
+  let filtered = SITES.filter(s =>
     (cat === '전체' || s.category === cat) &&
     (q === '' || s.title.includes(q) || s.keywords.includes(q) || s.target.includes(q))
   );
+  // 나에게 맞는 정렬
+  if (sortBy === 'empty-axis' || sortBy === 'recent') {
+    const axisCounts = [0, 0, 0, 0];
+    const recentDate = new Map<string, string>();
+    results.forEach(r => {
+      axisCounts[getAxis(r.site, '')]++;
+      recentDate.set(r.site, r.date);
+    });
+    filtered = [...filtered].sort((a, b) => {
+      if (sortBy === 'empty-axis') {
+        const da = axisCounts[getAxis(a.name, a.category)] === 0 ? 1 : 0;
+        const db = axisCounts[getAxis(b.name, b.category)] === 0 ? 1 : 0;
+        return db - da;
+      }
+      // 최근 미실시 우선
+      const ra = recentDate.get(a.name) || '0000';
+      const rb = recentDate.get(b.name) || '0000';
+      return ra.localeCompare(rb);
+    });
+  }
 
   const handleSave = (r: DiagnosisRecord) => {
     onSave(r);
@@ -87,13 +109,34 @@ export function DiagnosisList({ results, onSave, onGoAnalysis }: Props) {
               onClick={() => setCat(c)}
               style={{
                 padding: '8px 14px', borderRadius: 999, border: '1px solid #ddd3c2', cursor: 'pointer', fontSize: 12, fontWeight: 700,
-                background: cat === c ? '#6366f1' : 'rgba(240,233,220,0.85)', color: cat === c ? '#fff' : '#6b6355',
+                background: cat === c ? '#2b2620' : '#fffdf8', color: cat === c ? '#faf7f2' : '#6b6355',
               }}
             >
               {c}
             </button>
           ))}
         </div>
+      </div>
+      {/* 정렬 칩 */}
+      <div style={{ display: 'flex', gap: 6, marginBottom: 16, flexWrap: 'wrap' }}>
+        {([
+          ['default', '기본순'],
+          ['empty-axis', '빈 축 우선'],
+          ['recent', '최근 미실시'],
+        ] as const).map(([key, label]) => (
+          <button
+            key={key}
+            onClick={() => setSortBy(key)}
+            style={{
+              padding: '6px 14px', borderRadius: 999, fontSize: 11, fontWeight: 700, cursor: 'pointer',
+              border: '1px solid ' + (sortBy === key ? '#8a6d3b' : '#ddd3c2'),
+              background: sortBy === key ? 'rgba(138,109,59,0.12)' : '#fffdf8',
+              color: sortBy === key ? '#8a6d3b' : '#7a7060',
+            }}
+          >
+            {label}
+          </button>
+        ))}
       </div>
 
       {/* 진단 카드 그리드 */}

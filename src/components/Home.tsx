@@ -1,5 +1,6 @@
 import { SITES } from '../data';
 import { Recommend } from './Recommend';
+import type { DiagnosisRecord } from '../App';
 
 interface Props {
   onGoDiagnosis: () => void;
@@ -67,6 +68,9 @@ export function Home({ onGoDiagnosis, resultCount }: Props) {
       {/* 추천 진단 (온보딩 — 빈 축 메우기) */}
       <Recommend results={results} onGoDiagnosis={onGoDiagnosis} />
 
+      {/* 오늘의 한 화면 — 대시보드 */}
+      {results.length > 0 && <TodayDashboard results={results} onGoDiagnosis={onGoDiagnosis} />}
+
       {/* 카테고리 소개 */}
       <section style={{ maxWidth: 720, margin: '0 auto' }}>
         <h2 style={{ fontSize: 20, fontWeight: 800, margin: '0 0 16px' }}>어떤 영역을 진단하나요?</h2>
@@ -85,6 +89,76 @@ export function Home({ onGoDiagnosis, resultCount }: Props) {
           })}
         </div>
       </section>
+    </div>
+  );
+}
+
+/* ---------- 오늘의 한 화면 (대시보드) ---------- */
+function TodayDashboard({ results, onGoDiagnosis }: { results: DiagnosisRecord[]; onGoDiagnosis: () => void }) {
+  // 오늘 습관 (localStorage)
+  let habits: { id: number; name: string; days: string[] }[] = [];
+  try {
+    habits = JSON.parse(localStorage.getItem('alljindan_habits') || '[]');
+  } catch {}
+  const todayKR = ['일', '월', '화', '수', '목', '금', '토'][new Date().getDay()];
+  const todayHabits = habits.filter(h => h.days.includes(todayKR));
+  const doneToday = todayHabits.length;
+
+  // 최근 진단 1개
+  const recent = [...results].sort((a, b) => b.date.localeCompare(a.date))[0];
+
+  // 인사이트 1줄 (단순 규칙)
+  const totalScore = results.filter(r => r.score !== undefined).length;
+  const insight = totalScore >= 3
+    ? `${totalScore}개 진단 데이터가 쌓였어요. 통합 분석이 점점 선명해지고 있습니다.`
+    : `진단 ${3 - totalScore}개만 더 기록하면 4축 레이더가 완성돼요.`;
+
+  return (
+    <div style={{
+      background: '#fffdf8', border: '1px solid #e5ded2', borderRadius: 12, padding: 20, marginBottom: 24,
+    }}>
+      <div style={{ fontSize: 10, letterSpacing: 2, color: '#8a6d3b', fontWeight: 800, textTransform: 'uppercase', marginBottom: 12 }}>
+        오늘의 한 화면
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(200px,1fr))', gap: 16 }}>
+        {/* 습관 미니 */}
+        <div>
+          <div style={{ fontSize: 12, fontWeight: 800, marginBottom: 8 }}>✅ 오늘 습관 {todayHabits.length > 0 ? `${doneToday}개` : '없음'}</div>
+          {todayHabits.length > 0 ? (
+            todayHabits.map(h => (
+              <div key={h.id} style={{ fontSize: 12, color: '#6b6355', padding: '6px 0', borderBottom: '1px solid #f0e9dc' }}>
+                {h.name}
+              </div>
+            ))
+          ) : (
+            <div style={{ fontSize: 12, color: '#7a7060' }}>오늘 체크할 습관이 없어요.<br />미래 설계에서 추가해보세요.</div>
+          )}
+        </div>
+        {/* 최근 진단 */}
+        <div>
+          <div style={{ fontSize: 12, fontWeight: 800, marginBottom: 8 }}>🕐 최근 진단</div>
+          {recent && (
+            <div style={{ background: '#f7f2e9', borderRadius: 8, padding: 12 }}>
+              <div style={{ fontSize: 13, fontWeight: 700 }}>{recent.emoji} {recent.title}</div>
+              <div style={{ fontSize: 12, color: '#6b6355', marginTop: 4 }}>{recent.result}{recent.score !== undefined ? ` · ${recent.score}점` : ''}</div>
+            </div>
+          )}
+        </div>
+        {/* 인사이트 */}
+        <div>
+          <div style={{ fontSize: 12, fontWeight: 800, marginBottom: 8 }}>💡 오늘의 인사이트</div>
+          <div style={{ fontSize: 12, color: '#6b6355', lineHeight: 1.7 }}>{insight}</div>
+          <button
+            onClick={onGoDiagnosis}
+            style={{
+              marginTop: 10, padding: '8px 16px', borderRadius: 6, fontSize: 12, fontWeight: 700, cursor: 'pointer',
+              background: '#2b2620', color: '#faf7f2', border: 'none',
+            }}
+          >
+            진단 더 하기
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

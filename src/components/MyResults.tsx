@@ -112,6 +112,14 @@ export function MyResults({ results, onRemove, onShare, isLoggedIn }: Props) {
               </div>
             </div>
             <div style={{ fontSize: 11, color: '#9a9081', whiteSpace: 'nowrap' }}>{r.date}</div>
+            {isOldDiagnosis(r.date) && (
+              <span style={{
+                fontSize: 9, padding: '3px 8px', borderRadius: 999, fontWeight: 700, whiteSpace: 'nowrap',
+                background: 'rgba(138,109,59,0.12)', border: '1px solid rgba(138,109,59,0.3)', color: '#8a6d3b',
+              }}>
+                🔄 재진단 추천
+              </span>
+            )}
             {isLoggedIn && (
               <button
                 onClick={() => onShare(i)}
@@ -139,6 +147,14 @@ export function MyResults({ results, onRemove, onShare, isLoggedIn }: Props) {
       </div>
     </div>
   );
+}
+
+/* ---------- 재진단 리마인더 (4주 이상 경과) ---------- */
+function isOldDiagnosis(date: string): boolean {
+  const d = new Date(date);
+  if (isNaN(d.getTime())) return false;
+  const weeks = (Date.now() - d.getTime()) / (7 * 86400000);
+  return weeks >= 4;
 }
 
 /* ---------- 해석 가이드 (점수대별 의미/오해/다음 행동) ---------- */

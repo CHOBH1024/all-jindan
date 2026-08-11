@@ -67,6 +67,22 @@ export function FuturePlan({ results }: Props) {
 
   const removeHabit = (id: number) => saveHabits(habits.filter(h => h.id !== id));
 
+  // 스트릭 보호권 (주 1회)
+  const [shieldUsed, setShieldUsed] = useState(() => {
+    try {
+      const s = JSON.parse(localStorage.getItem('alljindan_shield') || 'null');
+      const week = Math.floor(Date.now() / (7 * 86400000));
+      return s && s.week === week && s.used;
+    } catch { return false; }
+  });
+  const useShield = () => {
+    if (shieldUsed) return;
+    if (!confirm('이번 주 리셋 시 체크를 유지하는 보호권을 사용할까요? (주 1회)')) return;
+    const week = Math.floor(Date.now() / (7 * 86400000));
+    localStorage.setItem('alljindan_shield', JSON.stringify({ week, used: true }));
+    setShieldUsed(true);
+  };
+
   // 진단 기반 목표 추천
   const suggestedGoals: string[] = [];
   if (results.some(r => r.title.includes('수면'))) suggestedGoals.push('😴 수면 7시간 루틴 만들기');
@@ -127,13 +143,26 @@ export function FuturePlan({ results }: Props) {
               onChange={e => setHabitName(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && addHabit()}
               placeholder="새 습관 (예: 30분 독서)"
-              style={{ flex: 1, padding: '9px 14px', borderRadius: 10, background: '#f0e9dc', border: '1px solid #ddd3c2', color: '#3d3830', fontSize: 13 }}
+              style={{ flex: 1, padding: '9px 14px', borderRadius: 6, background: '#fffdf8', border: '1px solid #ddd3c2', color: '#2b2620', fontSize: 13 }}
             />
-            <button onClick={addHabit} style={{ padding: '9px 16px', borderRadius: 10, border: 'none', cursor: 'pointer', fontSize: 13, fontWeight: 800, color: '#fff', background: '#2b2620' }}>추가</button>
+            <button onClick={addHabit} style={{ padding: '9px 16px', borderRadius: 6, border: 'none', cursor: 'pointer', fontSize: 13, fontWeight: 800, color: '#faf7f2', background: '#2b2620' }}>추가</button>
+            <button
+              onClick={useShield}
+              disabled={shieldUsed}
+              title="이번 주 리셋 시 체크 유지 (주 1회)"
+              style={{
+                padding: '9px 14px', borderRadius: 6, fontSize: 12, fontWeight: 700, cursor: shieldUsed ? 'not-allowed' : 'pointer',
+                background: shieldUsed ? 'rgba(138,109,59,0.08)' : 'rgba(138,109,59,0.12)',
+                border: '1px solid ' + (shieldUsed ? 'rgba(138,109,59,0.2)' : 'rgba(138,109,59,0.4)'),
+                color: shieldUsed ? '#9a9081' : '#8a6d3b', whiteSpace: 'nowrap',
+              }}
+            >
+              🛡️ {shieldUsed ? '보호권 사용함' : '보호권 사용'}
+            </button>
             <button
               onClick={() => { if (confirm('이번 주 체크를 모두 초기화할까요? (새 주 시작 시 사용)')) saveHabits(habits.map(h => ({ ...h, days: [] }))); }}
               title="주간 리셋"
-              style={{ padding: '9px 14px', borderRadius: 10, fontSize: 12, fontWeight: 700, cursor: 'pointer', background: 'rgba(240,233,220,0.9)', border: '1px solid #ddd3c2', color: '#9a9081', whiteSpace: 'nowrap' }}
+              style={{ padding: '9px 14px', borderRadius: 6, fontSize: 12, fontWeight: 700, cursor: 'pointer', background: '#fffdf8', border: '1px solid #ddd3c2', color: '#7a7060', whiteSpace: 'nowrap' }}
             >
               🔄 주간 리셋
             </button>
