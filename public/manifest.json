@@ -1,0 +1,18 @@
+{
+  "name": "올진단 — 76개 진단 통합",
+  "short_name": "올진단",
+  "description": "76개의 자기이해 진단을 하나의 종합 프로필로. 성격, 커리어, 관계, 습관.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#faf7f2",
+  "theme_color": "#2b2620",
+  "lang": "ko",
+  "icons": [
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
