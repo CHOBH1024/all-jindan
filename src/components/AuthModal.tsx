@@ -90,7 +90,7 @@ export function AuthModal({ onClose, onLogin }: Props) {
           style={{ ...inputStyle, marginTop: 8 }}
         />
 
-        {error && <div style={{ fontSize: 12, color: '#f87171', marginTop: 10 }}>{error}</div>}
+        {error && <div style={{ fontSize: 12, color: '#dc2626', marginTop: 10 }}>{error}</div>}
 
         <button
           onClick={submit}

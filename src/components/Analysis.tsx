@@ -201,7 +201,7 @@ export function Analysis({ results, onGoDiagnosis }: Props) {
       {/* 강점 / 주의점 */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(300px,1fr))', gap: 16, marginTop: 16 }}>
         <div style={{ background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.25)', borderRadius: 16, padding: 20 }}>
-          <h2 style={{ fontSize: 15, fontWeight: 800, margin: '0 0 10px', color: '#34d399' }}>💪 종합 강점</h2>
+          <h2 style={{ fontSize: 15, fontWeight: 800, margin: '0 0 10px', color: '#15803d' }}>💪 종합 강점</h2>
           <ul style={{ margin: 0, paddingLeft: 18, fontSize: 13, color: '#6b6355', lineHeight: 2 }}>
             {strengths.map((s, i) => <li key={i}>{s}</li>)}
           </ul>

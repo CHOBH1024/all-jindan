@@ -5,6 +5,7 @@ import { MyResults } from './components/MyResults';
 import { Analysis } from './components/Analysis';
 import { FuturePlan } from './components/FuturePlan';
 import { Community } from './components/Community';
+import { Science } from './components/Science';
 import { AuthModal } from './components/AuthModal';
 import { api, getToken, getSavedUser, setToken, saveUser, type User } from './api';
 
@@ -19,7 +20,7 @@ export interface DiagnosisRecord {
   shared?: number;
 }
 
-export type Tab = 'home' | 'diagnosis' | 'results' | 'analysis' | 'future' | 'community';
+export type Tab = 'home' | 'diagnosis' | 'results' | 'analysis' | 'future' | 'community' | 'science';
 
 const TABS: { id: Tab; label: (en: boolean) => string; icon: string }[] = [
   { id: 'home', label: en => en ? 'Home' : '홈', icon: '🏠' },
@@ -28,6 +29,7 @@ const TABS: { id: Tab; label: (en: boolean) => string; icon: string }[] = [
   { id: 'analysis', label: en => en ? 'Analysis' : '통합 분석', icon: '🧬' },
   { id: 'future', label: en => en ? 'Future' : '미래 설계', icon: '🗺️' },
   { id: 'community', label: en => en ? 'Community' : '커뮤니티', icon: '👥' },
+  { id: 'science', label: en => en ? 'Science' : '과학적 근거', icon: '🔬' },
 ];
 
 export function loadResults(): DiagnosisRecord[] {
@@ -182,7 +184,7 @@ export default function App() {
       ? 'linear-gradient(160deg,#171310 0%,#211b14 100%)'
       : 'linear-gradient(160deg,#faf7f2 0%,#f3ede2 100%)',
     text: dark ? '#e8e2d6' : '#2b2620',
-    sub: dark ? '#8f8678' : '#8a8172',
+    sub: dark ? '#8f8678' : '#6b6355',
     card: dark ? 'rgba(34,28,22,0.92)' : 'rgba(255,253,248,0.95)',
     border: dark ? '#3a3127' : '#e5ded2',
     header: dark ? 'rgba(23,19,16,0.92)' : 'rgba(250,247,242,0.92)',
@@ -232,7 +234,7 @@ export default function App() {
                 {(user.name || '?')[0]}
               </div>
               <div style={{ fontSize: 12, fontWeight: 700 }}>{user.name}</div>
-              <button onClick={logout} style={{ padding: '6px 10px', borderRadius: 8, fontSize: 11, cursor: 'pointer', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', color: '#f87171' }}>로그아웃</button>
+              <button onClick={logout} style={{ padding: '6px 10px', borderRadius: 8, fontSize: 11, cursor: 'pointer', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', color: '#dc2626' }}>로그아웃</button>
               <button onClick={deleteAccount} title="계정 삭제" style={{ padding: '6px 10px', borderRadius: 8, fontSize: 11, cursor: 'pointer', background: 'transparent', border: '1px solid #ddd3c2', color: '#9a9081' }}>🗑️</button>
             </div>
           ) : (
@@ -253,6 +255,7 @@ export default function App() {
         {tab === 'analysis' && <Analysis results={results} onGoDiagnosis={() => setTab('diagnosis')} />}
         {tab === 'future' && <FuturePlan results={results} />}
         {tab === 'community' && <Community />}
+        {tab === 'science' && <Science />}
       </main>
 
       <footer style={{ borderTop: '1px solid #e5ded2', padding: '24px', textAlign: 'center' }}>

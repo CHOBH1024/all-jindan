@@ -147,11 +147,11 @@ export function FuturePlan({ results }: Props) {
                     fontSize: 10, fontWeight: 800, padding: '3px 10px', borderRadius: 999,
                     background: h.days.length >= 4 ? 'rgba(239,68,68,0.15)' : 'rgba(16,185,129,0.12)',
                     border: '1px solid ' + (h.days.length >= 4 ? 'rgba(239,68,68,0.3)' : 'rgba(16,185,129,0.3)'),
-                    color: h.days.length >= 4 ? '#f87171' : '#34d399',
+                    color: h.days.length >= 4 ? '#dc2626' : '#15803d',
                   }}>
                     🔥 이번 주 {h.days.length}일
                   </span>
-                  <button onClick={() => removeHabit(h.id)} style={{ padding: '4px 8px', borderRadius: 6, fontSize: 10, cursor: 'pointer', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', color: '#f87171' }}>삭제</button>
+                  <button onClick={() => removeHabit(h.id)} style={{ padding: '4px 8px', borderRadius: 6, fontSize: 10, cursor: 'pointer', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', color: '#dc2626' }}>삭제</button>
                 </div>
                 <div style={{ display: 'flex', gap: 4 }}>
                   {WEEK.map(d => (

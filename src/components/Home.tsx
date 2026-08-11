@@ -22,7 +22,7 @@ export function Home({ onGoDiagnosis, resultCount }: Props) {
         }}>
           나는 어떤 사람인가,<br />진단으로 <span style={{ color: '#8a6d3b' }}>쌓아가는</span> 나의 지도
         </h1>
-        <p style={{ fontSize: 'clamp(13px,2vw,15px)', color: '#8a8172', maxWidth: 540, margin: '0 auto 28px', lineHeight: 1.8 }}>
+        <p style={{ fontSize: 'clamp(13px,2vw,15px)', color: '#6b6355', maxWidth: 540, margin: '0 auto 28px', lineHeight: 1.8 }}>
           {SITES.length}개의 진단을 하나의 종합 프로필로. 성격, 커리어, 관계, 습관 —<br />
           네 개의 축으로 <strong style={{ color: '#5a5245' }}>오늘의 나</strong>와 <strong style={{ color: '#5a5245' }}>내일의 나</strong>를 잇습니다.
         </p>
@@ -38,7 +38,7 @@ export function Home({ onGoDiagnosis, resultCount }: Props) {
         >
           진단 시작하기
         </button>
-        <div style={{ fontSize: 12, color: '#a89f8e', marginTop: 12 }}>무료 · 로그인 없이 3분</div>
+        <div style={{ fontSize: 12, color: '#7a7060', marginTop: 12 }}>무료 · 로그인 없이 3분</div>
       </section>
 
       {/* 통계 */}
@@ -51,7 +51,7 @@ export function Home({ onGoDiagnosis, resultCount }: Props) {
         ].map(s => (
           <div key={s.l} style={{ textAlign: 'center' }}>
             <div style={{ fontSize: 28, fontWeight: 900, color: '#8a6d3b', fontFamily: "'Noto Serif KR',serif" }}>{s.n}</div>
-            <div style={{ fontSize: 11, color: '#a89f8e', marginTop: 2 }}>{s.l}</div>
+            <div style={{ fontSize: 11, color: '#7a7060', marginTop: 2 }}>{s.l}</div>
           </div>
         ))}
       </section>

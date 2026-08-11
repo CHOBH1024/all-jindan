@@ -123,7 +123,7 @@ export function DiagnosisList({ results, onSave, onGoAnalysis }: Props) {
                 >
                   {bm ? '⭐' : '☆'}
                 </button>
-                {isDone && <span style={{ fontSize: 10, background: 'rgba(16,185,129,0.15)', color: '#34d399', padding: '2px 8px', borderRadius: 999, fontWeight: 700 }}>✓ 완료</span>}
+                {isDone && <span style={{ fontSize: 10, background: 'rgba(16,185,129,0.15)', color: '#15803d', padding: '2px 8px', borderRadius: 999, fontWeight: 700 }}>✓ 완료</span>}
               </div>
               <div style={{ fontSize: 11, color: '#9a9081', minHeight: 30 }}>{s.target}</div>
               <div style={{ display: 'flex', gap: 6, marginTop: 'auto' }}>

@@ -51,7 +51,7 @@ export function MyResults({ results, onRemove, onShare, isLoggedIn }: Props) {
           onClick={exportData}
           style={{
             marginLeft: 'auto', padding: '9px 16px', borderRadius: 10, fontSize: 12, fontWeight: 700, cursor: 'pointer',
-            background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.3)', color: '#34d399',
+            background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.3)', color: '#15803d',
           }}
         >
           📦 데이터 내보내기
@@ -106,7 +106,7 @@ export function MyResults({ results, onRemove, onShare, isLoggedIn }: Props) {
                   padding: '6px 10px', borderRadius: 8, fontSize: 11, cursor: 'pointer',
                   background: r.shared ? 'rgba(16,185,129,0.1)' : 'rgba(99,102,241,0.1)',
                   border: '1px solid ' + (r.shared ? 'rgba(16,185,129,0.3)' : 'rgba(138,109,59,0.3)'),
-                  color: r.shared ? '#34d399' : '#8a6d3b',
+                  color: r.shared ? '#15803d' : '#8a6d3b',
                 }}
               >
                 {r.shared ? '✓ 공유됨' : '공유'}
@@ -116,7 +116,7 @@ export function MyResults({ results, onRemove, onShare, isLoggedIn }: Props) {
               onClick={() => onRemove(i)}
               style={{
                 padding: '6px 10px', borderRadius: 8, fontSize: 11, cursor: 'pointer',
-                background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', color: '#f87171',
+                background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', color: '#dc2626',
               }}
             >
               삭제
