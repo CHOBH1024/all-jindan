@@ -6,15 +6,96 @@ interface Props {
 }
 
 // 사이트 → 4축 매핑 (성격/커리어/관계/습관)
-const AXIS_MAP: Record<string, string[]> = {
-  '성격·심리': ['personality'],
-  '일·커리어': ['career'],
-  '건강·습관': ['habit'],
-  '기타': ['personality'],
+const AXIS_MAP: Record<string, string> = {
+"adhd-focus-radar": "습관",
+  "ai-readiness-radar": "커리어",
+  "attachment-style-radar": "관계",
+  "burnout-prevention-radar": "커리어",
+  "burnout-recovery-radar": "습관",
+  "caffeine-dependency-radar": "습관",
+  "caffeine-half-life-clock": "습관",
+  "crypto-fomo-radar": "성격",
+  "defensiveness-radar": "관계",
+  "digital-detox-radar": "습관",
+  "empathy-fatigue-radar": "관계",
+  "financial-anxiety-radar": "습관",
+  "fitness-mindset-radar": "습관",
+  "introvert-charm-radar": "성격",
+  "mindfulness-zen-radar": "습관",
+  "networking-battery-radar": "관계",
+  "notion-obsessive-radar": "커리어",
+  "perfectionism-radar": "성격",
+  "persona-mask-radar": "성격",
+  "procrastination-radar": "습관",
+  "reward-spending-radar": "습관",
+  "runway-calculator": "커리어",
+  "sleep-hygiene-radar": "습관",
+  "subscription-fatigue-radar": "습관",
+  "argument-recovery-radar": "관계",
+  "assertion-style-radar": "관계",
+  "async-work-radar": "커리어",
+  "FIRE-readiness-radar": "커리어",
+  "digital-sovereignty-fit": "커리어",
+  "side-hustle-fit": "커리어",
+  "imposter-syndrome-radar": "성격",
+  "leadership-archetype": "커리어",
+  "conflict-style-radar": "관계",
+  "decision-paralysis-radar": "습관",
+  "grit-focus-radar": "커리어",
+  "micro-achievement-journal": "커리어",
+  "micro-break-routine": "커리어",
+  "deep-work-battery": "습관",
+  "code-review-roulette": "커리어",
+  "prompt-efficiency-score": "커리어",
+  "meeting-cost-clock": "커리어",
+  "regret-spending-log": "습관",
+  "subtle-sabotage-test": "습관",
+  "async-readiness-index": "커리어",
+  "hyper-automation-tower": "커리어",
+  "mz-radar": "커리어",
+  "genius-radar": "성격",
+  "fx-radar": "성격",
+  "mood-weather": "성격",
+  "burnout-radar": "커리어",
+  "money-radar": "습관",
+  "side-hustle-radar": "커리어",
+  "true-hourly-rate": "커리어",
+  "control-tower": "커리어",
+  "harness-report": "성격",
+  "jeongbu": "성격",
+  "jikjang": "커리어",
+  "serverguchuk1024": "커리어",
+  "ilban-leadership-site": "커리어",
+  "sinang-inside": "성격",
+  "sibiljo": "커리어",
+  "regulation-hub": "커리어",
+  "make-it-mine-35": "습관",
+  "Gajeong": "관계",
+  "juganbogo3": "커리어",
+  "juganbogo4": "커리어",
+  "SOMOPUMGWANRI": "성격",
+  "MIRRIOR-APP": "성격",
+  "dowajoyo": "커리어",
+  "trend-dashboard": "성격",
+  "FocusFlow1024": "습관",
+  "aikiugihimdulda": "관계",
+  "MindPrism1024": "성격",
+  "chotan": "성격",
+  "ilban-leadership": "커리어",
+  "tongHAP": "성격",
 };
 
-const AXIS_NAMES = ['성격', '커리어', '관계', '습관'];
 const CAT_TO_AXIS: Record<string, number> = { '성격·심리': 0, '일·커리어': 1, '건강·습관': 3, '기타': 0 };
+const AXIS_NAMES = ['성격', '커리어', '관계', '습관'];
+
+function getAxis(site: string, category: string): number {
+  const axis = AXIS_MAP[site];
+  if (axis === '관계') return 2;
+  if (axis === '커리어') return 1;
+  if (axis === '습관') return 3;
+  if (axis === '성격') return 0;
+  return CAT_TO_AXIS[category] ?? 0;
+}
 
 export function Analysis({ results, onGoDiagnosis }: Props) {
   if (results.length === 0) {
@@ -33,11 +114,11 @@ export function Analysis({ results, onGoDiagnosis }: Props) {
     );
   }
 
-  // 4축 점수 계산 (기록 수 기반 + 점수 있으면 반영)
+  // 4축 점수 계산 (사이트별 정밀 매핑 — 기록 수 기반 + 점수 있으면 반영)
   const axisScores = [0, 0, 0, 0];
   const axisCounts = [0, 0, 0, 0];
   for (const r of results) {
-    const ax = CAT_TO_AXIS[catOf(r.title)] ?? 0;
+    const ax = getAxis(r.site, catOf(r.title));
     axisCounts[ax]++;
     axisScores[ax] += r.score ?? 70;
   }

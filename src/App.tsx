@@ -120,16 +120,28 @@ export default function App() {
 
   const handleLogin = (u: User) => {
     setUser(u);
-    // 로그인 후 서버 데이터 로드
+    // 로그인 후 서버 데이터 로드 → 로컬과 병합 (데이터 유실 방지)
     api.myDiagnoses().then(d => {
       const serverItems = (d.diagnoses || []).map((x: { site: string; title: string; result: string; emoji: string; score?: number; created_at: number; id: number; shared: number }) => ({
         site: x.site, title: x.title, result: x.result, emoji: x.emoji, score: x.score,
         date: new Date(x.created_at).toISOString().slice(0, 10),
         serverId: x.id, shared: x.shared,
       }));
-      if (serverItems.length > 0) {
-        setResults(serverItems);
-        saveResults(serverItems);
+      const local = loadResults();
+      // 병합: 서버 + 로컬, 같은 (site+result+date) 중복 제거
+      const seen = new Set<string>();
+      const merged: DiagnosisRecord[] = [];
+      const push = (r: DiagnosisRecord) => {
+        const key = `${r.site}|${r.result}|${r.date}`;
+        if (seen.has(key)) return;
+        seen.add(key);
+        merged.push(r);
+      };
+      serverItems.forEach(push);
+      local.forEach(push);
+      if (merged.length > 0) {
+        setResults(merged);
+        saveResults(merged);
       }
     }).catch(() => {});
   };
