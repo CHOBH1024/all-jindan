@@ -59,7 +59,20 @@ export function Analysis({ results, onGoDiagnosis }: Props) {
   return (
     <div>
       <h1 style={{ fontSize: 24, fontWeight: 900, margin: '0 0 4px' }}>🧬 통합 분석</h1>
-      <p style={{ fontSize: 13, color: '#94a3b8', margin: '0 0 20px' }}>{results.length}개의 진단을 종합한 "지금의 나"</p>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
+        <p style={{ fontSize: 13, color: '#94a3b8', margin: 0, flex: 1 }}>{results.length}개의 진단을 종합한 "지금의 나"</p>
+        {results.length > 0 && (
+          <button
+            onClick={() => shareProfile(results)}
+            style={{
+              padding: '9px 16px', borderRadius: 10, fontSize: 12, fontWeight: 800, cursor: 'pointer',
+              background: 'rgba(236,72,153,0.12)', border: '1px solid rgba(236,72,153,0.3)', color: '#f472b6', whiteSpace: 'nowrap',
+            }}
+          >
+            📤 종합 프로필 공유
+          </button>
+        )}
+      </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(300px,1fr))', gap: 16 }}>
         {/* 4축 레이더 (간이 차트) */}
@@ -200,4 +213,31 @@ function generateWarnings(results: DiagnosisRecord[]): string[] {
   if (results.some(r => r.title.includes('완벽'))) w.push('완벽주의 성향 — "완료"가 "완벽"보다 중요할 때가 있어요');
   if (w.length === 0) w.push('현재 기록만으로는 특별한 위험 신호가 없어요 — 진단을 늘려 더 정확히 볼 수 있어요');
   return w.slice(0, 3);
+}
+
+/* ---------- 종합 프로필 공유 (navigator.share + 클립보드) ---------- */
+export async function shareProfile(results: DiagnosisRecord[]) {
+  const top = results.slice(0, 5);
+  const lines = top.map(r => `${r.emoji} ${r.title}: ${r.result}${r.score !== undefined ? ` (${r.score}점)` : ''}`);
+  const text = [
+    '🧬 나는 어떤 사람인가 — 올진단 종합 프로필',
+    '',
+    ...lines,
+    '',
+    `${results.length}개 진단을 통합 분석했어요`,
+    '👉 all-jindan.pomyjo.com 에서 나도 받아보기',
+  ].join('\n');
+  const url = 'https://all-jindan.pomyjo.com/';
+  try {
+    if (navigator.share) {
+      await navigator.share({ title: '올진단 종합 프로필', text, url });
+      return;
+    }
+  } catch {}
+  try {
+    await navigator.clipboard.writeText(text + '\n' + url);
+    alert('📋 종합 프로필이 복사되었습니다! (붙여넣어 공유하세요)');
+  } catch {
+    window.open('https://x.com/intent/post?text=' + encodeURIComponent(text + '\n' + url), '_blank');
+  }
 }

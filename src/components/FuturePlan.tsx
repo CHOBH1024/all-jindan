@@ -119,7 +119,7 @@ export function FuturePlan({ results }: Props) {
         {/* 습관 트래커 */}
         <div style={{ background: 'rgba(30,41,59,0.5)', border: '1px solid #1e293b', borderRadius: 16, padding: 20 }}>
           <h2 style={{ fontSize: 15, fontWeight: 800, margin: '0 0 12px' }}>✅ 습관 트래커</h2>
-          <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
+          <div style={{ display: 'flex', gap: 8 }}>
             <input
               value={habitName}
               onChange={e => setHabitName(e.target.value)}
@@ -128,12 +128,27 @@ export function FuturePlan({ results }: Props) {
               style={{ flex: 1, padding: '9px 14px', borderRadius: 10, background: 'rgba(15,23,42,0.8)', border: '1px solid #334155', color: '#e2e8f0', fontSize: 13 }}
             />
             <button onClick={addHabit} style={{ padding: '9px 16px', borderRadius: 10, border: 'none', cursor: 'pointer', fontSize: 13, fontWeight: 800, color: '#fff', background: 'linear-gradient(135deg,#10b981,#34d399)' }}>추가</button>
+            <button
+              onClick={() => { if (confirm('이번 주 체크를 모두 초기화할까요? (새 주 시작 시 사용)')) saveHabits(habits.map(h => ({ ...h, days: [] }))); }}
+              title="주간 리셋"
+              style={{ padding: '9px 14px', borderRadius: 10, fontSize: 12, fontWeight: 700, cursor: 'pointer', background: 'rgba(30,41,59,0.8)', border: '1px solid #334155', color: '#94a3b8', whiteSpace: 'nowrap' }}
+            >
+              🔄 주간 리셋
+            </button>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {habits.map(h => (
               <div key={h.id} style={{ padding: '10px 12px', background: 'rgba(15,23,42,0.6)', borderRadius: 10, border: '1px solid #1e293b' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
                   <span style={{ flex: 1, fontSize: 13, fontWeight: 700 }}>{h.name}</span>
+                  <span style={{
+                    fontSize: 10, fontWeight: 800, padding: '3px 10px', borderRadius: 999,
+                    background: h.days.length >= 4 ? 'rgba(239,68,68,0.15)' : 'rgba(16,185,129,0.12)',
+                    border: '1px solid ' + (h.days.length >= 4 ? 'rgba(239,68,68,0.3)' : 'rgba(16,185,129,0.3)'),
+                    color: h.days.length >= 4 ? '#f87171' : '#34d399',
+                  }}>
+                    🔥 이번 주 {h.days.length}일
+                  </span>
                   <button onClick={() => removeHabit(h.id)} style={{ padding: '4px 8px', borderRadius: 6, fontSize: 10, cursor: 'pointer', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', color: '#f87171' }}>삭제</button>
                 </div>
                 <div style={{ display: 'flex', gap: 4 }}>

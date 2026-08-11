@@ -233,7 +233,7 @@ export default function App() {
 
       <main style={{ maxWidth: 1080, margin: '0 auto', padding: '24px 20px 60px' }}>
         {tab === 'home' && <Home onGoDiagnosis={() => setTab('diagnosis')} resultCount={results.length} />}
-        {tab === 'diagnosis' && <DiagnosisList results={results} onSave={addResult} />}
+        {tab === 'diagnosis' && <DiagnosisList results={results} onSave={addResult} onGoAnalysis={() => setTab('analysis')} />}
         {tab === 'results' && <MyResults results={results} onRemove={removeResult} onShare={shareResult} isLoggedIn={!!user} />}
         {tab === 'analysis' && <Analysis results={results} onGoDiagnosis={() => setTab('diagnosis')} />}
         {tab === 'future' && <FuturePlan results={results} />}
