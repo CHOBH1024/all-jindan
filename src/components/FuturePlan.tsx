@@ -80,13 +80,13 @@ export function FuturePlan({ results }: Props) {
   return (
     <div>
       <h1 style={{ fontSize: 24, fontWeight: 900, margin: '0 0 4px' }}>🗺️ 미래 설계</h1>
-      <p style={{ fontSize: 13, color: '#94a3b8', margin: '0 0 20px' }}>진단 결과를 바탕으로, 앞으로의 삶을 만들어갑니다.</p>
+      <p style={{ fontSize: 13, color: '#9a9081', margin: '0 0 20px' }}>진단 결과를 바탕으로, 앞으로의 삶을 만들어갑니다.</p>
 
       <WeeklyReport results={results} />
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(300px,1fr))', gap: 16 }}>
         {/* 목표 설정 */}
-        <div style={{ background: 'rgba(30,41,59,0.5)', border: '1px solid #1e293b', borderRadius: 16, padding: 20 }}>
+        <div style={{ background: 'rgba(255,253,248,0.9)', border: '1px solid #e5ded2', borderRadius: 16, padding: 20 }}>
           <h2 style={{ fontSize: 15, fontWeight: 800, margin: '0 0 12px' }}>🎯 목표 설정</h2>
           <div style={{ display: 'flex', gap: 8, marginBottom: 8 }}>
             <input
@@ -94,32 +94,32 @@ export function FuturePlan({ results }: Props) {
               onChange={e => setGoalText(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && addGoal()}
               placeholder="새 목표 입력..."
-              style={{ flex: 1, padding: '9px 14px', borderRadius: 10, background: 'rgba(15,23,42,0.8)', border: '1px solid #334155', color: '#e2e8f0', fontSize: 13 }}
+              style={{ flex: 1, padding: '9px 14px', borderRadius: 10, background: '#f0e9dc', border: '1px solid #ddd3c2', color: '#3d3830', fontSize: 13 }}
             />
             <select
               value={goalPeriod}
               onChange={e => setGoalPeriod(e.target.value as 'short' | 'long')}
-              style={{ padding: '9px', borderRadius: 10, background: 'rgba(15,23,42,0.8)', border: '1px solid #334155', color: '#cbd5e1', fontSize: 12 }}
+              style={{ padding: '9px', borderRadius: 10, background: '#f0e9dc', border: '1px solid #ddd3c2', color: '#6b6355', fontSize: 12 }}
             >
               <option value="short">단기</option>
               <option value="long">장기</option>
             </select>
-            <button onClick={addGoal} style={{ padding: '9px 16px', borderRadius: 10, border: 'none', cursor: 'pointer', fontSize: 13, fontWeight: 800, color: '#fff', background: 'linear-gradient(135deg,#6366f1,#8b5cf6)' }}>추가</button>
+            <button onClick={addGoal} style={{ padding: '9px 16px', borderRadius: 10, border: 'none', cursor: 'pointer', fontSize: 13, fontWeight: 800, color: '#fff', background: '#2b2620' }}>추가</button>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
             {goals.map(g => (
-              <div key={g.id} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px', background: 'rgba(15,23,42,0.6)', borderRadius: 10, border: '1px solid #1e293b' }}>
+              <div key={g.id} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px', background: '#f0e9dc', borderRadius: 10, border: '1px solid #e5ded2' }}>
                 <button onClick={() => toggleGoal(g.id)} style={{ width: 20, height: 20, borderRadius: 6, border: '1px solid #475569', cursor: 'pointer', background: g.done ? '#10b981' : 'transparent', color: '#fff', fontSize: 11 }}>{g.done ? '✓' : ''}</button>
-                <span style={{ flex: 1, fontSize: 13, textDecoration: g.done ? 'line-through' : 'none', color: g.done ? '#64748b' : '#e2e8f0' }}>{g.text}</span>
+                <span style={{ flex: 1, fontSize: 13, textDecoration: g.done ? 'line-through' : 'none', color: g.done ? '#9a9081' : '#3d3830' }}>{g.text}</span>
                 <span style={{ fontSize: 10, color: g.period === 'short' ? '#38bdf8' : '#a78bfa', fontWeight: 700 }}>{g.period === 'short' ? '단기' : '장기'}</span>
               </div>
             ))}
-            {goals.length === 0 && <div style={{ fontSize: 12, color: '#64748b', textAlign: 'center', padding: 16 }}>목표를 추가해보세요</div>}
+            {goals.length === 0 && <div style={{ fontSize: 12, color: '#9a9081', textAlign: 'center', padding: 16 }}>목표를 추가해보세요</div>}
           </div>
         </div>
 
         {/* 습관 트래커 */}
-        <div style={{ background: 'rgba(30,41,59,0.5)', border: '1px solid #1e293b', borderRadius: 16, padding: 20 }}>
+        <div style={{ background: 'rgba(255,253,248,0.9)', border: '1px solid #e5ded2', borderRadius: 16, padding: 20 }}>
           <h2 style={{ fontSize: 15, fontWeight: 800, margin: '0 0 12px' }}>✅ 습관 트래커</h2>
           <div style={{ display: 'flex', gap: 8 }}>
             <input
@@ -127,20 +127,20 @@ export function FuturePlan({ results }: Props) {
               onChange={e => setHabitName(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && addHabit()}
               placeholder="새 습관 (예: 30분 독서)"
-              style={{ flex: 1, padding: '9px 14px', borderRadius: 10, background: 'rgba(15,23,42,0.8)', border: '1px solid #334155', color: '#e2e8f0', fontSize: 13 }}
+              style={{ flex: 1, padding: '9px 14px', borderRadius: 10, background: '#f0e9dc', border: '1px solid #ddd3c2', color: '#3d3830', fontSize: 13 }}
             />
-            <button onClick={addHabit} style={{ padding: '9px 16px', borderRadius: 10, border: 'none', cursor: 'pointer', fontSize: 13, fontWeight: 800, color: '#fff', background: 'linear-gradient(135deg,#10b981,#34d399)' }}>추가</button>
+            <button onClick={addHabit} style={{ padding: '9px 16px', borderRadius: 10, border: 'none', cursor: 'pointer', fontSize: 13, fontWeight: 800, color: '#fff', background: '#2b2620' }}>추가</button>
             <button
               onClick={() => { if (confirm('이번 주 체크를 모두 초기화할까요? (새 주 시작 시 사용)')) saveHabits(habits.map(h => ({ ...h, days: [] }))); }}
               title="주간 리셋"
-              style={{ padding: '9px 14px', borderRadius: 10, fontSize: 12, fontWeight: 700, cursor: 'pointer', background: 'rgba(30,41,59,0.8)', border: '1px solid #334155', color: '#94a3b8', whiteSpace: 'nowrap' }}
+              style={{ padding: '9px 14px', borderRadius: 10, fontSize: 12, fontWeight: 700, cursor: 'pointer', background: 'rgba(240,233,220,0.9)', border: '1px solid #ddd3c2', color: '#9a9081', whiteSpace: 'nowrap' }}
             >
               🔄 주간 리셋
             </button>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {habits.map(h => (
-              <div key={h.id} style={{ padding: '10px 12px', background: 'rgba(15,23,42,0.6)', borderRadius: 10, border: '1px solid #1e293b' }}>
+              <div key={h.id} style={{ padding: '10px 12px', background: '#f0e9dc', borderRadius: 10, border: '1px solid #e5ded2' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
                   <span style={{ flex: 1, fontSize: 13, fontWeight: 700 }}>{h.name}</span>
                   <span style={{
@@ -159,8 +159,8 @@ export function FuturePlan({ results }: Props) {
                       key={d}
                       onClick={() => toggleDay(h.id, d)}
                       style={{
-                        width: 30, height: 30, borderRadius: 8, fontSize: 11, cursor: 'pointer', border: '1px solid #334155',
-                        background: h.days.includes(d) ? '#10b981' : 'transparent', color: h.days.includes(d) ? '#fff' : '#64748b',
+                        width: 30, height: 30, borderRadius: 8, fontSize: 11, cursor: 'pointer', border: '1px solid #ddd3c2',
+                        background: h.days.includes(d) ? '#10b981' : 'transparent', color: h.days.includes(d) ? '#fff' : '#9a9081',
                         fontWeight: 700,
                       }}
                     >
@@ -170,17 +170,17 @@ export function FuturePlan({ results }: Props) {
                 </div>
               </div>
             ))}
-            {habits.length === 0 && <div style={{ fontSize: 12, color: '#64748b', textAlign: 'center', padding: 16 }}>습관을 추가하고 매일 체크하세요</div>}
+            {habits.length === 0 && <div style={{ fontSize: 12, color: '#9a9081', textAlign: 'center', padding: 16 }}>습관을 추가하고 매일 체크하세요</div>}
           </div>
         </div>
       </div>
 
       {/* 진단 기반 추천 */}
-      <div style={{ background: 'rgba(99,102,241,0.08)', border: '1px solid rgba(99,102,241,0.25)', borderRadius: 16, padding: 20, marginTop: 16 }}>
-        <h2 style={{ fontSize: 15, fontWeight: 800, margin: '0 0 10px', color: '#a5b4fc' }}>✨ 진단 기반 추천 목표</h2>
+      <div style={{ background: 'rgba(99,102,241,0.08)', border: '1px solid rgba(138,109,59,0.25)', borderRadius: 16, padding: 20, marginTop: 16 }}>
+        <h2 style={{ fontSize: 15, fontWeight: 800, margin: '0 0 10px', color: '#8a6d3b' }}>✨ 진단 기반 추천 목표</h2>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
           {suggestedGoals.map((g, i) => (
-            <span key={i} style={{ padding: '8px 14px', borderRadius: 999, background: 'rgba(99,102,241,0.12)', border: '1px solid rgba(99,102,241,0.3)', color: '#c7d2fe', fontSize: 12, fontWeight: 600 }}>{g}</span>
+            <span key={i} style={{ padding: '8px 14px', borderRadius: 999, background: 'rgba(138,109,59,0.1)', border: '1px solid rgba(138,109,59,0.3)', color: '#6b6355', fontSize: 12, fontWeight: 600 }}>{g}</span>
           ))}
         </div>
       </div>
@@ -216,12 +216,12 @@ function WeeklyReport({ results }: { results: DiagnosisRecord[] }) {
 
   return (
     <div style={{
-      background: 'linear-gradient(135deg,rgba(99,102,241,0.12),rgba(139,92,246,0.12))',
-      border: '1px solid rgba(99,102,241,0.3)', borderRadius: 16, padding: 20, marginBottom: 16,
+      background: 'linear-gradient(135deg,rgba(138,109,59,0.1),rgba(138,109,59,0.1))',
+      border: '1px solid rgba(138,109,59,0.3)', borderRadius: 16, padding: 20, marginBottom: 16,
     }}>
       <h2 style={{ fontSize: 15, fontWeight: 800, margin: '0 0 8px' }}>📬 이번 주 리포트</h2>
       {loading ? (
-        <div style={{ fontSize: 12, color: '#94a3b8' }}>로딩 중...</div>
+        <div style={{ fontSize: 12, color: '#9a9081' }}>로딩 중...</div>
       ) : isLoggedIn && report?.stats ? (
         <div>
           <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 8 }}>
@@ -232,17 +232,17 @@ function WeeklyReport({ results }: { results: DiagnosisRecord[] }) {
               { label: '공유', value: report.stats.shared },
             ].map(s => (
               <div key={s.label} style={{ flex: 1, minWidth: 60, textAlign: 'center', background: 'rgba(15,23,42,0.5)', borderRadius: 10, padding: '10px 6px' }}>
-                <div style={{ fontSize: 20, fontWeight: 900, color: '#a5b4fc' }}>{s.value}</div>
-                <div style={{ fontSize: 10, color: '#94a3b8' }}>{s.label}</div>
+                <div style={{ fontSize: 20, fontWeight: 900, color: '#8a6d3b' }}>{s.value}</div>
+                <div style={{ fontSize: 10, color: '#9a9081' }}>{s.label}</div>
               </div>
             ))}
           </div>
-          <div style={{ fontSize: 12, color: '#c7d2fe' }}>{report.message}</div>
+          <div style={{ fontSize: 12, color: '#6b6355' }}>{report.message}</div>
         </div>
       ) : (
-        <div style={{ fontSize: 12, color: '#94a3b8', lineHeight: 1.7 }}>
+        <div style={{ fontSize: 12, color: '#9a9081', lineHeight: 1.7 }}>
           {weekResults.length > 0
-            ? <>이번 주 진단 <strong style={{ color: '#a5b4fc' }}>{weekResults.length}개</strong> 기록! 꾸준함이 힘입니다 💪 <br />로그인하면 상세 리포트를 받을 수 있어요.</>
+            ? <>이번 주 진단 <strong style={{ color: '#8a6d3b' }}>{weekResults.length}개</strong> 기록! 꾸준함이 힘입니다 💪 <br />로그인하면 상세 리포트를 받을 수 있어요.</>
             : <>이번 주에는 아직 진단 기록이 없어요. 5분이면 하나 받을 수 있어요! 🧩 <br />로그인하면 상세 리포트가 제공됩니다.</>}
         </div>
       )}

@@ -178,21 +178,24 @@ export default function App() {
   };
 
   const theme = {
-    bg: dark ? 'linear-gradient(160deg,#0a0a14 0%,#101828 100%)' : 'linear-gradient(160deg,#f1f5f9 0%,#e2e8f0 100%)',
-    text: dark ? '#e2e8f0' : '#0f172a',
-    sub: dark ? '#94a3b8' : '#64748b',
-    card: dark ? 'rgba(30,41,59,0.5)' : 'rgba(255,255,255,0.8)',
-    border: dark ? '#1e293b' : '#cbd5e1',
-    header: dark ? 'rgba(10,10,20,0.85)' : 'rgba(255,255,255,0.9)',
+    bg: dark
+      ? 'linear-gradient(160deg,#171310 0%,#211b14 100%)'
+      : 'linear-gradient(160deg,#faf7f2 0%,#f3ede2 100%)',
+    text: dark ? '#e8e2d6' : '#2b2620',
+    sub: dark ? '#8f8678' : '#8a8172',
+    card: dark ? 'rgba(34,28,22,0.92)' : 'rgba(255,253,248,0.95)',
+    border: dark ? '#3a3127' : '#e5ded2',
+    header: dark ? 'rgba(23,19,16,0.92)' : 'rgba(250,247,242,0.92)',
+    accent: '#8a6d3b',
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: theme.bg, color: theme.text, fontFamily: "'Pretendard','Noto Sans KR',system-ui,sans-serif", transition: 'background .3s, color .3s' }}>
+    <div style={{ minHeight: '100vh', background: theme.bg, color: theme.text, fontFamily: "'Noto Serif KR','Noto Sans KR',system-ui,sans-serif", transition: 'background .3s, color .3s' }}>
       <header style={{ position: 'sticky', top: 0, zIndex: 50, background: theme.header, backdropFilter: 'blur(12px)', borderBottom: '1px solid ' + theme.border }}>
         <div style={{ maxWidth: 1080, margin: '0 auto', padding: '12px 20px', display: 'flex', alignItems: 'center', gap: 16 }}>
-          <div style={{ fontSize: 22, fontWeight: 900, letterSpacing: -1, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8 }} onClick={() => setTab('home')}>
-            <span style={{ fontSize: 26 }}>🧬</span>
-            <span>올<span style={{ color: '#818cf8' }}>진단</span></span>
+          <div style={{ fontSize: 22, fontWeight: 900, letterSpacing: -1, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, fontFamily: "'Noto Serif KR',serif" }} onClick={() => setTab('home')}>
+            <span style={{ fontSize: 24 }}>🧬</span>
+            <span>올<span style={{ color: '#8a6d3b' }}>진단</span></span>
           </div>
           <nav style={{ display: 'flex', gap: 4, flex: 1, overflowX: 'auto' }}>
             {TABS.map(tabItem => (
@@ -201,7 +204,7 @@ export default function App() {
                 onClick={() => setTab(tabItem.id)}
                 style={{
                   padding: '8px 14px', borderRadius: 999, border: 'none', cursor: 'pointer', fontSize: 13, fontWeight: 700, whiteSpace: 'nowrap',
-                  background: tab === tabItem.id ? 'linear-gradient(135deg,#6366f1,#8b5cf6)' : 'transparent',
+                  background: tab === tabItem.id ? '#2b2620' : 'transparent',
                   color: tab === tabItem.id ? '#fff' : theme.sub,
                 }}
               >
@@ -225,17 +228,17 @@ export default function App() {
           </button>
           {user ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <div style={{ width: 32, height: 32, borderRadius: '50%', background: 'linear-gradient(135deg,#6366f1,#8b5cf6)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 800 }}>
+              <div style={{ width: 32, height: 32, borderRadius: '50%', background: '#2b2620', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 800 }}>
                 {(user.name || '?')[0]}
               </div>
               <div style={{ fontSize: 12, fontWeight: 700 }}>{user.name}</div>
               <button onClick={logout} style={{ padding: '6px 10px', borderRadius: 8, fontSize: 11, cursor: 'pointer', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', color: '#f87171' }}>로그아웃</button>
-              <button onClick={deleteAccount} title="계정 삭제" style={{ padding: '6px 10px', borderRadius: 8, fontSize: 11, cursor: 'pointer', background: 'transparent', border: '1px solid #334155', color: '#64748b' }}>🗑️</button>
+              <button onClick={deleteAccount} title="계정 삭제" style={{ padding: '6px 10px', borderRadius: 8, fontSize: 11, cursor: 'pointer', background: 'transparent', border: '1px solid #ddd3c2', color: '#9a9081' }}>🗑️</button>
             </div>
           ) : (
             <button
               onClick={() => setShowAuth(true)}
-              style={{ padding: '9px 18px', borderRadius: 999, border: 'none', cursor: 'pointer', fontSize: 13, fontWeight: 800, color: '#fff', background: 'linear-gradient(135deg,#6366f1,#8b5cf6)' }}
+              style={{ padding: '9px 18px', borderRadius: 999, border: 'none', cursor: 'pointer', fontSize: 13, fontWeight: 800, color: '#fff', background: '#2b2620' }}
             >
               로그인
             </button>
@@ -252,12 +255,12 @@ export default function App() {
         {tab === 'community' && <Community />}
       </main>
 
-      <footer style={{ borderTop: '1px solid #1e293b', padding: '24px', textAlign: 'center' }}>
+      <footer style={{ borderTop: '1px solid #e5ded2', padding: '24px', textAlign: 'center' }}>
         <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 12 }}>
-          <a href="https://hub.pomyjo.com/" style={{ padding: '10px 20px', borderRadius: 999, background: 'rgba(99,102,241,0.12)', color: '#a5b4fc', fontSize: 12, fontWeight: 700, textDecoration: 'none' }}>🧠 POMYJO 진단 허브</a>
-          <a href="mailto:nokira1024@gmail.com" style={{ padding: '10px 20px', borderRadius: 999, background: 'rgba(30,41,59,0.6)', color: '#94a3b8', fontSize: 12, fontWeight: 700, textDecoration: 'none' }}>📧 문의: nokira1024@gmail.com</a>
+          <a href="https://hub.pomyjo.com/" style={{ padding: '10px 20px', borderRadius: 999, background: 'rgba(138,109,59,0.1)', color: '#8a6d3b', fontSize: 12, fontWeight: 700, textDecoration: 'none' }}>🧠 POMYJO 진단 허브</a>
+          <a href="mailto:nokira1024@gmail.com" style={{ padding: '10px 20px', borderRadius: 999, background: 'rgba(240,233,220,0.85)', color: '#9a9081', fontSize: 12, fontWeight: 700, textDecoration: 'none' }}>📧 문의: nokira1024@gmail.com</a>
         </div>
-        <div style={{ fontSize: 11, color: '#64748b' }}>© 2026 올진단 · POMYJO · 문의: nokira1024@gmail.com · 진단 결과는 자기 이해를 위한 참고 자료입니다</div>
+        <div style={{ fontSize: 11, color: '#9a9081' }}>© 2026 올진단 · POMYJO · 문의: nokira1024@gmail.com · 진단 결과는 자기 이해를 위한 참고 자료입니다</div>
       </footer>
 
       {showAuth && <AuthModal onClose={() => setShowAuth(false)} onLogin={handleLogin} />}

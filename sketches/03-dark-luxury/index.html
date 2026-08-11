@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>올진단 — Dark Luxury</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Noto Sans KR', -apple-system, sans-serif;
+    background: #0d0d0f;
+    color: #e8e4dc;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .serif { font-family: 'Playfair Display', 'Noto Serif KR', serif; }
+
+  /* 헤더 */
+  header { border-bottom: 1px solid rgba(201,168,103,0.25); background: rgba(13,13,15,0.9); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 10; }
+  .header-inner { max-width: 1080px; margin: 0 auto; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; }
+  .logo { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; letter-spacing: 1px; }
+  .logo span { color: #c9a867; }
+  nav { display: flex; gap: 2px; }
+  nav a { padding: 8px 14px; font-size: 13px; color: #8f8a80; text-decoration: none; letter-spacing: 0.3px; }
+  nav a:hover { color: #e8e4dc; }
+  nav a.active { color: #c9a867; border-bottom: 1px solid #c9a867; }
+  .btn-login {
+    padding: 9px 20px; border: 1px solid #c9a867; background: transparent; color: #c9a867;
+    font-size: 12px; letter-spacing: 1px; cursor: pointer; transition: all .2s;
+  }
+  .btn-login:hover { background: #c9a867; color: #0d0d0f; }
+
+  /* 히어로 */
+  .hero { max-width: 1080px; margin: 0 auto; padding: 88px 24px 56px; text-align: center; position: relative; }
+  .hero::before {
+    content: ''; position: absolute; inset: 40px -10%; pointer-events: none;
+    background: radial-gradient(ellipse 60% 50% at 50% 0%, rgba(201,168,103,0.08), transparent 70%);
+  }
+  .hero .kicker { font-size: 11px; letter-spacing: 4px; color: #c9a867; text-transform: uppercase; margin-bottom: 20px; font-weight: 500; }
+  .hero h1 {
+    font-family: 'Playfair Display', serif; font-size: 46px; font-weight: 700;
+    line-height: 1.25; letter-spacing: -0.5px; margin-bottom: 20px;
+  }
+  .hero h1 em { font-style: italic; color: #c9a867; }
+  .hero p { font-size: 14px; color: #8f8a80; max-width: 460px; margin: 0 auto 36px; font-weight: 300; }
+  .btn-primary {
+    padding: 14px 36px; background: linear-gradient(135deg, #c9a867, #a8853f); color: #0d0d0f;
+    border: none; font-size: 13px; font-weight: 700; letter-spacing: 1px; cursor: pointer;
+    box-shadow: 0 4px 24px rgba(201,168,103,0.25); transition: all .2s;
+  }
+  .btn-primary:hover { box-shadow: 0 6px 32px rgba(201,168,103,0.4); transform: translateY(-1px); }
+  .hero-stats { display: flex; gap: 48px; justify-content: center; margin-top: 48px; }
+  .hero-stats .stat .num { font-family: 'Playfair Display', serif; font-size: 30px; font-weight: 700; color: #c9a867; }
+  .hero-stats .stat .lbl { font-size: 11px; color: #8f8a80; letter-spacing: 1px; margin-top: 2px; }
+
+  /* 카테고리 */
+  .cats { max-width: 1080px; margin: 0 auto; padding: 8px 24px; display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
+  .cats button {
+    padding: 7px 18px; font-size: 12px; border: 1px solid rgba(201,168,103,0.3); background: transparent;
+    color: #8f8a80; cursor: pointer; letter-spacing: 0.5px; transition: all .2s;
+  }
+  .cats button:hover { border-color: #c9a867; color: #c9a867; }
+  .cats button.active { background: rgba(201,168,103,0.12); border-color: #c9a867; color: #c9a867; }
+
+  /* 그리드 */
+  .grid { max-width: 1080px; margin: 0 auto; padding: 32px 24px 88px; display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
+  .card {
+    background: linear-gradient(160deg, rgba(24,24,28,0.9), rgba(17,17,20,0.9));
+    border: 1px solid rgba(255,255,255,0.06); padding: 22px; display: flex; flex-direction: column; gap: 10px;
+    transition: border-color .2s, transform .2s;
+  }
+  .card:hover { border-color: rgba(201,168,103,0.4); transform: translateY(-2px); }
+  .card .tag { font-size: 10px; letter-spacing: 2px; color: #c9a867; font-weight: 500; text-transform: uppercase; }
+  .card h3 { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 700; letter-spacing: 0.3px; }
+  .card p { font-size: 12px; color: #8f8a80; flex: 1; font-weight: 300; }
+  .card .actions { display: flex; gap: 8px; }
+  .card .actions a { flex: 1; text-align: center; padding: 10px 0; font-size: 12px; text-decoration: none; letter-spacing: 0.5px; transition: all .2s; }
+  .card .go { background: #c9a867; color: #0d0d0f; font-weight: 700; }
+  .card .go:hover { background: #dbb976; }
+  .card .save { border: 1px solid rgba(201,168,103,0.3); color: #c9a867; }
+  .card .save:hover { border-color: #c9a867; }
+
+  footer { border-top: 1px solid rgba(201,168,103,0.15); padding: 32px 24px; text-align: center; font-size: 11px; color: #5f5a52; letter-spacing: 1px; }
+</style>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <div class="logo">올진단<span>.</span></div>
+    <nav><a class="active">Home</a><a>진단</a><a>기록</a><a>분석</a><a>커뮤니티</a></nav>
+    <button class="btn-login">로그인</button>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="kicker">Know Thyself</div>
+  <h1>자기 이해는<br>가장 <em>고급스러운</em> 투자</h1>
+  <p>76개의 진단이 빚어내는 나만의 종합 프로필. 성격, 커리어, 관계, 습관 — 네 개의 축으로 나를 정밀하게 그립니다.</p>
+  <button class="btn-primary">진단 시작하기</button>
+  <div class="hero-stats">
+    <div class="stat"><div class="num">76</div><div class="lbl">DIAGNOSES</div></div>
+    <div class="stat"><div class="num">04</div><div class="lbl">AXES</div></div>
+    <div class="stat"><div class="num">12K+</div><div class="lbl">RECORDS</div></div>
+  </div>
+</section>
+
+<div class="cats">
+  <button class="active">전체</button><button>성격·심리</button><button>일·커리어</button><button>건강·습관</button><button>관계</button><button>재무</button>
+</div>
+
+<section class="grid">
+  <div class="card"><div class="tag">Personality</div><h3>애착 유형 진단</h3><p>관계의 근원, 애착 패턴을 탐구합니다.</p><div class="actions"><a class="go" href="#">진단하기</a><a class="save" href="#">기록</a></div></div>
+  <div class="card"><div class="tag">Career</div><h3>MZ 직장 DNA</h3><p>일하는 본질적 성향을 분석합니다.</p><div class="actions"><a class="go" href="#">진단하기</a><a class="save" href="#">기록</a></div></div>
+  <div class="card"><div class="tag">Habit</div><h3>수면 위생 진단</h3><p>수면의 질이 하루의 질입니다.</p><div class="actions"><a class="go" href="#">진단하기</a><a class="save" href="#">기록</a></div></div>
+  <div class="card"><div class="tag">Emotion</div><h3>번아웃 예방 진단</h3><p>소진 전 신호를 정확히 포착합니다.</p><div class="actions"><a class="go" href="#">진단하기</a><a class="save" href="#">기록</a></div></div>
+  <div class="card"><div class="tag">Finance</div><h3>금융 불안 진단</h3><p>재정에 대한 감정을 직시합니다.</p><div class="actions"><a class="go" href="#">진단하기</a><a class="save" href="#">기록</a></div></div>
+  <div class="card"><div class="tag">Relation</div><h3>주장 스타일 진단</h3><p>자기표현 방식의 강점을 발견합니다.</p><div class="actions"><a class="go" href="#">진단하기</a><a class="save" href="#">기록</a></div></div>
+</section>
+
+<footer>© 2026 ALL-JINDAN · nokira1024@gmail.com</footer>
+</body>
+</html>

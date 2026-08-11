@@ -103,10 +103,10 @@ export function Analysis({ results, onGoDiagnosis }: Props) {
       <div style={{ textAlign: 'center', padding: '60px 20px' }}>
         <div style={{ fontSize: 56, marginBottom: 12 }}>🧬</div>
         <h1 style={{ fontSize: 22, fontWeight: 900, margin: '0 0 8px' }}>통합 분석을 시작하려면 진단이 필요해요</h1>
-        <p style={{ fontSize: 13, color: '#94a3b8', margin: '0 0 20px' }}>진단 3개 이상 기록하면 종합 프로필이 완성됩니다.</p>
+        <p style={{ fontSize: 13, color: '#9a9081', margin: '0 0 20px' }}>진단 3개 이상 기록하면 종합 프로필이 완성됩니다.</p>
         <button
           onClick={onGoDiagnosis}
-          style={{ padding: '12px 28px', borderRadius: 999, border: 'none', cursor: 'pointer', fontSize: 14, fontWeight: 800, color: '#fff', background: 'linear-gradient(135deg,#6366f1,#8b5cf6)' }}
+          style={{ padding: '12px 28px', borderRadius: 999, border: 'none', cursor: 'pointer', fontSize: 14, fontWeight: 800, color: '#fff', background: '#2b2620' }}
         >
           진단하러 가기 →
         </button>
@@ -141,13 +141,13 @@ export function Analysis({ results, onGoDiagnosis }: Props) {
     <div>
       <h1 style={{ fontSize: 24, fontWeight: 900, margin: '0 0 4px' }}>🧬 통합 분석</h1>
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
-        <p style={{ fontSize: 13, color: '#94a3b8', margin: 0, flex: 1 }}>{results.length}개의 진단을 종합한 "지금의 나"</p>
+        <p style={{ fontSize: 13, color: '#9a9081', margin: 0, flex: 1 }}>{results.length}개의 진단을 종합한 "지금의 나"</p>
         {results.length > 0 && (
           <button
             onClick={() => shareProfile(results)}
             style={{
               padding: '9px 16px', borderRadius: 10, fontSize: 12, fontWeight: 800, cursor: 'pointer',
-              background: 'rgba(236,72,153,0.12)', border: '1px solid rgba(236,72,153,0.3)', color: '#f472b6', whiteSpace: 'nowrap',
+              background: 'rgba(138,109,59,0.1)', border: '1px solid rgba(138,109,59,0.3)', color: '#8a6d3b', whiteSpace: 'nowrap',
             }}
           >
             📤 종합 프로필 공유
@@ -157,7 +157,7 @@ export function Analysis({ results, onGoDiagnosis }: Props) {
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(300px,1fr))', gap: 16 }}>
         {/* 4축 레이더 (간이 차트) */}
-        <div style={{ background: 'rgba(30,41,59,0.5)', border: '1px solid #1e293b', borderRadius: 16, padding: 20 }}>
+        <div style={{ background: 'rgba(255,253,248,0.9)', border: '1px solid #e5ded2', borderRadius: 16, padding: 20 }}>
           <h2 style={{ fontSize: 15, fontWeight: 800, margin: '0 0 16px' }}>4축 종합 레이더</h2>
           {hasAxis ? (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -165,33 +165,33 @@ export function Analysis({ results, onGoDiagnosis }: Props) {
                 <div key={i}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, marginBottom: 4 }}>
                     <span style={{ fontWeight: 700 }}>{name}</span>
-                    <span style={{ color: '#818cf8', fontWeight: 800 }}>{scores[i] > 0 ? scores[i] : '미측정'}</span>
+                    <span style={{ color: '#8a6d3b', fontWeight: 800 }}>{scores[i] > 0 ? scores[i] : '미측정'}</span>
                   </div>
                   <div style={{ height: 8, background: 'rgba(51,65,85,0.5)', borderRadius: 999, overflow: 'hidden' }}>
                     <div style={{ height: '100%', width: `${scores[i]}%`, background: 'linear-gradient(90deg,#6366f1,#8b5cf6)', borderRadius: 999, transition: 'width .5s' }} />
                   </div>
                 </div>
               ))}
-              <div style={{ fontSize: 11, color: '#64748b', marginTop: 4 }}>
+              <div style={{ fontSize: 11, color: '#9a9081', marginTop: 4 }}>
                 {axisCounts[0] > 0 && `성격 ${axisCounts[0]}개 · `}{axisCounts[1] > 0 && `커리어 ${axisCounts[1]}개 · `}{axisCounts[3] > 0 && `습관 ${axisCounts[3]}개`}
               </div>
             </div>
           ) : (
-            <div style={{ fontSize: 12, color: '#64748b' }}>진단을 더 기록하면 레이더가 채워집니다.</div>
+            <div style={{ fontSize: 12, color: '#9a9081' }}>진단을 더 기록하면 레이더가 채워집니다.</div>
           )}
         </div>
 
         {/* 종합 프로필 */}
-        <div style={{ background: 'linear-gradient(135deg,rgba(99,102,241,0.12),rgba(139,92,246,0.08))', border: '1px solid rgba(99,102,241,0.3)', borderRadius: 16, padding: 20 }}>
+        <div style={{ background: 'linear-gradient(135deg,rgba(138,109,59,0.1),rgba(139,92,246,0.08))', border: '1px solid rgba(138,109,59,0.3)', borderRadius: 16, padding: 20 }}>
           <h2 style={{ fontSize: 15, fontWeight: 800, margin: '0 0 12px' }}>나의 종합 프로필</h2>
-          <div style={{ fontSize: 13, color: '#cbd5e1', lineHeight: 1.8 }}>
+          <div style={{ fontSize: 13, color: '#6b6355', lineHeight: 1.8 }}>
             <p style={{ margin: '0 0 8px' }}>
-              당신은 <strong style={{ color: '#a5b4fc' }}>{topCat ? topCat[0] : '다양한'} 영역</strong>에서 가장 많은 진단을 받았어요.
+              당신은 <strong style={{ color: '#8a6d3b' }}>{topCat ? topCat[0] : '다양한'} 영역</strong>에서 가장 많은 진단을 받았어요.
             </p>
             <p style={{ margin: '0 0 8px' }}>
               최근 결과: {topResults.map((r, i) => <span key={i}>{r.emoji} {r.result}{i < topResults.length - 1 ? ', ' : ''}</span>)}
             </p>
-            <p style={{ margin: 0, fontSize: 12, color: '#94a3b8' }}>
+            <p style={{ margin: 0, fontSize: 12, color: '#9a9081' }}>
               진단을 더 많이 기록할수록, 이 프로필은 당신을 더 정확히 그려냅니다.
             </p>
           </div>
@@ -202,13 +202,13 @@ export function Analysis({ results, onGoDiagnosis }: Props) {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(300px,1fr))', gap: 16, marginTop: 16 }}>
         <div style={{ background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.25)', borderRadius: 16, padding: 20 }}>
           <h2 style={{ fontSize: 15, fontWeight: 800, margin: '0 0 10px', color: '#34d399' }}>💪 종합 강점</h2>
-          <ul style={{ margin: 0, paddingLeft: 18, fontSize: 13, color: '#cbd5e1', lineHeight: 2 }}>
+          <ul style={{ margin: 0, paddingLeft: 18, fontSize: 13, color: '#6b6355', lineHeight: 2 }}>
             {strengths.map((s, i) => <li key={i}>{s}</li>)}
           </ul>
         </div>
         <div style={{ background: 'rgba(245,158,11,0.06)', border: '1px solid rgba(245,158,11,0.2)', borderRadius: 16, padding: 20 }}>
           <h2 style={{ fontSize: 15, fontWeight: 800, margin: '0 0 10px', color: '#fbbf24' }}>⚠️ 주의 포인트</h2>
-          <ul style={{ margin: 0, paddingLeft: 18, fontSize: 13, color: '#cbd5e1', lineHeight: 2 }}>
+          <ul style={{ margin: 0, paddingLeft: 18, fontSize: 13, color: '#6b6355', lineHeight: 2 }}>
             {warnings.map((s, i) => <li key={i}>{s}</li>)}
           </ul>
         </div>
@@ -234,9 +234,9 @@ function TrendChart({ results }: { results: DiagnosisRecord[] }) {
   if (trends.length === 0) return null;
 
   return (
-    <div style={{ background: 'rgba(30,41,59,0.5)', border: '1px solid #1e293b', borderRadius: 16, padding: 20, marginTop: 16 }}>
+    <div style={{ background: 'rgba(255,253,248,0.9)', border: '1px solid #e5ded2', borderRadius: 16, padding: 20, marginTop: 16 }}>
       <h2 style={{ fontSize: 15, fontWeight: 800, margin: '0 0 4px' }}>📈 재진단 변화 추이</h2>
-      <p style={{ fontSize: 11, color: '#64748b', margin: '0 0 16px' }}>같은 진단을 다시 받으면 변화를 그래프로 볼 수 있어요</p>
+      <p style={{ fontSize: 11, color: '#9a9081', margin: '0 0 16px' }}>같은 진단을 다시 받으면 변화를 그래프로 볼 수 있어요</p>
       {trends.map(([title, list]) => {
         const sorted = [...list].sort((a, b) => a.date.localeCompare(b.date));
         const max = Math.max(...sorted.map(s => s.score || 0), 100);
@@ -248,16 +248,16 @@ function TrendChart({ results }: { results: DiagnosisRecord[] }) {
             <div style={{ display: 'flex', alignItems: 'flex-end', gap: 8, height: 80, padding: '0 4px' }}>
               {sorted.map((s, i) => (
                 <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, flex: 1 }}>
-                  <div style={{ fontSize: 10, fontWeight: 800, color: '#818cf8' }}>{s.score}</div>
+                  <div style={{ fontSize: 10, fontWeight: 800, color: '#8a6d3b' }}>{s.score}</div>
                   <div style={{
                     width: '100%', maxWidth: 50, height: Math.max(8, ((s.score || 0) / max) * 60), borderRadius: '6px 6px 2px 2px',
-                    background: 'linear-gradient(180deg,#6366f1,#8b5cf6)', transition: 'height .5s',
+                    background: '#2b2620', transition: 'height .5s',
                   }} />
-                  <div style={{ fontSize: 9, color: '#64748b' }}>{s.date.slice(5)}</div>
+                  <div style={{ fontSize: 9, color: '#9a9081' }}>{s.date.slice(5)}</div>
                 </div>
               ))}
             </div>
-            <div style={{ fontSize: 11, color: '#94a3b8', marginTop: 6 }}>
+            <div style={{ fontSize: 11, color: '#9a9081', marginTop: 6 }}>
               {sorted.length >= 2 && (sorted[sorted.length - 1].score || 0) > (sorted[0].score || 0)
                 ? `📈 ${sorted[0].score}점 → ${sorted[sorted.length - 1].score}점 (${sorted[sorted.length - 1].score! - sorted[0].score!}점 상승!)`
                 : `📉 ${sorted[0].score}점 → ${sorted[sorted.length - 1].score}점`}
