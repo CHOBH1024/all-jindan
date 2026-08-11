@@ -76,4 +76,8 @@ export const api = {
   toggleLike: (id: number) => req('POST', `/feed/${id}/like`),
   deleteAccount: () => req('DELETE', '/me'),
   exportData: () => req('GET', '/me/export'),
+  follow: (userId: number) => req('POST', `/users/${userId}/follow`),
+  unfollow: (userId: number) => req('DELETE', `/users/${userId}/follow`),
+  myFollowing: () => req('GET', '/me/following'),
+  weeklyReport: () => req('GET', '/me/weekly-report'),
 };

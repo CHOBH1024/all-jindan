@@ -61,6 +61,28 @@ export function Community() {
     } catch {}
   };
 
+  const toggleFollow = async (userId: number) => {
+    if (!isLoggedIn) return;
+    try {
+      const cur = following[userId];
+      if (cur) await api.unfollow(userId);
+      else await api.follow(userId);
+      setFollowing({ ...following, [userId]: !cur });
+    } catch {}
+  };
+
+  const [following, setFollowing] = useState<Record<number, boolean>>(() => {
+    // 로그인 시 내 팔로우 목록 로드
+    if (getToken()) {
+      api.myFollowing().then(d => {
+        const m: Record<number, boolean> = {};
+        (d.following || []).forEach((f: { following_id: number }) => { m[f.following_id] = true; });
+        setFollowing(m);
+      }).catch(() => {});
+    }
+    return {};
+  });
+
   return (
     <div>
       <h1 style={{ fontSize: 24, fontWeight: 900, margin: '0 0 4px' }}>👥 커뮤니티 피드</h1>
@@ -85,6 +107,19 @@ export function Community() {
                   <span style={{ fontSize: 11, color: '#64748b' }}>
                     {new Date(f.created_at).toLocaleDateString('ko-KR')}
                   </span>
+                  {isLoggedIn && (f as { user_id?: number }).user_id !== undefined && (f as { user_id: number }).user_id !== (JSON.parse(localStorage.getItem('alljindan_user') || '{}').id) && (
+                    <button
+                      onClick={() => toggleFollow((f as { user_id: number }).user_id)}
+                      style={{
+                        padding: '3px 10px', borderRadius: 999, fontSize: 10, fontWeight: 700, cursor: 'pointer',
+                        background: following[(f as { user_id: number }).user_id] ? 'rgba(30,41,59,0.6)' : 'rgba(99,102,241,0.15)',
+                        border: '1px solid ' + (following[(f as { user_id: number }).user_id] ? '#334155' : 'rgba(99,102,241,0.4)'),
+                        color: following[(f as { user_id: number }).user_id] ? '#94a3b8' : '#a5b4fc',
+                      }}
+                    >
+                      {following[(f as { user_id: number }).user_id] ? '✓ 팔로잉' : '+ 팔로우'}
+                    </button>
+                  )}
                 </div>
                 <div style={{ fontSize: 13, color: '#cbd5e1', lineHeight: 1.6 }}>
                   <span style={{ fontSize: 20, marginRight: 6 }}>{f.emoji || '🧩'}</span>

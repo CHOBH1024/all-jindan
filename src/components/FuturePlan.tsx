@@ -82,6 +82,8 @@ export function FuturePlan({ results }: Props) {
       <h1 style={{ fontSize: 24, fontWeight: 900, margin: '0 0 4px' }}>🗺️ 미래 설계</h1>
       <p style={{ fontSize: 13, color: '#94a3b8', margin: '0 0 20px' }}>진단 결과를 바탕으로, 앞으로의 삶을 만들어갑니다.</p>
 
+      <WeeklyReport results={results} />
+
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(300px,1fr))', gap: 16 }}>
         {/* 목표 설정 */}
         <div style={{ background: 'rgba(30,41,59,0.5)', border: '1px solid #1e293b', borderRadius: 16, padding: 20 }}>
@@ -182,6 +184,68 @@ export function FuturePlan({ results }: Props) {
           ))}
         </div>
       </div>
+    </div>
+  );
+}
+
+/* ---------- 주간 리포트 ---------- */
+function WeeklyReport({ results }: { results: DiagnosisRecord[] }) {
+  const [report, setReport] = useState<{ stats?: { diagnoses: number; comments: number; likes: number; shared: number }; message?: string } | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    import('../api').then(({ api, getToken }) => {
+      const hasToken = !!getToken();
+      setIsLoggedIn(hasToken);
+      if (hasToken) {
+        api.weeklyReport().then(d => {
+          setReport(d);
+          setLoading(false);
+        }).catch(() => { setReport(null); setLoading(false); });
+      } else {
+        setLoading(false);
+      }
+    });
+  }, []);
+
+  // 비로그인: 로컬 기반 주간 요약
+  const weekAgo = new Date();
+  weekAgo.setDate(weekAgo.getDate() - 7);
+  const weekResults = results.filter(r => new Date(r.date) >= weekAgo);
+
+  return (
+    <div style={{
+      background: 'linear-gradient(135deg,rgba(99,102,241,0.12),rgba(139,92,246,0.12))',
+      border: '1px solid rgba(99,102,241,0.3)', borderRadius: 16, padding: 20, marginBottom: 16,
+    }}>
+      <h2 style={{ fontSize: 15, fontWeight: 800, margin: '0 0 8px' }}>📬 이번 주 리포트</h2>
+      {loading ? (
+        <div style={{ fontSize: 12, color: '#94a3b8' }}>로딩 중...</div>
+      ) : isLoggedIn && report?.stats ? (
+        <div>
+          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 8 }}>
+            {[
+              { label: '진단', value: report.stats.diagnoses },
+              { label: '댓글', value: report.stats.comments },
+              { label: '좋아요', value: report.stats.likes },
+              { label: '공유', value: report.stats.shared },
+            ].map(s => (
+              <div key={s.label} style={{ flex: 1, minWidth: 60, textAlign: 'center', background: 'rgba(15,23,42,0.5)', borderRadius: 10, padding: '10px 6px' }}>
+                <div style={{ fontSize: 20, fontWeight: 900, color: '#a5b4fc' }}>{s.value}</div>
+                <div style={{ fontSize: 10, color: '#94a3b8' }}>{s.label}</div>
+              </div>
+            ))}
+          </div>
+          <div style={{ fontSize: 12, color: '#c7d2fe' }}>{report.message}</div>
+        </div>
+      ) : (
+        <div style={{ fontSize: 12, color: '#94a3b8', lineHeight: 1.7 }}>
+          {weekResults.length > 0
+            ? <>이번 주 진단 <strong style={{ color: '#a5b4fc' }}>{weekResults.length}개</strong> 기록! 꾸준함이 힘입니다 💪 <br />로그인하면 상세 리포트를 받을 수 있어요.</>
+            : <>이번 주에는 아직 진단 기록이 없어요. 5분이면 하나 받을 수 있어요! 🧩 <br />로그인하면 상세 리포트가 제공됩니다.</>}
+        </div>
+      )}
     </div>
   );
 }
