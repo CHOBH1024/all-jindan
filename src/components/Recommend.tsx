@@ -35,13 +35,13 @@ export function Recommend({ results, onGoDiagnosis }: Props) {
   return (
     <div style={{ marginBottom: 24 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-        <div style={{ fontSize: 11, letterSpacing: 2, color: '#8a6d3b', fontWeight: 800, textTransform: 'uppercase' }}>
+        <div style={{ fontSize: 11, letterSpacing: 2, color: 'var(--accent)', fontWeight: 800, textTransform: 'uppercase' }}>
           추천 진단
         </div>
-        <div style={{ flex: 1, height: 1, background: '#e5ded2' }} />
+        <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
         <button
           onClick={onGoDiagnosis}
-          style={{ fontSize: 11, color: '#8a6d3b', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 700 }}
+          style={{ fontSize: 11, color: 'var(--accent)', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 700 }}
         >
           전체 보기 →
         </button>
@@ -49,26 +49,26 @@ export function Recommend({ results, onGoDiagnosis }: Props) {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(240px,1fr))', gap: 10 }}>
         {scored.map(({ site }) => (
           <div key={site.name} style={{
-            background: '#fffdf8', border: '1px solid #e5ded2', borderRadius: 10, padding: 14,
+            background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 10, padding: 14,
             display: 'flex', flexDirection: 'column', gap: 8,
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <span style={{ fontSize: 22 }}>{site.emoji}</span>
               <div style={{ flex: 1 }}>
-                <div style={{ fontSize: 9, letterSpacing: 1.5, fontWeight: 800, color: '#8a6d3b', textTransform: 'uppercase' }}>
+                <div style={{ fontSize: 9, letterSpacing: 1.5, fontWeight: 800, color: 'var(--accent)', textTransform: 'uppercase' }}>
                   {site.category}
                 </div>
                 <div style={{ fontSize: 13, fontWeight: 800, fontFamily: "'Noto Serif KR',serif" }}>{site.title}</div>
               </div>
             </div>
-            <div style={{ fontSize: 11, color: '#7a7060', lineHeight: 1.6 }}>{site.target}</div>
+            <div style={{ fontSize: 11, color: 'var(--sub2)', lineHeight: 1.6 }}>{site.target}</div>
             <a
               href={site.url}
               target="_blank"
               rel="noreferrer"
               style={{
                 textAlign: 'center', padding: '8px 0', borderRadius: 6, fontSize: 12, fontWeight: 700,
-                background: '#2b2620', color: '#faf7f2', textDecoration: 'none',
+                background: 'var(--text)', color: 'var(--bg)', textDecoration: 'none',
               }}
             >
               진단하기

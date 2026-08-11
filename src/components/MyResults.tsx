@@ -33,7 +33,7 @@ export function MyResults({ results, onRemove, onShare, isLoggedIn, onShowLogin 
       <div style={{ textAlign: 'center', padding: '60px 20px' }}>
         <div style={{ fontSize: 56, marginBottom: 12 }}>📊</div>
         <h1 style={{ fontSize: 22, fontWeight: 900, margin: '0 0 8px' }}>아직 기록된 진단이 없어요</h1>
-        <p style={{ fontSize: 13, color: '#9a9081', margin: 0 }}>
+        <p style={{ fontSize: 13, color: 'var(--hint)', margin: 0 }}>
           진단 모음에서 진단을 받고 <strong>결과 기록</strong> 버튼으로 저장하세요.<br />
           기록이 쌓이면 <strong>통합 분석</strong>에서 나만의 종합 프로필이 완성됩니다!
         </p>
@@ -52,7 +52,7 @@ export function MyResults({ results, onRemove, onShare, isLoggedIn, onShowLogin 
           onClick={exportData}
           style={{
             marginLeft: 'auto', padding: '9px 16px', borderRadius: 10, fontSize: 12, fontWeight: 700, cursor: 'pointer',
-            background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.3)', color: '#15803d',
+            background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.3)', color: 'var(--success)',
           }}
         >
           📦 데이터 내보내기
@@ -61,30 +61,30 @@ export function MyResults({ results, onRemove, onShare, isLoggedIn, onShowLogin 
           onClick={() => window.print()}
           style={{
             padding: '9px 16px', borderRadius: 10, fontSize: 12, fontWeight: 700, cursor: 'pointer',
-            background: 'rgba(138,109,59,0.1)', border: '1px solid rgba(138,109,59,0.3)', color: '#8a6d3b',
+            background: 'var(--accent-soft)', border: '1px solid var(--accent-border)', color: 'var(--accent)',
           }}
         >
           🖨️ PDF로 저장
         </button>
       </div>
-      <p style={{ fontSize: 13, color: '#9a9081', margin: '0 0 20px' }}>총 {results.length}개 진단 기록 — 결과를 쌓을수록 종합 분석이 정밀해집니다.</p>
+      <p style={{ fontSize: 13, color: 'var(--hint)', margin: '0 0 20px' }}>총 {results.length}개 진단 기록 — 결과를 쌓을수록 종합 분석이 정밀해집니다.</p>
 
       {/* 비로그인 — 가입 유도 배너 */}
       {!isLoggedIn && (
         <div style={{
           display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16,
-          background: 'linear-gradient(135deg,#f7f2e9,#f0e9dc)', border: '1px solid #e5ded2', borderRadius: 12, padding: '14px 16px',
+          background: 'linear-gradient(135deg,#f7f2e9,#f0e9dc)', border: '1px solid var(--border)', borderRadius: 12, padding: '14px 16px',
         }}>
           <span style={{ fontSize: 24 }}>🔐</span>
           <div style={{ flex: 1 }}>
             <div style={{ fontSize: 13, fontWeight: 800 }}>기록을 잃지 않으려면 가입하세요</div>
-            <div style={{ fontSize: 11, color: '#7a7060' }}>가입하면 {results.length}개 기록이 서버에 안전하게 저장되고, 다른 기기에서도 이어볼 수 있어요.</div>
+            <div style={{ fontSize: 11, color: 'var(--sub2)' }}>가입하면 {results.length}개 기록이 서버에 안전하게 저장되고, 다른 기기에서도 이어볼 수 있어요.</div>
           </div>
           <button
             onClick={onShowLogin}
             style={{
               padding: '8px 14px', borderRadius: 6, fontSize: 12, fontWeight: 700, cursor: 'pointer',
-              background: '#2b2620', color: '#faf7f2', border: 'none', whiteSpace: 'nowrap',
+              background: 'var(--text)', color: 'var(--bg)', border: 'none', whiteSpace: 'nowrap',
             }}
           >
             가입하기
@@ -95,26 +95,26 @@ export function MyResults({ results, onRemove, onShare, isLoggedIn, onShowLogin 
       {/* 최근 결과 카드 */}
       <div style={{
         background: 'linear-gradient(135deg,rgba(138,109,59,0.12),rgba(139,92,246,0.1))',
-        border: '1px solid rgba(138,109,59,0.3)', borderRadius: 16, padding: 20, marginBottom: 20,
+        border: '1px solid var(--accent-border)', borderRadius: 16, padding: 20, marginBottom: 20,
       }}>
-        <div style={{ fontSize: 11, color: '#8a6d3b', fontWeight: 700, marginBottom: 6 }}>가장 최근 진단</div>
+        <div style={{ fontSize: 11, color: 'var(--accent)', fontWeight: 700, marginBottom: 6 }}>가장 최근 진단</div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <span style={{ fontSize: 36 }}>{recent.emoji}</span>
           <div>
             <div style={{ fontSize: 17, fontWeight: 800 }}>{recent.title}</div>
-            <div style={{ fontSize: 14, color: '#6b6355', marginTop: 2 }}>결과: <strong>{recent.result}</strong></div>
-            <div style={{ fontSize: 11, color: '#9a9081', marginTop: 2 }}>{recent.date} 기록</div>
+            <div style={{ fontSize: 14, color: 'var(--sub)', marginTop: 2 }}>결과: <strong>{recent.result}</strong></div>
+            <div style={{ fontSize: 11, color: 'var(--hint)', marginTop: 2 }}>{recent.date} 기록</div>
           </div>
         </div>
         {/* 해석 가이드 — 3분 읽기 */}
         {recent.score !== undefined && (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(200px,1fr))', gap: 10, marginTop: 16 }}>
             {guideCards(recent.score).map((g, gi) => (
-              <div key={gi} style={{ background: 'rgba(255,253,248,0.9)', border: '1px solid #e5ded2', borderRadius: 10, padding: '12px 14px' }}>
-                <div style={{ fontSize: 10, letterSpacing: 1, fontWeight: 800, color: '#8a6d3b', textTransform: 'uppercase', marginBottom: 4 }}>
+              <div key={gi} style={{ background: 'rgba(255,253,248,0.9)', border: '1px solid var(--border)', borderRadius: 10, padding: '12px 14px' }}>
+                <div style={{ fontSize: 10, letterSpacing: 1, fontWeight: 800, color: 'var(--accent)', textTransform: 'uppercase', marginBottom: 4 }}>
                   {g.label}
                 </div>
-                <div style={{ fontSize: 12, color: '#3d3830', lineHeight: 1.6 }}>{g.text}</div>
+                <div style={{ fontSize: 12, color: 'var(--text-strong)', lineHeight: 1.6 }}>{g.text}</div>
               </div>
             ))}
           </div>
@@ -126,20 +126,20 @@ export function MyResults({ results, onRemove, onShare, isLoggedIn, onShowLogin 
         {byDate.map((r, i) => (
           <div key={i} style={{
             display: 'flex', alignItems: 'center', gap: 12,
-            background: 'rgba(255,253,248,0.9)', border: '1px solid #e5ded2', borderRadius: 12, padding: '12px 16px',
+            background: 'rgba(255,253,248,0.9)', border: '1px solid var(--border)', borderRadius: 12, padding: '12px 16px',
           }}>
             <span style={{ fontSize: 22 }}>{r.emoji}</span>
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ fontSize: 13, fontWeight: 700 }}>{r.title}</div>
-              <div style={{ fontSize: 12, color: '#9a9081', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              <div style={{ fontSize: 12, color: 'var(--hint)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                 {r.result}{r.score !== undefined ? ` · ${r.score}점` : ''}
               </div>
             </div>
-            <div style={{ fontSize: 11, color: '#9a9081', whiteSpace: 'nowrap' }}>{r.date}</div>
+            <div style={{ fontSize: 11, color: 'var(--hint)', whiteSpace: 'nowrap' }}>{r.date}</div>
             {isOldDiagnosis(r.date) && (
               <span style={{
                 fontSize: 9, padding: '3px 8px', borderRadius: 999, fontWeight: 700, whiteSpace: 'nowrap',
-                background: 'rgba(138,109,59,0.12)', border: '1px solid rgba(138,109,59,0.3)', color: '#8a6d3b',
+                background: 'var(--accent-soft)', border: '1px solid var(--accent-border)', color: 'var(--accent)',
               }}>
                 🔄 재진단 추천
               </span>
@@ -151,7 +151,7 @@ export function MyResults({ results, onRemove, onShare, isLoggedIn, onShowLogin 
                   padding: '6px 10px', borderRadius: 8, fontSize: 11, cursor: 'pointer',
                   background: r.shared ? 'rgba(16,185,129,0.1)' : 'rgba(99,102,241,0.1)',
                   border: '1px solid ' + (r.shared ? 'rgba(16,185,129,0.3)' : 'rgba(138,109,59,0.3)'),
-                  color: r.shared ? '#15803d' : '#8a6d3b',
+                  color: r.shared ? 'var(--success)' : 'var(--accent)',
                 }}
               >
                 {r.shared ? '✓ 공유됨' : '공유'}
@@ -161,7 +161,7 @@ export function MyResults({ results, onRemove, onShare, isLoggedIn, onShowLogin 
               onClick={() => onRemove(i)}
               style={{
                 padding: '6px 10px', borderRadius: 8, fontSize: 11, cursor: 'pointer',
-                background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', color: '#dc2626',
+                background: 'rgba(248,113,113,0.12)', border: '1px solid rgba(248,113,113,0.4)', color: 'var(--error)',
               }}
             >
               삭제

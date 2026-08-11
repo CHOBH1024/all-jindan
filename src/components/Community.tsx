@@ -132,24 +132,24 @@ export function Community() {
   return (
     <div>
       <h1 style={{ fontSize: 24, fontWeight: 900, margin: '0 0 4px' }}>👥 커뮤니티 피드</h1>
-      <p style={{ fontSize: 13, color: '#7a7060', margin: '0 0 20px' }}>다른 사람들의 진단 결과를 구경하고, 댓글과 좋아요로 소통해보세요.</p>
+      <p style={{ fontSize: 13, color: 'var(--sub2)', margin: '0 0 20px' }}>다른 사람들의 진단 결과를 구경하고, 댓글과 좋아요로 소통해보세요.</p>
 
       {/* 첫 공유 미션 — 사회적 증명 */}
       {!hasSharedOnce && isLoggedIn && (
         <div style={{
           display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16,
-          background: 'linear-gradient(135deg,#f7f2e9,#f0e9dc)', border: '1px solid #e5ded2', borderRadius: 12, padding: '14px 16px',
+          background: 'linear-gradient(135deg,#f7f2e9,#f0e9dc)', border: '1px solid var(--border)', borderRadius: 12, padding: '14px 16px',
         }}>
           <span style={{ fontSize: 26 }}>🎁</span>
           <div style={{ flex: 1 }}>
             <div style={{ fontSize: 13, fontWeight: 800 }}>첫 결과를 공유해보세요</div>
-            <div style={{ fontSize: 11, color: '#7a7060' }}>나의 결과 탭에서 공유하면 커뮤니티에 소개됩니다.</div>
+            <div style={{ fontSize: 11, color: 'var(--sub2)' }}>나의 결과 탭에서 공유하면 커뮤니티에 소개됩니다.</div>
           </div>
           <button
             onClick={() => setShowGuide(true)}
             style={{
               padding: '8px 14px', borderRadius: 6, fontSize: 12, fontWeight: 700, cursor: 'pointer',
-              background: '#2b2620', color: '#faf7f2', border: 'none', whiteSpace: 'nowrap',
+              background: 'var(--text)', color: 'var(--bg)', border: 'none', whiteSpace: 'nowrap',
             }}
           >
             공유 방법 보기
@@ -157,42 +157,42 @@ export function Community() {
         </div>
       )}
 
-      {loading && <div style={{ textAlign: 'center', padding: 40, color: '#9a9081' }}>피드 불러오는 중...</div>}
-      {error && <div style={{ textAlign: 'center', padding: 40, color: '#dc2626' }}>{error}</div>}
+      {loading && <div style={{ textAlign: 'center', padding: 40, color: 'var(--hint)' }}>피드 불러오는 중...</div>}
+      {error && <div style={{ textAlign: 'center', padding: 40, color: 'var(--error)' }}>{error}</div>}
 
       {/* 주간 커뮤니티 챌린지 */}
       {challenges.length > 0 && (
         <div style={{ marginBottom: 16 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-            <div style={{ fontSize: 11, letterSpacing: 2, color: '#8a6d3b', fontWeight: 800, textTransform: 'uppercase' }}>
+            <div style={{ fontSize: 11, letterSpacing: 2, color: 'var(--accent)', fontWeight: 800, textTransform: 'uppercase' }}>
               이번 주 챌린지
             </div>
-            <div style={{ flex: 1, height: 1, background: '#e5ded2' }} />
+            <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))', gap: 8 }}>
             {challenges.map(c => {
               const joined = joinedChallenges.has(c.id);
               return (
                 <div key={c.id} style={{
-                  background: '#fffdf8', border: '1px solid #e5ded2', borderRadius: 10, padding: 14,
+                  background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 10, padding: 14,
                   display: 'flex', flexDirection: 'column', gap: 6,
                 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                     <span style={{ fontSize: 20 }}>{c.emoji}</span>
                     <div style={{ flex: 1 }}>
                       <div style={{ fontSize: 13, fontWeight: 800 }}>{c.title}</div>
-                      <div style={{ fontSize: 10, color: '#7a7060' }}>{c.desc}</div>
+                      <div style={{ fontSize: 10, color: 'var(--sub2)' }}>{c.desc}</div>
                     </div>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <span style={{ fontSize: 11, color: '#8a6d3b', fontWeight: 700 }}>👥 {c.participants}명 참여 중</span>
+                    <span style={{ fontSize: 11, color: 'var(--accent)', fontWeight: 700 }}>👥 {c.participants}명 참여 중</span>
                     <button
                       onClick={() => joinChallenge(c.id)}
                       style={{
                         padding: '6px 12px', borderRadius: 6, fontSize: 11, fontWeight: 700, cursor: 'pointer',
-                        background: joined ? 'rgba(138,109,59,0.12)' : '#2b2620',
+                        background: joined ? 'rgba(138,109,59,0.12)' : 'var(--text)',
                         border: joined ? '1px solid rgba(138,109,59,0.4)' : 'none',
-                        color: joined ? '#8a6d3b' : '#faf7f2',
+                        color: joined ? 'var(--accent)' : 'var(--bg)',
                       }}
                     >
                       {joined ? '✓ 참여 중' : '참여하기'}
@@ -207,11 +207,11 @@ export function Community() {
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
         {feed.map(f => (
-          <div key={f.id} style={{ background: 'rgba(255,253,248,0.9)', border: '1px solid #e5ded2', borderRadius: 14, padding: 16 }}>
+          <div key={f.id} style={{ background: 'rgba(255,253,248,0.9)', border: '1px solid var(--border)', borderRadius: 14, padding: 16 }}>
             <div style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
               <div style={{
                 width: 40, height: 40, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                background: '#2b2620', fontSize: 18, fontWeight: 800, color: '#fff', flexShrink: 0,
+                background: 'var(--text)', fontSize: 18, fontWeight: 800, color: 'var(--bg)', flexShrink: 0,
               }}>
                 {(f.user_name || '?')[0].toUpperCase()}
               </div>
@@ -220,7 +220,7 @@ export function Community() {
                   <button
                     onClick={() => setProfileUser(f.user_name || null)}
                     style={{
-                      fontSize: 13, fontWeight: 800, color: '#3d3830', background: 'none', border: 'none',
+                      fontSize: 13, fontWeight: 800, color: 'var(--text-strong)', background: 'none', border: 'none',
                       cursor: 'pointer', padding: 0,
                     }}
                   >
@@ -229,12 +229,12 @@ export function Community() {
                   {growthUsers.has(f.user_name || '') && (
                     <span style={{
                       fontSize: 9, padding: '2px 8px', borderRadius: 999, fontWeight: 700,
-                      background: 'rgba(138,109,59,0.12)', border: '1px solid rgba(138,109,59,0.3)', color: '#8a6d3b',
+                      background: 'var(--accent-soft)', border: '1px solid var(--accent-border)', color: 'var(--accent)',
                     }}>
                       📈 성장 중
                     </span>
                   )}
-                  <span style={{ fontSize: 11, color: '#9a9081' }}>
+                  <span style={{ fontSize: 11, color: 'var(--hint)' }}>
                     {new Date(f.created_at).toLocaleDateString('ko-KR')}
                   </span>
                   {isLoggedIn && (f as { user_id?: number }).user_id !== undefined && (f as { user_id: number }).user_id !== (JSON.parse(localStorage.getItem('alljindan_user') || '{}').id) && (
@@ -242,19 +242,19 @@ export function Community() {
                       onClick={() => toggleFollow((f as { user_id: number }).user_id)}
                       style={{
                         padding: '3px 10px', borderRadius: 999, fontSize: 10, fontWeight: 700, cursor: 'pointer',
-                        background: following[(f as { user_id: number }).user_id] ? 'rgba(240,233,220,0.85)' : 'rgba(138,109,59,0.12)',
-                        border: '1px solid ' + (following[(f as { user_id: number }).user_id] ? '#ddd3c2' : 'rgba(99,102,241,0.4)'),
-                        color: following[(f as { user_id: number }).user_id] ? '#9a9081' : '#8a6d3b',
+                        background: following[(f as { user_id: number }).user_id] ? 'var(--card3)' : 'rgba(138,109,59,0.12)',
+                        border: '1px solid ' + (following[(f as { user_id: number }).user_id] ? 'var(--border2)' : 'rgba(99,102,241,0.4)'),
+                        color: following[(f as { user_id: number }).user_id] ? 'var(--hint)' : 'var(--accent)',
                       }}
                     >
                       {following[(f as { user_id: number }).user_id] ? '✓ 팔로잉' : '+ 팔로우'}
                     </button>
                   )}
                 </div>
-                <div style={{ fontSize: 13, color: '#6b6355', lineHeight: 1.6 }}>
+                <div style={{ fontSize: 13, color: 'var(--sub)', lineHeight: 1.6 }}>
                   <span style={{ fontSize: 20, marginRight: 6 }}>{f.emoji || '🧩'}</span>
                   <strong>{f.title}</strong> — {f.result}
-                  {f.score !== null && f.score !== undefined && <span style={{ color: '#8a6d3b', fontWeight: 700 }}> · {f.score}점</span>}
+                  {f.score !== null && f.score !== undefined && <span style={{ color: 'var(--accent)', fontWeight: 700 }}> · {f.score}점</span>}
                 </div>
                 {/* 액션 버튼 */}
                 <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
@@ -263,9 +263,9 @@ export function Community() {
                     disabled={!isLoggedIn}
                     style={{
                       padding: '5px 12px', borderRadius: 999, fontSize: 11, fontWeight: 700, cursor: isLoggedIn ? 'pointer' : 'not-allowed',
-                      background: liked[f.id] ? 'rgba(239,68,68,0.15)' : 'rgba(240,233,220,0.85)',
-                      border: '1px solid ' + (liked[f.id] ? 'rgba(239,68,68,0.4)' : '#ddd3c2'),
-                      color: liked[f.id] ? '#dc2626' : '#9a9081',
+                      background: liked[f.id] ? 'rgba(239,68,68,0.15)' : 'var(--card3)',
+                      border: '1px solid ' + (liked[f.id] ? 'rgba(239,68,68,0.4)' : 'var(--border2)'),
+                      color: liked[f.id] ? 'var(--error)' : 'var(--hint)',
                     }}
                   >
                     ❤️ {likeCount[f.id] || 0}
@@ -274,7 +274,7 @@ export function Community() {
                     onClick={() => toggleComments(f.id)}
                     style={{
                       padding: '5px 12px', borderRadius: 999, fontSize: 11, fontWeight: 700, cursor: 'pointer',
-                      background: 'rgba(240,233,220,0.85)', border: '1px solid #ddd3c2', color: '#9a9081',
+                      background: 'var(--card3)', border: '1px solid var(--border2)', color: 'var(--hint)',
                     }}
                   >
                     💬 {f.comment_count || 0}
@@ -289,7 +289,7 @@ export function Community() {
                     }}
                     style={{
                       padding: '5px 12px', borderRadius: 999, fontSize: 11, fontWeight: 700, cursor: 'pointer',
-                      background: 'rgba(138,109,59,0.1)', border: '1px solid rgba(138,109,59,0.3)', color: '#8a6d3b',
+                      background: 'var(--accent-soft)', border: '1px solid var(--accent-border)', color: 'var(--accent)',
                     }}
                   >
                     ⚔️ 나와 비교
@@ -297,7 +297,7 @@ export function Community() {
                 </div>
                 {/* 댓글 섹션 */}
                 {openComments === f.id && (
-                  <div style={{ marginTop: 12, borderTop: '1px solid #e5ded2', paddingTop: 12 }}>
+                  <div style={{ marginTop: 12, borderTop: '1px solid var(--border)', paddingTop: 12 }}>
                     {(comments[f.id] || []).map(c => (
                       <div key={c.id} style={{ display: 'flex', gap: 8, marginBottom: 8 }}>
                         <div style={{
@@ -306,7 +306,7 @@ export function Community() {
                         }}>
                           {(c.user_name || '?')[0]}
                         </div>
-                        <div style={{ fontSize: 12, color: '#6b6355', lineHeight: 1.5 }}>
+                        <div style={{ fontSize: 12, color: 'var(--sub)', lineHeight: 1.5 }}>
                           <strong style={{ marginRight: 6 }}>{c.user_name}</strong>
                           {c.body}
                         </div>
@@ -321,18 +321,18 @@ export function Community() {
                           placeholder="댓글 달기..."
                           style={{
                             flex: 1, padding: '8px 12px', borderRadius: 10, fontSize: 12,
-                            background: '#f0e9dc', border: '1px solid #ddd3c2', color: '#3d3830',
+                            background: 'var(--card3)', border: '1px solid var(--border2)', color: 'var(--text-strong)',
                           }}
                         />
                         <button
                           onClick={() => postComment(f.id)}
-                          style={{ padding: '8px 14px', borderRadius: 10, fontSize: 12, fontWeight: 700, cursor: 'pointer', border: 'none', color: '#fff', background: '#2b2620' }}
+                          style={{ padding: '8px 14px', borderRadius: 10, fontSize: 12, fontWeight: 700, cursor: 'pointer', border: 'none', color: 'var(--bg)', background: 'var(--text)' }}
                         >
                           등록
                         </button>
                       </div>
                     ) : (
-                      <div style={{ fontSize: 11, color: '#9a9081' }}>댓글을 쓰려면 로그인이 필요해요</div>
+                      <div style={{ fontSize: 11, color: 'var(--hint)' }}>댓글을 쓰려면 로그인이 필요해요</div>
                     )}
                   </div>
                 )}
@@ -341,7 +341,7 @@ export function Community() {
           </div>
         ))}
         {!loading && !error && feed.length === 0 && (
-          <div style={{ textAlign: 'center', padding: 40, color: '#9a9081' }}>
+          <div style={{ textAlign: 'center', padding: 40, color: 'var(--hint)' }}>
             아직 공유된 결과가 없어요 — 첫 번째로 공유해보세요! 🎉
           </div>
         )}
@@ -354,11 +354,11 @@ export function Community() {
           background: 'rgba(43,38,32,0.6)', backdropFilter: 'blur(4px)',
         }} onClick={() => setShowGuide(false)}>
           <div onClick={e => e.stopPropagation()} style={{
-            width: '100%', maxWidth: 380, background: '#fffdf8', border: '1px solid #e5ded2', borderRadius: 14,
+            width: '100%', maxWidth: 380, background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 14,
             padding: 24, boxShadow: '0 20px 60px rgba(43,38,32,0.3)',
           }}>
             <h2 style={{ fontSize: 16, fontWeight: 800, margin: '0 0 12px', fontFamily: "'Noto Serif KR',serif" }}>📤 공유하는 방법</h2>
-            <div style={{ fontSize: 13, color: '#5a5245', lineHeight: 1.9 }}>
+            <div style={{ fontSize: 13, color: 'var(--body-text)', lineHeight: 1.9 }}>
               1. <strong>나의 결과</strong> 탭으로 이동<br />
               2. 결과 옆 <strong>공유</strong> 버튼 클릭<br />
               3. 커뮤니티 피드에 내 결과가 표시됩니다!
@@ -367,7 +367,7 @@ export function Community() {
               onClick={() => setShowGuide(false)}
               style={{
                 width: '100%', marginTop: 16, padding: '11px 0', borderRadius: 8, border: 'none', cursor: 'pointer',
-                fontSize: 13, fontWeight: 800, color: '#faf7f2', background: '#2b2620',
+                fontSize: 13, fontWeight: 800, color: 'var(--bg)', background: 'var(--text)',
               }}
             >
               확인
@@ -404,23 +404,23 @@ function UserProfileModal({ userName, feed, onClose }: {
       background: 'rgba(43,38,32,0.6)', backdropFilter: 'blur(4px)',
     }} onClick={onClose}>
       <div onClick={e => e.stopPropagation()} style={{
-        width: '100%', maxWidth: 420, background: '#fffdf8', border: '1px solid #e5ded2', borderRadius: 14,
+        width: '100%', maxWidth: 420, background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 14,
         padding: 24, boxShadow: '0 20px 60px rgba(43,38,32,0.3)', maxHeight: '80vh', overflowY: 'auto',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
           <div style={{
             width: 44, height: 44, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 20, fontWeight: 800, background: 'rgba(138,109,59,0.15)', color: '#8a6d3b',
+            fontSize: 20, fontWeight: 800, background: 'rgba(138,109,59,0.15)', color: 'var(--accent)',
           }}>
             {userName.slice(0, 1).toUpperCase()}
           </div>
           <div style={{ flex: 1 }}>
             <div style={{ fontSize: 15, fontWeight: 800 }}>{userName}</div>
-            <div style={{ fontSize: 11, color: '#7a7060' }}>
+            <div style={{ fontSize: 11, color: 'var(--sub2)' }}>
               공유 {userPosts.length}개 {growth && '· 📈 꾸준한 진단러'}
             </div>
           </div>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', color: '#7a7060', fontSize: 18, cursor: 'pointer' }}>✕</button>
+          <button onClick={onClose} style={{ background: 'none', border: 'none', color: 'var(--sub2)', fontSize: 18, cursor: 'pointer' }}>✕</button>
         </div>
 
         {axes.size > 0 && (
@@ -428,7 +428,7 @@ function UserProfileModal({ userName, feed, onClose }: {
             {[...axes].map(a => (
               <span key={a} style={{
                 fontSize: 10, padding: '3px 10px', borderRadius: 999, fontWeight: 700,
-                background: 'rgba(138,109,59,0.1)', border: '1px solid rgba(138,109,59,0.3)', color: '#8a6d3b',
+                background: 'var(--accent-soft)', border: '1px solid var(--accent-border)', color: 'var(--accent)',
               }}>
                 {a} 축
               </span>
@@ -436,19 +436,19 @@ function UserProfileModal({ userName, feed, onClose }: {
           </div>
         )}
 
-        <div style={{ fontSize: 11, letterSpacing: 1, fontWeight: 800, color: '#8a6d3b', textTransform: 'uppercase', marginBottom: 8 }}>
+        <div style={{ fontSize: 11, letterSpacing: 1, fontWeight: 800, color: 'var(--accent)', textTransform: 'uppercase', marginBottom: 8 }}>
           공유한 진단
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
           {userPosts.map((p, i) => (
-            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 10px', background: '#f7f2e9', borderRadius: 8 }}>
+            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 10px', background: 'var(--card2)', borderRadius: 8 }}>
               <span style={{ fontSize: 16 }}>{p.emoji || '🧩'}</span>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontSize: 12, fontWeight: 700, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.title}</div>
-                <div style={{ fontSize: 11, color: '#7a7060' }}>{p.result}</div>
+                <div style={{ fontSize: 11, color: 'var(--sub2)' }}>{p.result}</div>
               </div>
               {p.score !== null && p.score !== undefined && (
-                <span style={{ fontSize: 12, fontWeight: 800, color: '#8a6d3b' }}>{p.score}점</span>
+                <span style={{ fontSize: 12, fontWeight: 800, color: 'var(--accent)' }}>{p.score}점</span>
               )}
             </div>
           ))}
@@ -473,32 +473,32 @@ function CompareModal({ data, onClose }: {
       background: 'rgba(43,38,32,0.6)', backdropFilter: 'blur(4px)',
     }} onClick={onClose}>
       <div onClick={e => e.stopPropagation()} style={{
-        width: '100%', maxWidth: 400, background: '#fffdf8', border: '1px solid #e5ded2', borderRadius: 14,
+        width: '100%', maxWidth: 400, background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 14,
         padding: 24, boxShadow: '0 20px 60px rgba(43,38,32,0.3)',
       }}>
         <h2 style={{ fontSize: 16, fontWeight: 800, margin: '0 0 4px', fontFamily: "'Noto Serif KR',serif" }}>
           ⚔️ 나와 비교 — {data.title}
         </h2>
-        <div style={{ fontSize: 11, color: '#7a7060', marginBottom: 16 }}>동일 진단을 받은 두 사람의 결과</div>
+        <div style={{ fontSize: 11, color: 'var(--sub2)', marginBottom: 16 }}>동일 진단을 받은 두 사람의 결과</div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-          <div style={{ background: '#f7f2e9', borderRadius: 8, padding: 12 }}>
-            <div style={{ fontSize: 11, fontWeight: 800, color: '#8a6d3b', marginBottom: 4 }}>{data.user_name}</div>
+          <div style={{ background: 'var(--card2)', borderRadius: 8, padding: 12 }}>
+            <div style={{ fontSize: 11, fontWeight: 800, color: 'var(--accent)', marginBottom: 4 }}>{data.user_name}</div>
             <div style={{ fontSize: 13, fontWeight: 700 }}>{data.result}</div>
-            {data.score !== undefined && <div style={{ fontSize: 12, color: '#8a6d3b', fontWeight: 700, marginTop: 2 }}>{data.score}점</div>}
+            {data.score !== undefined && <div style={{ fontSize: 12, color: 'var(--accent)', fontWeight: 700, marginTop: 2 }}>{data.score}점</div>}
           </div>
           <div style={{ textAlign: 'center', fontSize: 18 }}>▼</div>
-          <div style={{ background: '#f0e9dc', borderRadius: 8, padding: 12 }}>
-            <div style={{ fontSize: 11, fontWeight: 800, color: '#7a7060', marginBottom: 4 }}>나</div>
+          <div style={{ background: 'var(--card3)', borderRadius: 8, padding: 12 }}>
+            <div style={{ fontSize: 11, fontWeight: 800, color: 'var(--sub2)', marginBottom: 4 }}>나</div>
             <div style={{ fontSize: 13, fontWeight: 700 }}>{mine?.result || '기록 없음'}</div>
-            {mine?.score !== undefined && <div style={{ fontSize: 12, color: '#7a7060', fontWeight: 700, marginTop: 2 }}>{mine.score}점</div>}
+            {mine?.score !== undefined && <div style={{ fontSize: 12, color: 'var(--sub2)', fontWeight: 700, marginTop: 2 }}>{mine.score}점</div>}
           </div>
         </div>
 
         {diff !== null && diff !== 0 && (
           <div style={{
             marginTop: 14, padding: '10px 12px', borderRadius: 8, fontSize: 12, lineHeight: 1.6,
-            background: 'rgba(138,109,59,0.1)', border: '1px solid rgba(138,109,59,0.3)', color: '#5a5245',
+            background: 'var(--accent-soft)', border: '1px solid var(--accent-border)', color: 'var(--body-text)',
           }}>
             {diff > 0
               ? `${data.user_name}님이 ${diff}점 더 높아요. 사람마다 이 진단의 강도가 다르게 나타난다는 뜻이에요.`
@@ -510,7 +510,7 @@ function CompareModal({ data, onClose }: {
           onClick={onClose}
           style={{
             width: '100%', marginTop: 16, padding: '11px 0', borderRadius: 8, border: 'none', cursor: 'pointer',
-            fontSize: 13, fontWeight: 800, color: '#faf7f2', background: '#2b2620',
+            fontSize: 13, fontWeight: 800, color: 'var(--bg)', background: 'var(--text)',
           }}
         >
           확인

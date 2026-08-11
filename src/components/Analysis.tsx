@@ -107,10 +107,10 @@ export function Analysis({ results, onGoDiagnosis }: Props) {
       <div style={{ textAlign: 'center', padding: '60px 20px' }}>
         <div style={{ fontSize: 56, marginBottom: 12 }}>🧬</div>
         <h1 style={{ fontSize: 22, fontWeight: 900, margin: '0 0 8px' }}>통합 분석을 시작하려면 진단이 필요해요</h1>
-        <p style={{ fontSize: 13, color: '#9a9081', margin: '0 0 20px' }}>진단 3개 이상 기록하면 종합 프로필이 완성됩니다.</p>
+        <p style={{ fontSize: 13, color: 'var(--hint)', margin: '0 0 20px' }}>진단 3개 이상 기록하면 종합 프로필이 완성됩니다.</p>
         <button
           onClick={onGoDiagnosis}
-          style={{ padding: '12px 28px', borderRadius: 999, border: 'none', cursor: 'pointer', fontSize: 14, fontWeight: 800, color: '#fff', background: '#2b2620' }}
+          style={{ padding: '12px 28px', borderRadius: 999, border: 'none', cursor: 'pointer', fontSize: 14, fontWeight: 800, color: 'var(--bg)', background: 'var(--text)' }}
         >
           진단하러 가기 →
         </button>
@@ -166,11 +166,11 @@ export function Analysis({ results, onGoDiagnosis }: Props) {
     <div>
       <h1 style={{ fontSize: 24, fontWeight: 900, margin: '0 0 4px' }}>🧬 통합 분석</h1>
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
-        <p style={{ fontSize: 13, color: '#6b6355', margin: 0, flex: 1 }}>{results.length}개의 진단을 종합한 "지금의 나"</p>
+        <p style={{ fontSize: 13, color: 'var(--sub)', margin: 0, flex: 1 }}>{results.length}개의 진단을 종합한 "지금의 나"</p>
         {balanced && (
           <span style={{
             padding: '6px 14px', borderRadius: 999, fontSize: 11, fontWeight: 800,
-            background: 'linear-gradient(135deg,#c9a867,#a8853f)', color: '#fff',
+            background: 'linear-gradient(135deg,var(--gold),var(--accent))', color: 'var(--bg)',
             boxShadow: '0 2px 10px rgba(201,168,103,0.35)',
           }}>
             🏅 균형 프로필 — 4축 완성
@@ -179,7 +179,7 @@ export function Analysis({ results, onGoDiagnosis }: Props) {
         {!balanced && fullAxes > 0 && (
           <span style={{
             padding: '6px 14px', borderRadius: 999, fontSize: 11, fontWeight: 700,
-            background: 'rgba(138,109,59,0.1)', border: '1px solid rgba(138,109,59,0.3)', color: '#8a6d3b',
+            background: 'var(--accent-soft)', border: '1px solid var(--accent-border)', color: 'var(--accent)',
           }}>
             {fullAxes}/4 축 완성
           </span>
@@ -189,7 +189,7 @@ export function Analysis({ results, onGoDiagnosis }: Props) {
             onClick={() => setShowShare(true)}
             style={{
               padding: '9px 16px', borderRadius: 10, fontSize: 12, fontWeight: 800, cursor: 'pointer',
-              background: 'rgba(138,109,59,0.1)', border: '1px solid rgba(138,109,59,0.3)', color: '#8a6d3b', whiteSpace: 'nowrap',
+              background: 'var(--accent-soft)', border: '1px solid var(--accent-border)', color: 'var(--accent)', whiteSpace: 'nowrap',
             }}
           >
             📤 공유 카드 만들기
@@ -201,7 +201,7 @@ export function Analysis({ results, onGoDiagnosis }: Props) {
             title="재진단 타이밍 알림"
             style={{
               padding: '9px 14px', borderRadius: 10, fontSize: 12, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap',
-              background: 'rgba(138,109,59,0.06)', border: '1px dashed rgba(138,109,59,0.5)', color: '#8a6d3b',
+              background: 'var(--accent-soft)', border: '1px dashed rgba(138,109,59,0.5)', color: 'var(--accent)',
             }}
           >
             🔔 알림 켜기
@@ -211,7 +211,7 @@ export function Analysis({ results, onGoDiagnosis }: Props) {
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(300px,1fr))', gap: 16 }}>
         {/* 4축 레이더 (간이 차트) */}
-        <div style={{ background: 'rgba(255,253,248,0.9)', border: '1px solid #e5ded2', borderRadius: 16, padding: 20 }}>
+        <div style={{ background: 'rgba(255,253,248,0.9)', border: '1px solid var(--border)', borderRadius: 16, padding: 20 }}>
           <h2 style={{ fontSize: 15, fontWeight: 800, margin: '0 0 16px' }}>4축 종합 레이더</h2>
           {hasAxis ? (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -219,19 +219,19 @@ export function Analysis({ results, onGoDiagnosis }: Props) {
                 <div key={i}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, marginBottom: 4, cursor: 'pointer' }} onClick={() => setActiveAxis(activeAxis === i ? null : i)}>
                     <span style={{ fontWeight: 700 }}>{name} {axisCounts[i] > 0 ? `(${axisCounts[i]})` : ''}</span>
-                    <span style={{ color: '#8a6d3b', fontWeight: 800 }}>{scores[i] > 0 ? scores[i] : '미측정'}</span>
+                    <span style={{ color: 'var(--accent)', fontWeight: 800 }}>{scores[i] > 0 ? scores[i] : '미측정'}</span>
                   </div>
                   <div style={{ height: 8, background: 'rgba(51,65,85,0.5)', borderRadius: 999, overflow: 'hidden' }}>
-                    <div style={{ height: '100%', width: `${scores[i]}%`, background: '#8a6d3b', borderRadius: 999, transition: 'width .5s' }} />
+                    <div style={{ height: '100%', width: `${scores[i]}%`, background: 'var(--accent)', borderRadius: 999, transition: 'width .5s' }} />
                   </div>
                   {/* 축 드로어 — 기여 진단 목록 */}
                   {activeAxis === i && axisCounts[i] > 0 && (
-                    <div style={{ marginTop: 8, padding: '10px 12px', background: '#f7f2e9', border: '1px solid #ece4d5', borderRadius: 8 }}>
-                      <div style={{ fontSize: 10, fontWeight: 800, color: '#8a6d3b', letterSpacing: 1, marginBottom: 6, textTransform: 'uppercase' }}>
+                    <div style={{ marginTop: 8, padding: '10px 12px', background: 'var(--card2)', border: '1px solid var(--border)', borderRadius: 8 }}>
+                      <div style={{ fontSize: 10, fontWeight: 800, color: 'var(--accent)', letterSpacing: 1, marginBottom: 6, textTransform: 'uppercase' }}>
                         {name} 축 기여 진단
                       </div>
                       {results.filter(r => getAxis(r.site, '') === i).map((r, ri) => (
-                        <div key={ri} style={{ fontSize: 12, color: '#5a5245', padding: '4px 0', borderBottom: '1px solid #ece4d5' }}>
+                        <div key={ri} style={{ fontSize: 12, color: 'var(--body-text)', padding: '4px 0', borderBottom: '1px solid #ece4d5' }}>
                           {r.emoji} {r.title} — {r.result}{r.score !== undefined ? ` (${r.score}점)` : ''}
                         </div>
                       ))}
@@ -239,7 +239,7 @@ export function Analysis({ results, onGoDiagnosis }: Props) {
                   )}
                 </div>
               ))}
-              <div style={{ fontSize: 11, color: '#7a7060', marginTop: 4 }}>
+              <div style={{ fontSize: 11, color: 'var(--sub2)', marginTop: 4 }}>
                 {axisCounts[0] > 0 && `성격 ${axisCounts[0]}개 · `}{axisCounts[1] > 0 && `커리어 ${axisCounts[1]}개 · `}{axisCounts[3] > 0 && `습관 ${axisCounts[3]}개`}
               </div>
               {/* 빈 축 CTA */}
@@ -248,7 +248,7 @@ export function Analysis({ results, onGoDiagnosis }: Props) {
                   onClick={onGoDiagnosis}
                   style={{
                     marginTop: 12, padding: '10px 0', borderRadius: 6, fontSize: 12, fontWeight: 700, cursor: 'pointer',
-                    background: '#f7f2e9', border: '1px solid #e5ded2', color: '#8a6d3b',
+                    background: 'var(--card2)', border: '1px solid var(--border)', color: 'var(--accent)',
                   }}
                 >
                   {AXIS_NAMES.filter((_, i) => axisCounts[i] === 0).map(n => n).join('·')} 축 진단하러 가기 →
@@ -256,15 +256,15 @@ export function Analysis({ results, onGoDiagnosis }: Props) {
               )}
             </div>
           ) : (
-            <div style={{ fontSize: 12, color: '#9a9081' }}>진단을 더 기록하면 레이더가 채워집니다.</div>
+            <div style={{ fontSize: 12, color: 'var(--hint)' }}>진단을 더 기록하면 레이더가 채워집니다.</div>
           )}
         </div>
 
         {/* 종합 프로필 */}
-        <div style={{ background: 'linear-gradient(135deg,rgba(138,109,59,0.1),rgba(139,92,246,0.08))', border: '1px solid rgba(138,109,59,0.3)', borderRadius: 16, padding: 20 }}>
+        <div style={{ background: 'linear-gradient(135deg,rgba(138,109,59,0.1),rgba(139,92,246,0.08))', border: '1px solid var(--accent-border)', borderRadius: 16, padding: 20 }}>
           <h2 style={{ fontSize: 15, fontWeight: 800, margin: '0 0 12px' }}>나의 종합 프로필</h2>
           {/* 한 줄 프로필 + 톤 선택 */}
-          <div style={{ fontSize: 13, color: '#3d3830', lineHeight: 1.8, fontFamily: "'Noto Serif KR',serif", marginBottom: 10 }}>
+          <div style={{ fontSize: 13, color: 'var(--text-strong)', lineHeight: 1.8, fontFamily: "'Noto Serif KR',serif", marginBottom: 10 }}>
             "{oneLine}"
           </div>
           <div style={{ display: 'flex', gap: 6, marginBottom: 12 }}>
@@ -278,25 +278,25 @@ export function Analysis({ results, onGoDiagnosis }: Props) {
                 onClick={() => setTone(key)}
                 style={{
                   padding: '5px 12px', borderRadius: 999, fontSize: 11, fontWeight: 700, cursor: 'pointer',
-                  border: '1px solid ' + (tone === key ? '#8a6d3b' : '#ddd3c2'),
-                  background: tone === key ? 'rgba(138,109,59,0.12)' : '#fffdf8',
-                  color: tone === key ? '#8a6d3b' : '#7a7060',
+                  border: '1px solid ' + (tone === key ? 'var(--accent)' : 'var(--border2)'),
+                  background: tone === key ? 'rgba(138,109,59,0.12)' : 'var(--card)',
+                  color: tone === key ? 'var(--accent)' : 'var(--sub2)',
                 }}
               >
                 {label}
               </button>
             ))}
           </div>
-          <div style={{ fontSize: 13, color: '#6b6355', lineHeight: 1.8 }}>
+          <div style={{ fontSize: 13, color: 'var(--sub)', lineHeight: 1.8 }}>
             <p style={{ margin: '0 0 8px' }}>
-              당신은 <strong style={{ color: '#8a6d3b' }}>{topCat ? topCat[0] : '다양한'} 영역</strong>에서 가장 많은 진단을 받았어요.
+              당신은 <strong style={{ color: 'var(--accent)' }}>{topCat ? topCat[0] : '다양한'} 영역</strong>에서 가장 많은 진단을 받았어요.
             </p>
             <p style={{ margin: '0 0 8px' }}>
               최근 결과: {topResults.map((r, i) => <span key={i}>{r.emoji} {r.result}{i < topResults.length - 1 ? ', ' : ''}</span>)}
             </p>
-            <p style={{ margin: 0, fontSize: 12, color: '#9a9081' }}>
+            <p style={{ margin: 0, fontSize: 12, color: 'var(--hint)' }}>
               진단을 더 많이 기록할수록, 이 프로필은 당신을 더 정확히 그려냅니다.
-              <div style={{ fontSize: 10, color: '#7a7060', marginTop: 8, lineHeight: 1.6 }}>
+              <div style={{ fontSize: 10, color: 'var(--sub2)', marginTop: 8, lineHeight: 1.6 }}>
                 * 본 분석은 자기이해를 위한 참고 자료이며, 의학적·임상적 진단을 대체하지 않습니다.
               </div>
             </p>
@@ -307,14 +307,14 @@ export function Analysis({ results, onGoDiagnosis }: Props) {
       {/* 강점 / 주의점 */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(300px,1fr))', gap: 16, marginTop: 16 }}>
         <div style={{ background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.25)', borderRadius: 16, padding: 20 }}>
-          <h2 style={{ fontSize: 15, fontWeight: 800, margin: '0 0 10px', color: '#15803d' }}>💪 종합 강점</h2>
-          <ul style={{ margin: 0, paddingLeft: 18, fontSize: 13, color: '#6b6355', lineHeight: 2 }}>
+          <h2 style={{ fontSize: 15, fontWeight: 800, margin: '0 0 10px', color: 'var(--success)' }}>💪 종합 강점</h2>
+          <ul style={{ margin: 0, paddingLeft: 18, fontSize: 13, color: 'var(--sub)', lineHeight: 2 }}>
             {strengths.map((s, i) => <li key={i}>{s}</li>)}
           </ul>
         </div>
         <div style={{ background: 'rgba(245,158,11,0.06)', border: '1px solid rgba(245,158,11,0.2)', borderRadius: 16, padding: 20 }}>
-          <h2 style={{ fontSize: 15, fontWeight: 800, margin: '0 0 10px', color: '#fbbf24' }}>⚠️ 주의 포인트</h2>
-          <ul style={{ margin: 0, paddingLeft: 18, fontSize: 13, color: '#6b6355', lineHeight: 2 }}>
+          <h2 style={{ fontSize: 15, fontWeight: 800, margin: '0 0 10px', color: 'var(--gold)' }}>⚠️ 주의 포인트</h2>
+          <ul style={{ margin: 0, paddingLeft: 18, fontSize: 13, color: 'var(--sub)', lineHeight: 2 }}>
             {warnings.map((s, i) => <li key={i}>{s}</li>)}
           </ul>
         </div>
@@ -322,16 +322,16 @@ export function Analysis({ results, onGoDiagnosis }: Props) {
 
       {/* 축 간 충돌 인사이트 */}
       {conflicts.length > 0 && (
-        <div style={{ background: 'rgba(255,253,248,0.9)', border: '1px solid #e5ded2', borderRadius: 16, padding: 20, marginTop: 16 }}>
+        <div style={{ background: 'rgba(255,253,248,0.9)', border: '1px solid var(--border)', borderRadius: 16, padding: 20, marginTop: 16 }}>
           <h2 style={{ fontSize: 15, fontWeight: 800, margin: '0 0 4px' }}>⚡ 축 간 인사이트</h2>
-          <p style={{ fontSize: 11, color: '#7a7060', margin: '0 0 12px' }}>서로 다른 영역의 점수가 만드는 독특한 패턴</p>
+          <p style={{ fontSize: 11, color: 'var(--sub2)', margin: '0 0 12px' }}>서로 다른 영역의 점수가 만드는 독특한 패턴</p>
           {conflicts.map((c, i) => (
             <div key={i} style={{
               padding: '12px 14px', borderRadius: 10, marginBottom: 8,
-              background: '#f7f2e9', border: '1px solid #ece4d5', fontSize: 13, lineHeight: 1.7,
+              background: 'var(--card2)', border: '1px solid var(--border)', fontSize: 13, lineHeight: 1.7,
             }}>
-              <strong style={{ color: '#8a6d3b' }}>{c.title}</strong>
-              <div style={{ fontSize: 12, color: '#5a5245', marginTop: 4 }}>{c.text}</div>
+              <strong style={{ color: 'var(--accent)' }}>{c.title}</strong>
+              <div style={{ fontSize: 12, color: 'var(--body-text)', marginTop: 4 }}>{c.text}</div>
             </div>
           ))}
         </div>
@@ -359,9 +359,9 @@ function TrendChart({ results }: { results: DiagnosisRecord[] }) {
   if (trends.length === 0) return null;
 
   return (
-    <div style={{ background: 'rgba(255,253,248,0.9)', border: '1px solid #e5ded2', borderRadius: 16, padding: 20, marginTop: 16 }}>
+    <div style={{ background: 'rgba(255,253,248,0.9)', border: '1px solid var(--border)', borderRadius: 16, padding: 20, marginTop: 16 }}>
       <h2 style={{ fontSize: 15, fontWeight: 800, margin: '0 0 4px' }}>📈 재진단 변화 추이</h2>
-      <p style={{ fontSize: 11, color: '#9a9081', margin: '0 0 16px' }}>같은 진단을 다시 받으면 변화를 그래프로 볼 수 있어요</p>
+      <p style={{ fontSize: 11, color: 'var(--hint)', margin: '0 0 16px' }}>같은 진단을 다시 받으면 변화를 그래프로 볼 수 있어요</p>
       {trends.map(([title, list]) => {
         const sorted = [...list].sort((a, b) => a.date.localeCompare(b.date));
         const max = Math.max(...sorted.map(s => s.score || 0), 100);
@@ -373,16 +373,16 @@ function TrendChart({ results }: { results: DiagnosisRecord[] }) {
             <div style={{ display: 'flex', alignItems: 'flex-end', gap: 8, height: 80, padding: '0 4px' }}>
               {sorted.map((s, i) => (
                 <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, flex: 1 }}>
-                  <div style={{ fontSize: 10, fontWeight: 800, color: '#8a6d3b' }}>{s.score}</div>
+                  <div style={{ fontSize: 10, fontWeight: 800, color: 'var(--accent)' }}>{s.score}</div>
                   <div style={{
                     width: '100%', maxWidth: 50, height: Math.max(8, ((s.score || 0) / max) * 60), borderRadius: '6px 6px 2px 2px',
-                    background: '#2b2620', transition: 'height .5s',
+                    background: 'var(--text)', transition: 'height .5s',
                   }} />
-                  <div style={{ fontSize: 9, color: '#9a9081' }}>{s.date.slice(5)}</div>
+                  <div style={{ fontSize: 9, color: 'var(--hint)' }}>{s.date.slice(5)}</div>
                 </div>
               ))}
             </div>
-            <div style={{ fontSize: 11, color: '#9a9081', marginTop: 6 }}>
+            <div style={{ fontSize: 11, color: 'var(--hint)', marginTop: 6 }}>
               {sorted.length >= 2 && (sorted[sorted.length - 1].score || 0) > (sorted[0].score || 0)
                 ? `📈 ${sorted[0].score}점 → ${sorted[sorted.length - 1].score}점 (${sorted[sorted.length - 1].score! - sorted[0].score!}점 상승!)`
                 : `📉 ${sorted[0].score}점 → ${sorted[sorted.length - 1].score}점`}

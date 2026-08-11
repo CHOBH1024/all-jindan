@@ -41,14 +41,14 @@ export function PremiumModal({ onClose, onPurchased }: Props) {
       background: 'rgba(43,38,32,0.6)', backdropFilter: 'blur(4px)', padding: 16, overflowY: 'auto',
     }} onClick={onClose}>
       <div onClick={e => e.stopPropagation()} style={{
-        width: '100%', maxWidth: 460, background: '#fffdf8', border: '1px solid #e5ded2', borderRadius: 14,
+        width: '100%', maxWidth: 460, background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 14,
         padding: 24, boxShadow: '0 20px 60px rgba(43,38,32,0.3)',
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
           <h2 style={{ fontSize: 18, fontWeight: 800, margin: 0, fontFamily: "'Noto Serif KR',serif" }}>💎 올진단 프리미엄</h2>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', color: '#7a7060', fontSize: 18, cursor: 'pointer' }}>✕</button>
+          <button onClick={onClose} style={{ background: 'none', border: 'none', color: 'var(--sub2)', fontSize: 18, cursor: 'pointer' }}>✕</button>
         </div>
-        <p style={{ fontSize: 12, color: '#7a7060', margin: '0 0 16px' }}>
+        <p style={{ fontSize: 12, color: 'var(--sub2)', margin: '0 0 16px' }}>
           자기 이해를 더 깊게 — AI 코치, 상세 리포트, 무제한 기록
         </p>
 
@@ -56,22 +56,22 @@ export function PremiumModal({ onClose, onPurchased }: Props) {
           {PRODUCTS.map(p => (
             <div key={p.id} style={{
               display: 'flex', alignItems: 'center', gap: 12, padding: '12px 14px', borderRadius: 10,
-              border: '1px solid ' + (p.id === 'premium_month' ? '#8a6d3b' : '#e5ded2'),
-              background: p.id === 'premium_month' ? 'rgba(138,109,59,0.06)' : '#fffdf8',
+              border: '1px solid ' + (p.id === 'premium_month' ? 'var(--accent)' : 'var(--border)'),
+              background: p.id === 'premium_month' ? 'rgba(138,109,59,0.06)' : 'var(--card)',
             }}>
               <span style={{ fontSize: 22 }}>{p.emoji}</span>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontSize: 13, fontWeight: 800 }}>{p.name}</div>
-                <div style={{ fontSize: 11, color: '#7a7060', lineHeight: 1.5 }}>{p.desc}</div>
+                <div style={{ fontSize: 11, color: 'var(--sub2)', lineHeight: 1.5 }}>{p.desc}</div>
               </div>
               <div style={{ textAlign: 'right' }}>
-                <div style={{ fontSize: 13, fontWeight: 900, color: '#8a6d3b' }}>{p.price}</div>
+                <div style={{ fontSize: 13, fontWeight: 900, color: 'var(--accent)' }}>{p.price}</div>
                 <button
                   onClick={() => buy(p.id)}
                   disabled={buying === p.id}
                   style={{
                     marginTop: 4, padding: '6px 14px', borderRadius: 6, fontSize: 11, fontWeight: 800, cursor: 'pointer',
-                    background: '#2b2620', color: '#faf7f2', border: 'none',
+                    background: 'var(--text)', color: 'var(--bg)', border: 'none',
                   }}
                 >
                   {buying === p.id ? '처리 중...' : '구매'}
@@ -86,13 +86,13 @@ export function PremiumModal({ onClose, onPurchased }: Props) {
             padding: '10px 12px', borderRadius: 8, fontSize: 12, fontWeight: 700, marginBottom: 8,
             background: msg.startsWith('✅') ? 'rgba(138,109,59,0.1)' : 'rgba(239,68,68,0.08)',
             border: '1px solid ' + (msg.startsWith('✅') ? 'rgba(138,109,59,0.3)' : 'rgba(239,68,68,0.3)'),
-            color: msg.startsWith('✅') ? '#15803d' : '#dc2626',
+            color: msg.startsWith('✅') ? 'var(--success)' : 'var(--error)',
           }}>
             {msg}
           </div>
         )}
 
-        <div style={{ fontSize: 10, color: '#9a9081', lineHeight: 1.6 }}>
+        <div style={{ fontSize: 10, color: 'var(--hint)', lineHeight: 1.6 }}>
           * 결제는 안전하게 처리되며, 구독은 언제든 해지할 수 있습니다 (청약철회 7일).<br />
           * 프리미엄 콘텐츠도 자기이해 참고용이며 임상 진단을 대체하지 않습니다.
         </div>

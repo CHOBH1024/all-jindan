@@ -64,6 +64,8 @@ export default function App() {
   useEffect(() => {
     setResults(loadResults());
     setUser(getSavedUser());
+    // 다크 모드 CSS 변수 적용
+    document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
     const onResize = () => setIsMobile(window.innerWidth <= 768);
     window.addEventListener('resize', onResize);
     // 프리미엄/관리자 상태 로드
@@ -214,12 +216,12 @@ export default function App() {
     bg: dark
       ? 'linear-gradient(160deg,#171310 0%,#211b14 100%)'
       : 'linear-gradient(160deg,#faf7f2 0%,#f3ede2 100%)',
-    text: dark ? '#e8e2d6' : '#2b2620',
-    sub: dark ? '#8f8678' : '#6b6355',
-    card: dark ? 'rgba(34,28,22,0.92)' : 'rgba(255,253,248,0.95)',
-    border: dark ? '#3a3127' : '#e5ded2',
-    header: dark ? 'rgba(23,19,16,0.92)' : 'rgba(250,247,242,0.92)',
-    accent: '#8a6d3b',
+    text: 'var(--text)',
+    sub: 'var(--sub)',
+    card: 'var(--card)',
+    border: 'var(--border)',
+    header: 'var(--header)',
+    accent: 'var(--accent)',
   };
 
   const openAdmin = () => {
@@ -241,7 +243,7 @@ export default function App() {
         <div style={{ maxWidth: 1080, margin: '0 auto', padding: isMobile ? '8px 14px' : '12px 20px', display: 'flex', alignItems: 'center', gap: isMobile ? 10 : 16 }}>
           <div style={{ fontSize: isMobile ? 17 : 22, fontWeight: 900, letterSpacing: -1, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6, fontFamily: "'Noto Serif KR',serif" }} onClick={() => setTab('home')}>
             <span style={{ fontSize: isMobile ? 20 : 24 }}>🧬</span>
-            <span>올<span style={{ color: '#8a6d3b' }}>진단</span></span>
+            <span>올<span style={{ color: 'var(--accent)' }}>진단</span></span>
           </div>
           {!isMobile && (
             <nav style={{ display: 'flex', gap: 4, flex: 1, overflowX: 'auto' }}>
@@ -251,8 +253,8 @@ export default function App() {
                   onClick={() => setTab(tabItem.id)}
                   style={{
                     padding: '8px 14px', borderRadius: 999, border: 'none', cursor: 'pointer', fontSize: 13, fontWeight: 700, whiteSpace: 'nowrap',
-                    background: tab === tabItem.id ? '#2b2620' : 'transparent',
-                    color: tab === tabItem.id ? '#fff' : theme.sub,
+                    background: tab === tabItem.id ? 'var(--text)' : 'transparent',
+                    color: tab === tabItem.id ? 'var(--bg)' : theme.sub,
                   }}
                 >
                   {tabItem.icon} {tabItem.label(en)}
@@ -279,7 +281,7 @@ export default function App() {
               {isPremium && (
                 <span style={{
                   fontSize: isMobile ? 8 : 10, padding: isMobile ? '3px 7px' : '4px 10px', borderRadius: 999, fontWeight: 800,
-                  background: 'linear-gradient(135deg,#c9a867,#a8853f)', color: '#fff',
+                  background: 'linear-gradient(135deg,var(--gold),var(--accent))', color: 'var(--bg)',
                 }}>
                   👑 PRO
                 </span>
@@ -289,18 +291,18 @@ export default function App() {
                   onClick={openAdmin}
                   style={{
                     padding: isMobile ? '4px 7px' : '6px 10px', borderRadius: 8, fontSize: isMobile ? 9 : 11, cursor: 'pointer',
-                    background: 'rgba(138,109,59,0.12)', border: '1px solid rgba(138,109,59,0.4)', color: '#8a6d3b',
+                    background: 'var(--accent-soft)', border: '1px solid var(--accent-border)', color: 'var(--accent)',
                   }}
                 >
                   📊 관리자
                 </button>
               )}
-              <div style={{ width: isMobile ? 26 : 32, height: isMobile ? 26 : 32, borderRadius: '50%', background: '#2b2620', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: isMobile ? 11 : 14, fontWeight: 800 }}>
+              <div style={{ width: isMobile ? 26 : 32, height: isMobile ? 26 : 32, borderRadius: '50%', background: 'var(--text)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: isMobile ? 11 : 14, fontWeight: 800 }}>
                 {(user.name || '?')[0]}
               </div>
               {!isMobile && <div style={{ fontSize: 12, fontWeight: 700 }}>{user.name}</div>}
-              {!isMobile && <button onClick={logout} style={{ padding: '6px 10px', borderRadius: 8, fontSize: 11, cursor: 'pointer', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', color: '#dc2626' }}>로그아웃</button>}
-              <button onClick={deleteAccount} title="계정 삭제" style={{ padding: isMobile ? '4px 7px' : '6px 10px', borderRadius: 8, fontSize: isMobile ? 10 : 11, cursor: 'pointer', background: 'transparent', border: '1px solid #ddd3c2', color: '#9a9081' }}>🗑️</button>
+              {!isMobile && <button onClick={logout} style={{ padding: '6px 10px', borderRadius: 8, fontSize: 11, cursor: 'pointer', background: 'rgba(248,113,113,0.12)', border: '1px solid rgba(248,113,113,0.4)', color: 'var(--error)' }}>로그아웃</button>}
+              <button onClick={deleteAccount} title="계정 삭제" style={{ padding: isMobile ? '4px 7px' : '6px 10px', borderRadius: 8, fontSize: isMobile ? 10 : 11, cursor: 'pointer', background: 'transparent', border: '1px solid var(--border2)', color: 'var(--hint)' }}>🗑️</button>
             </div>
           ) : (
             <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? 6 : 8 }}>
@@ -309,7 +311,7 @@ export default function App() {
                   onClick={() => setShowPremium(true)}
                   style={{
                     padding: '9px 14px', borderRadius: 999, cursor: 'pointer', fontSize: 12, fontWeight: 800,
-                    background: 'transparent', border: '1px solid #c9a867', color: '#8a6d3b',
+                    background: 'transparent', border: '1px solid #c9a867', color: 'var(--accent)',
                   }}
                 >
                   💎 프리미엄
@@ -317,7 +319,7 @@ export default function App() {
               )}
               <button
                 onClick={() => setShowAuth(true)}
-                style={{ padding: isMobile ? '7px 12px' : '9px 18px', borderRadius: 999, border: 'none', cursor: 'pointer', fontSize: isMobile ? 12 : 13, fontWeight: 800, color: '#fff', background: '#2b2620' }}
+                style={{ padding: isMobile ? '7px 12px' : '9px 18px', borderRadius: 999, border: 'none', cursor: 'pointer', fontSize: isMobile ? 12 : 13, fontWeight: 800, color: 'var(--bg)', background: 'var(--text)' }}
               >
                 {isMobile ? '로그인' : '로그인'}
               </button>
@@ -326,7 +328,7 @@ export default function App() {
         </div>
       </header>
 
-      <main style={{ maxWidth: 1080, margin: '0 auto', padding: '24px 20px ' + (isMobile ? '110px' : '60px') }}>
+      <main key={tab} style={{ maxWidth: 1080, margin: '0 auto', padding: isMobile ? '20px 16px 110px' : '40px 32px 80px' }} className="anim-fade">
         {tab === 'home' && <Home onGoDiagnosis={() => setTab('diagnosis')} resultCount={results.length} />}
         {tab === 'diagnosis' && <DiagnosisList results={results} onSave={addResult} onGoAnalysis={() => setTab('analysis')} />}
         {tab === 'results' && <MyResults results={results} onRemove={removeResult} onShare={shareResult} isLoggedIn={!!user} onShowLogin={() => setShowAuth(true)} />}
@@ -336,12 +338,12 @@ export default function App() {
         {tab === 'science' && <Science />}
       </main>
 
-      <footer style={{ borderTop: '1px solid #e5ded2', padding: '24px', textAlign: 'center' }}>
+      <footer style={{ borderTop: '1px solid var(--border)', padding: '24px', textAlign: 'center' }}>
         <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 12 }}>
-          <a href="https://hub.pomyjo.com/" style={{ padding: '10px 20px', borderRadius: 999, background: 'rgba(138,109,59,0.1)', color: '#8a6d3b', fontSize: 12, fontWeight: 700, textDecoration: 'none' }}>🧠 POMYJO 진단 허브</a>
-          <a href="mailto:nokira1024@gmail.com" style={{ padding: '10px 20px', borderRadius: 999, background: 'rgba(240,233,220,0.85)', color: '#9a9081', fontSize: 12, fontWeight: 700, textDecoration: 'none' }}>📧 문의: nokira1024@gmail.com</a>
+          <a href="https://pomyjo.com/" style={{ padding: '10px 20px', borderRadius: 999, background: 'var(--text)', color: 'var(--bg)', fontSize: 12, fontWeight: 700, textDecoration: 'none', display: 'inline-block' }}>🧠 POMYJO 진단 허브</a>
+          <a href="mailto:nokira1024@gmail.com" style={{ padding: '10px 20px', borderRadius: 999, background: 'var(--card3)', color: 'var(--hint)', fontSize: 12, fontWeight: 700, textDecoration: 'none' }}>📧 문의: nokira1024@gmail.com</a>
         </div>
-        <div style={{ fontSize: 11, color: '#9a9081' }}>© 2026 올진단 · POMYJO · 문의: nokira1024@gmail.com · 진단 결과는 자기 이해를 위한 참고 자료입니다</div>
+        <div style={{ fontSize: 11, color: 'var(--hint)' }}>© 2026 올진단 · POMYJO · 문의: nokira1024@gmail.com · 진단 결과는 자기 이해를 위한 참고 자료입니다</div>
       </footer>
 
       {/* 모바일 하단 탭 바 */}
@@ -364,7 +366,7 @@ export default function App() {
                     display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2,
                     padding: '6px 10px', border: 'none', background: 'transparent', cursor: 'pointer',
                     fontSize: 10, fontWeight: active ? 800 : 600,
-                    color: active ? '#8a6d3b' : theme.sub, minWidth: 60,
+                    color: active ? 'var(--accent)' : theme.sub, minWidth: 60,
                   }}
                 >
                   <span style={{ fontSize: 19 }}>{tabItem.icon}</span>
@@ -379,7 +381,7 @@ export default function App() {
                 display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2,
                 padding: '6px 10px', border: 'none', background: 'transparent', cursor: 'pointer',
                 fontSize: 10, fontWeight: showMore || ['future', 'community', 'science'].includes(tab) ? 800 : 600,
-                color: showMore || ['future', 'community', 'science'].includes(tab) ? '#8a6d3b' : theme.sub, minWidth: 60,
+                color: showMore || ['future', 'community', 'science'].includes(tab) ? 'var(--accent)' : theme.sub, minWidth: 60,
               }}
             >
               <span style={{ fontSize: 19 }}>⋯</span>
@@ -404,7 +406,7 @@ export default function App() {
                       display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4,
                       padding: '14px 8px', borderRadius: 12, border: '1px solid ' + theme.border, cursor: 'pointer',
                       background: tab === tabItem.id ? 'rgba(138,109,59,0.08)' : 'transparent',
-                      fontSize: 11, fontWeight: tab === tabItem.id ? 800 : 600, color: tab === tabItem.id ? '#8a6d3b' : theme.text,
+                      fontSize: 11, fontWeight: tab === tabItem.id ? 800 : 600, color: tab === tabItem.id ? 'var(--accent)' : theme.text,
                     }}
                   >
                     <span style={{ fontSize: 22 }}>{tabItem.icon}</span>
@@ -428,12 +430,12 @@ export default function App() {
           background: 'rgba(43,38,32,0.6)', backdropFilter: 'blur(4px)', padding: 16,
         }} onClick={() => setShowAdmin(false)}>
           <div onClick={e => e.stopPropagation()} style={{
-            width: '100%', maxWidth: 480, background: '#fffdf8', border: '1px solid #e5ded2', borderRadius: 14,
+            width: '100%', maxWidth: 480, background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 14,
             padding: 24, boxShadow: '0 20px 60px rgba(43,38,32,0.3)', maxHeight: '80vh', overflowY: 'auto',
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
               <h2 style={{ fontSize: 17, fontWeight: 800, margin: 0, fontFamily: "'Noto Serif KR',serif" }}>📊 관리자 대시보드</h2>
-              <button onClick={() => setShowAdmin(false)} style={{ background: 'none', border: 'none', color: '#7a7060', fontSize: 18, cursor: 'pointer' }}>✕</button>
+              <button onClick={() => setShowAdmin(false)} style={{ background: 'none', border: 'none', color: 'var(--sub2)', fontSize: 18, cursor: 'pointer' }}>✕</button>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 8, marginBottom: 16 }}>
               {[
@@ -442,25 +444,25 @@ export default function App() {
                 { label: '주문', value: adminStats.orders ?? 0 },
                 { label: '매출', value: (adminStats.revenue ?? 0).toLocaleString() + '원' },
               ].map((s, i) => (
-                <div key={i} style={{ textAlign: 'center', background: '#f7f2e9', borderRadius: 8, padding: '10px 4px' }}>
-                  <div style={{ fontSize: 16, fontWeight: 900, color: '#8a6d3b' }}>{s.value}</div>
-                  <div style={{ fontSize: 10, color: '#7a7060' }}>{s.label}</div>
+                <div key={i} style={{ textAlign: 'center', background: 'var(--card2)', borderRadius: 8, padding: '10px 4px' }}>
+                  <div style={{ fontSize: 16, fontWeight: 900, color: 'var(--accent)' }}>{s.value}</div>
+                  <div style={{ fontSize: 10, color: 'var(--sub2)' }}>{s.label}</div>
                 </div>
               ))}
             </div>
-            <div style={{ fontSize: 11, letterSpacing: 1, fontWeight: 800, color: '#8a6d3b', textTransform: 'uppercase', marginBottom: 8 }}>
+            <div style={{ fontSize: 11, letterSpacing: 1, fontWeight: 800, color: 'var(--accent)', textTransform: 'uppercase', marginBottom: 8 }}>
               최근 주문
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
               {(adminStats.recentOrders || []).map(o => (
-                <div key={o.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 10px', background: '#f7f2e9', borderRadius: 8, fontSize: 12 }}>
+                <div key={o.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 10px', background: 'var(--card2)', borderRadius: 8, fontSize: 12 }}>
                   <span style={{ fontWeight: 700, flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{o.item}</span>
-                  <span style={{ color: '#7a7060' }}>{o.email}</span>
-                  <span style={{ fontWeight: 800, color: '#8a6d3b' }}>{o.amount.toLocaleString()}원</span>
+                  <span style={{ color: 'var(--sub2)' }}>{o.email}</span>
+                  <span style={{ fontWeight: 800, color: 'var(--accent)' }}>{o.amount.toLocaleString()}원</span>
                 </div>
               ))}
               {(adminStats.recentOrders || []).length === 0 && (
-                <div style={{ fontSize: 12, color: '#9a9081', textAlign: 'center', padding: 16 }}>아직 주문이 없습니다</div>
+                <div style={{ fontSize: 12, color: 'var(--hint)', textAlign: 'center', padding: 16 }}>아직 주문이 없습니다</div>
               )}
             </div>
           </div>

@@ -22,7 +22,7 @@ export function Home({ onGoDiagnosis, resultCount }: Props) {
     <div>
       <section style={{ padding: '64px 0 36px', textAlign: 'center', position: 'relative' }}>
         <div style={{
-          fontSize: 11, letterSpacing: 3, color: '#8a6d3b', fontWeight: 800, textTransform: 'uppercase', marginBottom: 16,
+          fontSize: 11, letterSpacing: 3, color: 'var(--accent)', fontWeight: 800, textTransform: 'uppercase', marginBottom: 16,
         }}>
           Self-Knowledge, Systematically
         </div>
@@ -30,25 +30,25 @@ export function Home({ onGoDiagnosis, resultCount }: Props) {
           fontSize: 'clamp(30px,5vw,46px)', fontWeight: 900, margin: '0 0 16px', letterSpacing: -1,
           lineHeight: 1.35, fontFamily: "'Noto Serif KR',serif",
         }}>
-          나는 어떤 사람인가,<br />진단으로 <span style={{ color: '#8a6d3b' }}>쌓아가는</span> 나의 지도
+          나는 어떤 사람인가,<br />진단으로 <span style={{ color: 'var(--accent)' }}>쌓아가는</span> 나의 지도
         </h1>
-        <p style={{ fontSize: 'clamp(13px,2vw,15px)', color: '#6b6355', maxWidth: 540, margin: '0 auto 28px', lineHeight: 1.8 }}>
+        <p style={{ fontSize: 'clamp(13px,2vw,15px)', color: 'var(--sub)', maxWidth: 540, margin: '0 auto 28px', lineHeight: 1.8 }}>
           {SITES.length}개의 진단을 하나의 종합 프로필로. 성격, 커리어, 관계, 습관 —<br />
-          네 개의 축으로 <strong style={{ color: '#5a5245' }}>오늘의 나</strong>와 <strong style={{ color: '#5a5245' }}>내일의 나</strong>를 잇습니다.
+          네 개의 축으로 <strong style={{ color: 'var(--body-text)' }}>오늘의 나</strong>와 <strong style={{ color: 'var(--body-text)' }}>내일의 나</strong>를 잇습니다.
         </p>
         <button
           onClick={onGoDiagnosis}
           style={{
             padding: '13px 34px', borderRadius: 6, border: 'none', cursor: 'pointer',
-            fontSize: 14, fontWeight: 700, color: '#faf7f2', background: '#2b2620',
+            fontSize: 14, fontWeight: 700, color: 'var(--bg)', background: 'var(--text)',
             boxShadow: '0 4px 16px rgba(43,38,32,0.2)', transition: 'all .15s',
           }}
-          onMouseEnter={e => { e.currentTarget.style.background = '#453e33'; }}
-          onMouseLeave={e => { e.currentTarget.style.background = '#2b2620'; }}
+          onMouseEnter={e => { e.currentTarget.style.background = 'var(--text-strong)'; }}
+          onMouseLeave={e => { e.currentTarget.style.background = 'var(--text)'; }}
         >
           진단 시작하기
         </button>
-        <div style={{ fontSize: 12, color: '#7a7060', marginTop: 12 }}>무료 · 로그인 없이 3분</div>
+        <div style={{ fontSize: 12, color: 'var(--sub2)', marginTop: 12 }}>무료 · 로그인 없이 3분</div>
       </section>
 
       {/* 통계 */}
@@ -60,8 +60,8 @@ export function Home({ onGoDiagnosis, resultCount }: Props) {
           { n: `${resultCount}`, l: '나의 기록' },
         ].map(s => (
           <div key={s.l} style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: 28, fontWeight: 900, color: '#8a6d3b', fontFamily: "'Noto Serif KR',serif" }}>{s.n}</div>
-            <div style={{ fontSize: 11, color: '#7a7060', marginTop: 2 }}>{s.l}</div>
+            <div style={{ fontSize: 28, fontWeight: 900, color: 'var(--accent)', fontFamily: "'Noto Serif KR',serif" }}>{s.n}</div>
+            <div style={{ fontSize: 11, color: 'var(--sub2)', marginTop: 2 }}>{s.l}</div>
           </div>
         ))}
       </section>
@@ -85,9 +85,9 @@ export function Home({ onGoDiagnosis, resultCount }: Props) {
           {categories.map((cat, i) => {
             const items = SITES.filter(s => s.category === cat);
             return (
-              <div key={i} style={{ background: 'rgba(255,253,248,0.9)', border: '1px solid #e5ded2', borderRadius: 16, padding: 16 }}>
+              <div key={i} style={{ background: 'rgba(255,253,248,0.9)', border: '1px solid var(--border)', borderRadius: 16, padding: 16 }}>
                 <div style={{ fontSize: 15, fontWeight: 800, marginBottom: 6 }}>{cat}</div>
-                <div style={{ fontSize: 12, color: '#9a9081' }}>
+                <div style={{ fontSize: 12, color: 'var(--hint)' }}>
                   {items.slice(0, 4).map(s => s.emoji + ' ' + s.title).join(' · ')}
                   {items.length > 4 ? ` · 외 ${items.length - 4}개` : ''}
                 </div>
@@ -118,17 +118,17 @@ function MonthlyTheme({ onGoDiagnosis }: { onGoDiagnosis: () => void }) {
   return (
     <div style={{ marginBottom: 24 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-        <div style={{ fontSize: 11, letterSpacing: 2, color: '#8a6d3b', fontWeight: 800, textTransform: 'uppercase' }}>
+        <div style={{ fontSize: 11, letterSpacing: 2, color: 'var(--accent)', fontWeight: 800, textTransform: 'uppercase' }}>
           {month}월의 테마
         </div>
-        <div style={{ flex: 1, height: 1, background: '#e5ded2' }} />
+        <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
       </div>
       <div style={{
-        background: 'linear-gradient(135deg,#f7f2e9,#f0e9dc)', border: '1px solid #e5ded2', borderRadius: 12,
+        background: 'linear-gradient(135deg,#f7f2e9,#f0e9dc)', border: '1px solid var(--border)', borderRadius: 12,
         padding: 20, marginBottom: 12,
       }}>
         <div style={{ fontSize: 17, fontWeight: 800, fontFamily: "'Noto Serif KR',serif", marginBottom: 4 }}>{theme.title}</div>
-        <div style={{ fontSize: 12, color: '#6b6355', marginBottom: 14 }}>{theme.desc}</div>
+        <div style={{ fontSize: 12, color: 'var(--sub)', marginBottom: 14 }}>{theme.desc}</div>
         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
           {themeSites.map(s => (
             <a
@@ -138,7 +138,7 @@ function MonthlyTheme({ onGoDiagnosis }: { onGoDiagnosis: () => void }) {
               rel="noreferrer"
               style={{
                 padding: '8px 14px', borderRadius: 999, fontSize: 12, fontWeight: 700, textDecoration: 'none',
-                background: '#fffdf8', border: '1px solid #ddd3c2', color: '#5a5245',
+                background: 'var(--card)', border: '1px solid var(--border2)', color: 'var(--body-text)',
               }}
             >
               {s.emoji} {s.title}
@@ -190,15 +190,15 @@ function SituationSim({ results, onGoDiagnosis }: { results: DiagnosisRecord[]; 
   return (
     <div style={{ marginBottom: 24 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-        <div style={{ fontSize: 11, letterSpacing: 2, color: '#8a6d3b', fontWeight: 800, textTransform: 'uppercase' }}>
+        <div style={{ fontSize: 11, letterSpacing: 2, color: 'var(--accent)', fontWeight: 800, textTransform: 'uppercase' }}>
           상황 시뮬레이션
         </div>
-        <div style={{ flex: 1, height: 1, background: '#e5ded2' }} />
-        <span style={{ fontSize: 11, color: '#7a7060' }}>{allDone ? '완료' : `${step + 1}/${scenarios.length}`}</span>
+        <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
+        <span style={{ fontSize: 11, color: 'var(--sub2)' }}>{allDone ? '완료' : `${step + 1}/${scenarios.length}`}</span>
       </div>
 
       <div style={{
-        background: '#fffdf8', border: '1px solid #e5ded2', borderRadius: 12, padding: 20,
+        background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 12, padding: 20,
       }}>
         {!allDone ? (
           <>
@@ -212,7 +212,7 @@ function SituationSim({ results, onGoDiagnosis }: { results: DiagnosisRecord[]; 
                   onClick={() => choose(i)}
                   style={{
                     textAlign: 'left', padding: '12px 14px', borderRadius: 8, cursor: 'pointer', fontSize: 13,
-                    background: '#f7f2e9', border: '1px solid #ece4d5', color: '#3d3830',
+                    background: 'var(--card2)', border: '1px solid var(--border)', color: 'var(--text-strong)',
                   }}
                 >
                   {opt}
@@ -223,13 +223,13 @@ function SituationSim({ results, onGoDiagnosis }: { results: DiagnosisRecord[]; 
         ) : (
           <>
             <div style={{ fontSize: 14, fontWeight: 800, marginBottom: 8 }}>🎯 당신의 반응 스타일</div>
-            <div style={{ fontSize: 12, color: '#5a5245', lineHeight: 1.8, marginBottom: 14 }}>
+            <div style={{ fontSize: 12, color: 'var(--body-text)', lineHeight: 1.8, marginBottom: 14 }}>
               {scenarios.map((sc, i) => (
                 <div key={i} style={{ marginBottom: 6 }}>
                   <strong>{sc.title}</strong> → "{sc.options[answers[i]]}"
                 </div>
               ))}
-              <div style={{ marginTop: 10, color: '#8a6d3b', fontWeight: 700 }}>
+              <div style={{ marginTop: 10, color: 'var(--accent)', fontWeight: 700 }}>
                 {scenarios[0].tip.split('. ')[0]}와 같은 패턴을 정확히 알고 싶다면, 진단으로 확인해보세요.
               </div>
             </div>
@@ -238,7 +238,7 @@ function SituationSim({ results, onGoDiagnosis }: { results: DiagnosisRecord[]; 
                 onClick={() => onGoDiagnosis()}
                 style={{
                   flex: 1, padding: '10px 0', borderRadius: 6, cursor: 'pointer', fontSize: 12, fontWeight: 800,
-                  background: '#2b2620', color: '#faf7f2', border: 'none',
+                  background: 'var(--text)', color: 'var(--bg)', border: 'none',
                 }}
               >
                 진단 모음 가기
@@ -247,7 +247,7 @@ function SituationSim({ results, onGoDiagnosis }: { results: DiagnosisRecord[]; 
                 onClick={reset}
                 style={{
                   padding: '10px 18px', borderRadius: 6, cursor: 'pointer', fontSize: 12, fontWeight: 700,
-                  background: '#fffdf8', border: '1px solid #ddd3c2', color: '#7a7060',
+                  background: 'var(--card)', border: '1px solid var(--border2)', color: 'var(--sub2)',
                 }}
               >
                 다시 하기
@@ -282,9 +282,9 @@ function TodayDashboard({ results, onGoDiagnosis }: { results: DiagnosisRecord[]
 
   return (
     <div style={{
-      background: '#fffdf8', border: '1px solid #e5ded2', borderRadius: 12, padding: 20, marginBottom: 24,
+      background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 12, padding: 20, marginBottom: 24,
     }}>
-      <div style={{ fontSize: 10, letterSpacing: 2, color: '#8a6d3b', fontWeight: 800, textTransform: 'uppercase', marginBottom: 12 }}>
+      <div style={{ fontSize: 10, letterSpacing: 2, color: 'var(--accent)', fontWeight: 800, textTransform: 'uppercase', marginBottom: 12 }}>
         오늘의 한 화면
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(200px,1fr))', gap: 16 }}>
@@ -293,33 +293,33 @@ function TodayDashboard({ results, onGoDiagnosis }: { results: DiagnosisRecord[]
           <div style={{ fontSize: 12, fontWeight: 800, marginBottom: 8 }}>✅ 오늘 습관 {todayHabits.length > 0 ? `${doneToday}개` : '없음'}</div>
           {todayHabits.length > 0 ? (
             todayHabits.map(h => (
-              <div key={h.id} style={{ fontSize: 12, color: '#6b6355', padding: '6px 0', borderBottom: '1px solid #f0e9dc' }}>
+              <div key={h.id} style={{ fontSize: 12, color: 'var(--sub)', padding: '6px 0', borderBottom: '1px solid #f0e9dc' }}>
                 {h.name}
               </div>
             ))
           ) : (
-            <div style={{ fontSize: 12, color: '#7a7060' }}>오늘 체크할 습관이 없어요.<br />미래 설계에서 추가해보세요.</div>
+            <div style={{ fontSize: 12, color: 'var(--sub2)' }}>오늘 체크할 습관이 없어요.<br />미래 설계에서 추가해보세요.</div>
           )}
         </div>
         {/* 최근 진단 */}
         <div>
           <div style={{ fontSize: 12, fontWeight: 800, marginBottom: 8 }}>🕐 최근 진단</div>
           {recent && (
-            <div style={{ background: '#f7f2e9', borderRadius: 8, padding: 12 }}>
+            <div style={{ background: 'var(--card2)', borderRadius: 8, padding: 12 }}>
               <div style={{ fontSize: 13, fontWeight: 700 }}>{recent.emoji} {recent.title}</div>
-              <div style={{ fontSize: 12, color: '#6b6355', marginTop: 4 }}>{recent.result}{recent.score !== undefined ? ` · ${recent.score}점` : ''}</div>
+              <div style={{ fontSize: 12, color: 'var(--sub)', marginTop: 4 }}>{recent.result}{recent.score !== undefined ? ` · ${recent.score}점` : ''}</div>
             </div>
           )}
         </div>
         {/* 인사이트 */}
         <div>
           <div style={{ fontSize: 12, fontWeight: 800, marginBottom: 8 }}>💡 오늘의 인사이트</div>
-          <div style={{ fontSize: 12, color: '#6b6355', lineHeight: 1.7 }}>{insight}</div>
+          <div style={{ fontSize: 12, color: 'var(--sub)', lineHeight: 1.7 }}>{insight}</div>
           <button
             onClick={onGoDiagnosis}
             style={{
               marginTop: 10, padding: '8px 16px', borderRadius: 6, fontSize: 12, fontWeight: 700, cursor: 'pointer',
-              background: '#2b2620', color: '#faf7f2', border: 'none',
+              background: 'var(--text)', color: 'var(--bg)', border: 'none',
             }}
           >
             진단 더 하기

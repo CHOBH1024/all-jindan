@@ -51,23 +51,23 @@ export function AuthModal({ onClose, onLogin }: Props) {
       <div
         onClick={e => e.stopPropagation()}
         style={{
-          width: '100%', maxWidth: 380, background: '#fffdf8', border: '1px solid #e5ded2', borderRadius: 20,
+          width: '100%', maxWidth: 380, background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 20,
           padding: 28, boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
         }}
       >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
           <h2 style={{ fontSize: 18, fontWeight: 900, margin: 0 }}>{mode === 'login' ? '로그인' : '회원가입'}</h2>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', color: '#9a9081', fontSize: 20, cursor: 'pointer' }}>✕</button>
+          <button onClick={onClose} style={{ background: 'none', border: 'none', color: 'var(--hint)', fontSize: 20, cursor: 'pointer' }}>✕</button>
         </div>
 
-        <div style={{ display: 'flex', gap: 4, marginBottom: 20, background: '#f0e9dc', padding: 4, borderRadius: 12 }}>
+        <div style={{ display: 'flex', gap: 4, marginBottom: 20, background: 'var(--card3)', padding: 4, borderRadius: 12 }}>
           {(['login', 'register'] as const).map(m => (
             <button
               key={m}
               onClick={() => setMode(m)}
               style={{
                 flex: 1, padding: '8px 0', borderRadius: 8, border: 'none', cursor: 'pointer', fontSize: 13, fontWeight: 800,
-                background: mode === m ? '#6366f1' : 'transparent', color: mode === m ? '#fff' : '#9a9081',
+                background: mode === m ? 'var(--accent)' : 'transparent', color: mode === m ? 'var(--bg)' : 'var(--hint)',
               }}
             >
               {m === 'login' ? '로그인' : '회원가입'}
@@ -90,24 +90,24 @@ export function AuthModal({ onClose, onLogin }: Props) {
           style={{ ...inputStyle, marginTop: 8 }}
         />
 
-        {error && <div style={{ fontSize: 12, color: '#dc2626', marginTop: 10 }}>{error}</div>}
+        {error && <div style={{ fontSize: 12, color: 'var(--error)', marginTop: 10 }}>{error}</div>}
 
         <button
           onClick={submit}
           disabled={loading}
           style={{
             width: '100%', marginTop: 16, padding: '12px 0', borderRadius: 12, border: 'none', cursor: 'pointer',
-            fontSize: 14, fontWeight: 800, color: '#fff',
-            background: '#2b2620', opacity: loading ? 0.6 : 1,
+            fontSize: 14, fontWeight: 800, color: 'var(--bg)',
+            background: 'var(--text)', opacity: loading ? 0.6 : 1,
           }}
         >
           {loading ? '처리 중...' : mode === 'login' ? '로그인' : '가입하기'}
         </button>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, margin: '20px 0 12px' }}>
-          <div style={{ flex: 1, height: 1, background: '#e5ded2' }} />
-          <span style={{ fontSize: 11, color: '#9a9081' }}>또는</span>
-          <div style={{ flex: 1, height: 1, background: '#e5ded2' }} />
+          <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
+          <span style={{ fontSize: 11, color: 'var(--hint)' }}>또는</span>
+          <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
         </div>
 
         <button
@@ -115,12 +115,12 @@ export function AuthModal({ onClose, onLogin }: Props) {
           disabled={loading}
           style={{
             width: '100%', padding: '12px 0', borderRadius: 12, cursor: 'pointer',
-            fontSize: 14, fontWeight: 700, background: '#e5ded2', border: '1px solid #ddd3c2', color: '#3d3830',
+            fontSize: 14, fontWeight: 700, background: 'var(--border)', border: '1px solid var(--border2)', color: 'var(--text-strong)',
           }}
         >
           🌐 Google로 로그인
         </button>
-        <div style={{ fontSize: 11, color: '#9a9081', marginTop: 10, textAlign: 'center' }}>
+        <div style={{ fontSize: 11, color: 'var(--hint)', marginTop: 10, textAlign: 'center' }}>
           Google 로그인은 이메일 인증으로 간편하게 처리됩니다
         </div>
       </div>
@@ -130,6 +130,6 @@ export function AuthModal({ onClose, onLogin }: Props) {
 
 const inputStyle: React.CSSProperties = {
   width: '100%', padding: '11px 14px', borderRadius: 12, fontSize: 14,
-  background: '#f0e9dc', border: '1px solid #ddd3c2', color: '#3d3830',
+  background: 'var(--card3)', border: '1px solid var(--border2)', color: 'var(--text-strong)',
   outline: 'none', boxSizing: 'border-box',
 };
