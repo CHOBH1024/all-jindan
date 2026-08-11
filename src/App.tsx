@@ -66,6 +66,9 @@ export default function App() {
     setUser(getSavedUser());
     // 다크 모드 CSS 변수 적용
     document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+    // iOS 주소바 색상 동기화
+    const mc = document.querySelector('meta[name="theme-color"]');
+    if (mc) mc.setAttribute('content', dark ? '#171310' : '#2b2620');
     const onResize = () => setIsMobile(window.innerWidth <= 768);
     window.addEventListener('resize', onResize);
     // 프리미엄/관리자 상태 로드
