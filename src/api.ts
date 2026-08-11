@@ -19,6 +19,7 @@ export interface ServerDiagnosis {
   created_at: number;
   shared: number;
   user_name?: string;
+  user_id?: number;
   like_count?: number;
   comment_count?: number;
 }
