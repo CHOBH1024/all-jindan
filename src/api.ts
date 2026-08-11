@@ -87,4 +87,7 @@ export const api = {
   myStatus: () => req('GET', '/me/status'),
   createOrder: (product: string) => req('POST', '/orders', { product }),
   adminStats: () => req('GET', '/admin/stats'),
+  reportFeed: (id: number, reason?: string) => req('POST', `/feed/${id}/report`, { reason }),
+  blockUser: (id: number) => req('POST', `/users/${id}/block`),
+  unblockUser: (id: number) => req('DELETE', `/users/${id}/block`),
 };

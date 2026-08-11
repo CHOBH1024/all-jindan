@@ -307,6 +307,24 @@ export function Community() {
                   >
                     ⚔️ 나와 비교
                   </button>
+                  {/* 신고 */}
+                  <button
+                    onClick={async () => {
+                      if (!isLoggedIn) { alert('로그인 후 신고할 수 있어요.'); return; }
+                      if (!confirm('이 게시물을 신고할까요? 검토 후 조치됩니다.')) return;
+                      try {
+                        await api.reportFeed(f.id, '부적절한 내용');
+                        alert('✅ 신고가 접수되었습니다. 검토 후 조치됩니다.');
+                      } catch { alert('신고 처리에 실패했어요.'); }
+                    }}
+                    style={{
+                      marginLeft: 'auto', padding: '5px 10px', borderRadius: 999, fontSize: 10, fontWeight: 600, cursor: 'pointer',
+                      background: 'transparent', border: '1px solid var(--border2)', color: 'var(--hint)',
+                    }}
+                    title="신고"
+                  >
+                    🚩
+                  </button>
                 </div>
                 {/* 댓글 섹션 */}
                 {openComments === f.id && (
@@ -406,6 +424,16 @@ function UserProfileModal({ userName, feed, onClose }: {
 }) {
   const userPosts = feed.filter(f => f.user_name === userName);
   const growth = userPosts.length >= 3;
+  const targetUserId = userPosts[0]?.user_id;
+  const block = async () => {
+    if (!targetUserId) { alert('차단할 수 없는 사용자예요.'); return; }
+    if (!confirm(userName + '님을 차단할까요? 차단한 사용자의 게시물이 더 이상 보이지 않아요.')) return;
+    try {
+      await api.blockUser(targetUserId);
+      alert('✅ 차단되었습니다.');
+      onClose();
+    } catch { alert('차단 처리에 실패했어요.'); }
+  };
   const axes = new Set(userPosts.map(p => {
     const map: Record<string, number> = { 'mz-radar': 1, 'attachment-style-radar': 2, 'sleep-hygiene-radar': 3 };
     return map[p.site] !== undefined ? ['성격', '커리어', '관계', '습관'][map[p.site]] : '성격';
@@ -429,10 +457,17 @@ function UserProfileModal({ userName, feed, onClose }: {
           </div>
           <div style={{ flex: 1 }}>
             <div style={{ fontSize: 15, fontWeight: 800 }}>{userName}</div>
-            <div style={{ fontSize: 11, color: 'var(--sub2)' }}>
-              공유 {userPosts.length}개 {growth && '· 📈 꾸준한 진단러'}
-            </div>
+            <div style={{ fontSize: 11, color: 'var(--hint)' }}>{userPosts.length}개의 공유 · {growth ? '성장 중 📈' : '활동 중'}</div>
           </div>
+          <button
+            onClick={block}
+            style={{
+              padding: '6px 12px', borderRadius: 8, fontSize: 11, fontWeight: 700, cursor: 'pointer',
+              background: 'rgba(248,113,113,0.1)', border: '1px solid rgba(248,113,113,0.3)', color: 'var(--error)',
+            }}
+          >
+            🚫 차단
+          </button>
           <button onClick={onClose} style={{ background: 'none', border: 'none', color: 'var(--sub2)', fontSize: 18, cursor: 'pointer' }}>✕</button>
         </div>
 
